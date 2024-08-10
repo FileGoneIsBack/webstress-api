@@ -1,0 +1,12 @@
+name=site-info
+description=displays site stats
+admin=false
+system=false
+==================
+<<clear>>
+User:
+<<ongoing>> // <<conns>>
+Site:
+<<running>> // <<slots>>
+total users active: <<online>>
+
