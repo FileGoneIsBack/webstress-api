@@ -153,8 +153,8 @@
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a href="/admin/apisettings" class="menu-link">
-                                        <div data-i18n="API">API's</div>
+                                    <a href="/admin/blacklist" class="menu-link">
+                                        <div data-i18n="API">Blacklist</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
@@ -332,6 +332,7 @@
                                                     <label class="form-label" for="roleOption">Roles</label>
                                                     <select multiple class="form-select" id="roleOption" aria-label="Default select example">
                                                         <option>member</option>
+                                                        <option>basic</option>
                                                         <option>admin</option>
                                                         <option>vip</option>
                                                         <option>api</option>
@@ -340,7 +341,7 @@
                                                 </div>
                                                 <div class="mb-1 col-md-6">
                                                     <label class="form-label" for="balance">Balance</label>
-                                                    <input type="text" name="balance" id="balance" class="form-control"
+                                                    <input type="text" name="balance" id="testbalance" class="form-control"
                                                         placeholder="100$" />
                                                 </div>
                                                 <div class="mb-1 col-md-6">
@@ -383,12 +384,19 @@
                                     </div>
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination justify-content-center">
-                                            <!-- Pagination links will be dynamically added here -->
+                                          <li class="page-item prev">
+                                            <a class="page-link" href="#"><i class="ti ti-chevrons-left ti-xs"></i></a>
+                                          </li>
+                                          <li class="page-item active">
+                                            <a class="page-link" href="#">1</a>
+                                          </li>
+                                          <li class="page-item next">
+                                            <a class="page-link" href="#"><i class="ti ti-chevrons-right ti-xs"></i></a>
+                                          </li>
                                         </ul>
-                                    </nav>
-                                </div>
+                                      </nav>                                    
+                                 </div>
                             </div>
-                            
                 </section>
             </div>
             <h4 class="py-3 mb-4">
@@ -440,7 +448,7 @@
     <!-- END: Page Vendor JS-->
 
     <!-- BEGIN: Dashboard JS-->
-    <script src="/_assets/scripts/admin/editUser2.js"></script>
+    <script src="/_assets/scripts/admin/editUser14.js"></script>
 
     <style>
         ::-webkit-scrollbar-track {

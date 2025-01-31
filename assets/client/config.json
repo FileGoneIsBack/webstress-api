@@ -1,5 +1,8 @@
 {
-    "name":"Layer 7 - 2",
-    "slots":"75",
-    "type":"2"
+    "name":"spoof999",
+    "slots":"51",
+    "type":"1",
+    "key":"test",
+    "master":"176.105.253.34:1234",
+    "maxthreads": 5
 }

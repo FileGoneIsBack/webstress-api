@@ -364,7 +364,30 @@
     <script src="/_assets/js/core/app.js"></script>
     <!-- END: Theme JS-->
 
-    <script src="/_assets/scripts/dashboard.js"></script>
+    <script src="/_assets/scripts/dashboard13.js"></script>
+<script>
+    $(document).ready(function () {
+        $.get('/api/dashboard/data', function (response) {
+            console.log(response);
+            if (response.serversLayer4 || response.serversLayer7) {
+                var allServers = response.serversLayer4.concat(response.serversLayer7);
+
+                allServers.forEach(function (server) {
+                    console.log("Server Name: " + server.name);
+                    if (server.methods && server.methods.length > 0) {
+                        console.log("Methods: " + server.methods.join(", "));
+                    } else {
+                        console.log("Methods: No methods available");
+                    }
+                });
+            } else {
+                console.log("No servers data found.");
+            }
+        }).fail(function (xhr, status, error) {
+            console.log("Error: " + error);
+        });
+    });
+</script>
     <style>
         ::-webkit-scrollbar-track {
             -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);

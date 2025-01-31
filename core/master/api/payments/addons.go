@@ -29,21 +29,55 @@ func init() {
 
             addonVal := r.PostFormValue("addon_name")
             fmt.Println("Addon Name:", addonVal) // Log addonVal
-            
-            addonRanks := []*ranks.Rank{
-                ranks.GetRole(addonVal, true),
-            }
-            fmt.Println("Addon Ranks:", addonRanks) // Log addonRanks
-            addon := plans.Addons[addonVal]
 
-        if user.Balance >= addon.Price {
-            if err := database.Container.UserUpdateRank(user.User, addonRanks, addon); err != nil {
-                json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully purchased addon " + addonVal})
-                return
+            var addon *plans.Addon
+            var addonRanks []*ranks.Rank
+
+            if addonVal == "time" {
+                addon = plans.Addons["time"]
+                if user.Balance >= addon.Price {
+                    user.Duration += addon.Value
+                    if err := database.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
+                        json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Failed to add time."})
+                        return
+                    }
+                    json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully added time."})
+                } else {
+                    json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})
+                }
+            
+            } else if addonVal == "concurrents" {
+                addon = plans.Addons["concurrents"]
+                if user.Balance >= addon.Price {
+                    user.Concurrents += addon.Value
+                    if err := database.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
+                        json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Failed to add concurrent connections."})
+                        return
+                    }
+                    json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully added concurrent connections."})
+                } else {
+                    json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})
+                }
+            
+            } else {
+                // Handling other addons (roles)
+                addonRanks = []*ranks.Rank{
+                    ranks.GetRole(addonVal, true), // Get the role based on addon name
+                }
+            
+                addon = plans.Addons[addonVal] // Assuming you have other roles in the `Addons` map
+            
+                if user.Balance >= addon.Price {
+                    if err := database.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
+                        json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Error updating rank."})
+                        return
+                    }
+                    json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully purchased addon " + addonVal})
+                } else {
+                    json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})
+                }
             }
-        } else {
-            json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})
-        }
+            
 
             return
         }

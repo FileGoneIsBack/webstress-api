@@ -13,6 +13,9 @@
             dashboard template, flat admin template, responsive admin template,
             web app">
     <meta name="author" content="PIXINVENT">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
+                integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>{{.Name}} | {{.Title}}</title>
     <link rel="apple-touch-icon" href="/_assets/images/ico/apple-icon-120.png">
     <link rel="shortcut icon" type="image/x-icon" href="/_assets/images/ico/favicon.ico">
@@ -165,6 +168,10 @@
                                         <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
                                             data-bs-target="#whitelist">Whitelist</button>
                                     </li>
+                                    <li class="nav-item">
+                                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                            data-bs-target="#methods">Methods</button>
+                                    </li>
                                 </ul>
                                 <div class="tab-content">
                                     <!--API Link-->
@@ -298,27 +305,108 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="tab-pane fade" id="methods">
+                                        <span class="card-header-title me-2">Whitelist</span>
+                                        <div class="card-body" class="mb-1 col-md-6">
+<div id="grid4" style="height: 600px; width: 100%;" class="ag-theme-alpine"></div>
+<br>
+
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             </table>
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-header header-elements">
-                            <div class="ps-0 ps-sm-2 d-flex flex-column mb-2 mb-sm-0">
-                                <p class="card-subtitle text-muted mb-1">Methods Used</p>
-                            </div>
-                            <div class="card-action-element ms-auto py-0">
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <canvas id="horizontalBarChart" class="chartjs" data-height="400"></canvas>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    
+
+<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
+<script>
+    // Function to load methods from the API and populate AG-Grid
+    function test() {
+        var gridDiv = document.getElementById("grid4");
+
+        $.post('/api/attacks/methods', function (response) {
+            var json = $.parseJSON(response);
+
+            if (json.status == "success") {
+                console.log(json.methods);
+
+                // Create an array to hold all the methods
+                let methods = [];
+
+                // Loop through each method and group them by subnet
+                for (var i = 0; i < json.methods.length; i++) {
+                    var method = json.methods[i];
+
+                    // Create method objects for AG-Grid
+                    methods.push({
+                        subnet: method.subnet,
+                        method: method.method,
+                        panel_method: method.panel_method
+                    });
+                }
+
+                const myTheme = agGrid.themeQuartz.withParams({
+                    backgroundColor: "rgb(249, 245, 227)",
+                    foregroundColor: "rgb(126, 46, 132)",
+                    headerTextColor: "rgb(204, 245, 172)",
+                    headerBackgroundColor: "rgb(209, 64, 129)",
+                    oddRowBackgroundColor: "rgb(0, 0, 0, 0.03)",
+                    headerColumnResizeHandleColor: "rgb(126, 46, 132)",
+                });
+
+                // Grid column definitions
+                const columnDefs = [
+                    { 
+                        headerName: "Subnet", 
+                        field: "subnet", 
+                        rowGroup: true,  // Group by subnet
+                        rowSpan: function(params) {
+                            // Only apply rowSpan to rows with the same subnet value
+                            const startIndex = params.node.rowIndex;
+                            let count = 1;
+
+                            // Count the number of rows with the same subnet value
+                            while (params.api.getDisplayedRowAtIndex(startIndex + count) &&
+                                   params.api.getDisplayedRowAtIndex(startIndex + count).data.subnet === params.data.subnet) {
+                                count++;
+                            }
+                            return count; // Set the rowSpan based on how many rows are in the group
+                        }
+                    },
+                    { headerName: "Method", field: "method" },
+                    { headerName: "Panel Method", field: "panel_method" }
+                ];
+
+                // Grid options
+                const gridOptions = {
+                    columnDefs: columnDefs,
+                    theme: myTheme,
+                    rowData: methods,  // Set row data with grouped methods
+                    groupUseEntireRow: true,  // Ensure the entire row is used for grouping
+                    domLayout: 'autoHeight', // Automatically adjust height to fit rows
+                    animateRows: true, // Optional: for row animations
+                    sortingOrder: ['asc', 'desc']  // Allow sorting by method or panel_method
+                };
+
+                // Initialize AG-Grid with the given options
+                document.addEventListener("DOMContentLoaded", function () {
+                    // Get the container where the grid will be placed
+                    const gridDiv = document.getElementById("grid4");
+
+                    // Create the AG-Grid instance
+                    agGrid.createGrid(gridDiv, gridOptions);  // Use agGrid.createGrid() instead of new agGrid.Grid()
+                });
+            } else if (json.status == "error") {
+                toastr['warning'](response.message, 'Attacks', { "toastClass": "toast-dark" });
+            }
+        });
+    }
+
+    // Call the test function to load data and initialize the grid
+    test();
+</script>
+
         <!-- END: Content-->
 
         <div class="sidenav-overlay"></div>
@@ -348,20 +436,22 @@
         <!-- BEGIN Vendor JS-->
 
         <!-- BEGIN: Page Vendor JS-->
-        <script src="/_assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/responsive.bootstrap5.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/datatables.checkboxes.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/datatables.buttons.min.js"></script>
-        <script src="/_assets/vendors/js/charts/chart.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/jszip.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/pdfmake.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/vfs_fonts.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/buttons.html5.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/buttons.print.min.js"></script>
-        <script src="/_assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
-        <script src="/_assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/responsive.bootstrap5.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/datatables.checkboxes.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/datatables.buttons.min.js"></script>
+    <script src="/_assets/vendors/js/charts/apexcharts.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/jszip.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/pdfmake.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/vfs_fonts.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/buttons.html5.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/buttons.print.min.js"></script>
+    <script src="/_assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
+    <script src="/_assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    
 
         <script src="/_assets/vendors/js/extensions/wNumb.min.js"></script>
         <script src="/_assets/vendors/js/extensions/nouislider.min.js"></script>
@@ -376,12 +466,10 @@
         <!-- END: Page Vendor JS-->
 
         <!-- BEGIN: Theme JS-->
-        <script src="/_assets/js/core/app-menu.js"></script>
-        <script src="/_assets/js/core/app.js"></script>
+    <script src="/_assets/js/core/app-menu.js"></script>
+    <script src="/_assets/js/core/app.js"></script>
         <!-- END: Theme JS-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-            integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 
         <!--START: Scrollbar-->
         <style>
@@ -457,6 +545,7 @@
 
         <script>
             $(window).on('load', function () {
+                test();
                 if (feather) {
                     feather.replace({
                         width: 14,

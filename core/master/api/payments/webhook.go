@@ -2,7 +2,7 @@ package paymentsapi
 
 import (
 	"api/core/database"
-	"api/core/models/sellix"
+	//"api/core/models/sellix"
 	"api/core/models/server"
 	"bytes"
 	"crypto/hmac"
@@ -10,7 +10,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -273,13 +272,7 @@ var (
 
 func init() {
 	Route.NewSub(server.NewRoute("/webhook", func(w http.ResponseWriter, r *http.Request) {
-		ip := sellix.KeyByRealIP(r)
-		if ip != "99.81.24.41" {
-			fmt.Println(r.RemoteAddr)
-			w.WriteHeader(403)
-			w.Write([]byte("Unathorized!"))
-			return
-		}
+
 		if r.Method != "POST" {
 			return
 		}
@@ -288,7 +281,7 @@ func init() {
 		signature := r.Header.Get("x-sellix-unescaped-signature")
 		hmac := hmac.New(sha512.New, []byte(Secret))
 		if !bytes.Equal(hmac.Sum(body), []byte(signature)) {
-			log.Println("invalid hmac signature!")
+			fmt.Println("invalid hmac signature!")
 		}
 		var data *WebhookBody
 		json.Unmarshal(body, &data)
@@ -333,7 +326,7 @@ func init() {
 			sale.Status = "partially_paid"
 			sale.Recieved = data.Data.CryptoReceived
 			if err := database.Container.UpdateSale(sale); err != nil {
-				log.Println(err)
+				fmt.Println(err)
 			}
 		case "order:cancelled":
 			sale, err := database.Container.GetSaleByUniq(data.Data.Uniqid)

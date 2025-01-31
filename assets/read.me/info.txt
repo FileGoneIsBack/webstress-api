@@ -1,0 +1,53 @@
+idk how to explain this enough you gotta think this funnels servers and apis so in json its important to keep the method CAPS and the method.name whatever else 
+
+1. Website
+    -config.json
+        1. secure `true/false` this is to enable https/http on 443/8080
+        2. domain `string`  this is to send attacks to ur attack handler from cnc if turned on
+        3. cert/key `files` this is what u get from cloudflare and update to get ssl and remove unprotected site warning 
+        4. autobuy `key and email` use the same email for signup on sellix and get the key from the settings and make sure btc is main and there is valid btc addy
+        5. freeuser not yet working
+        6. fake `users or attacks` 
+        7. cnc `enable ports` enable the cnc with diff ports make sure they arent the same
+        8. methods 
+            -subnet1 is group 1 and so on and the string next to it is for the name for the group, in methods make sure the subnet you want to group is following that order
+    -methods.json
+        1. example
+                "HOLD": {
+                    "type": 1,
+                    "name": "HOLD (Amplification)",
+                    "description": "",
+                    "subnet": 1,
+                    "mtype": 1,
+                    "vip": false
+                }
+        2. explain  
+                "METHOD_NAME_IN_SERVER/APIS": {
+                    "type": 1,
+                    "name": "method name in site doesnt need to be caps",
+                    "description": "little description",
+                    "subnet": group order to follow in config.json,
+                    "mtype": 1 for L4 2 for L7,
+                    "vip": false/true simple lmao
+                }
+    -server.json
+        `listner` int       port to listen for server
+        `allowed` string[]  list of servers allowed to connect to the site 
+        `key`     string    auth key
+
+
+
+
+2. Client
+    -config.json
+        `name` string   server name
+        `slots` int     server slots
+        `type`  int     1=L4 2=L7
+        `key`   string  auth step needs to match website server.json    
+        `master`string  master server:`listner` from website defult 1234
+        `maxthreads` int    auto sets max threads if the attack was 12 to whatever maxthreads is to keep server cpu avg
+    -methods.json
+        1.example
+            "HOLD":"./dns $target/32 $port lists/dns.list $threads $pps $time",
+        2.explain
+            "METHOD_NAME_IN_SERVER/APIS":"CMD all files need to be in the same folder or all go files need to be in root dir with no folder or methods will not screen properly if you see exit status 1 that means the method wasnt screened properly but the client will still stay connected",

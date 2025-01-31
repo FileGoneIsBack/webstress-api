@@ -48,7 +48,7 @@ function buyPlan(type) {
                     <li class="mb-2">${plan.duration} Seconds</li>
                     <li class="mb-2">${plan.concurrents} Con</li>
                     <li class="mb-2">Unlimited Test</li>
-                    <li class="mb-2">VIP False</li>
+                    <li class="mb-2">VIP: ${plan.vip}</</li>
                     <li class="mb-0">API ${plan.api}</li>
                 </ul>
 
@@ -80,7 +80,7 @@ function buyPlan(type) {
                     <li class="mb-2">${plan.duration} Seconds</li>
                     <li class="mb-2">${plan.concurrents} Con</li>
                     <li class="mb-2">Unlimited Test</li>
-                    <li class="mb-2">VIP False</li>
+                    <li class="mb-2">VIP: ${plan.vip}</</li>
                     <li class="mb-0">API ${plan.api}</li>
                 </ul>
 

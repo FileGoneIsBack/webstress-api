@@ -77,7 +77,7 @@ function updatePayments() {
                 `;
 
                 newRow.addEventListener("click", () => {
-                    document.cookie = `payment_id=${payment.transaction}; path=/`;
+                    document.cookie = `payment_id=${payment.id}; path=/`;
 
                     window.location.href = 'transaction';
                 });

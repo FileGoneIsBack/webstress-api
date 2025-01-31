@@ -22,6 +22,7 @@ function signup() {
     var username = $("#signup-username").val();
     var password = $("#signup-password").val();
     var cpassword = $("#signup-confirm-password").val();
+    var auth = $("#signup-auth").val();
     var captcha = $("#signup-captcha").val();
     console.log('clicked signup, posting data!');
 
@@ -39,7 +40,10 @@ function signup() {
         showToast('Error', 'Incorrect CAPTCHA.', 'error');
         return;
     }
-
+    if (auth !== String(1111)) {
+        showToast('Error', 'Incorrect CAPTCHA.', 'error');
+        return;
+    }
     $.post('/signup',{username, password},  function (response) {
         data = $.parseJSON(response);
         if (data.status == 'success') {

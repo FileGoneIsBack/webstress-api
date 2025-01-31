@@ -34,6 +34,6 @@ func (c *Client) CreateRequest(method, data, query string) (*http.Request, error
 		return nil, err
 	}
 	r.Header.Add("Content-Type", "application/json")
-	r.Header.Add("Authorization", c.Authentication)
+	r.Header.Add("Authorization", "Bearer " + models.Config.Autobuy.Key)
 	return r, nil
 }

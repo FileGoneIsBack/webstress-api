@@ -1,12 +1,14 @@
 package panelapi
 
 import (
-    "api/core/master/sessions"
-    "api/core/models/floods"
-    "api/core/models/server"
-    "encoding/json"
-    "net/http"
-    "strings"
+	"api/core/master/sessions"
+	"api/core/models/floods"
+	"api/core/models/server"
+    "api/core/models"
+	"encoding/json"
+	"net/http"
+	"strings"
+    "fmt"
 )
 
 func init() {
@@ -22,8 +24,9 @@ func init() {
                 ID          int    `json:"id"`
                 Method      string `json:"method"`
                 PanelMethod string `json:"panel_method"`
-                Subnet      int    `json:"subnet"`
-                Type        string `json:"type"`
+                Subnet      string `json:"subnet"`
+                Mtype       int    `json:"mtype"`
+                VIP         string `json:"vip"`
             }
             type status struct {
                 Status  string    `json:"status"`
@@ -33,40 +36,37 @@ func init() {
                 Status:  "success",
                 Methods: make([]*method, 0),
             }
-            if user.HasPermission("vip") {
+            if !user.HasPermission("basic") && !user.HasPermission("vip") && !user.HasPermission("admin") && !user.HasPermission("api") {
+                s.Methods = append(s.Methods, &method{
+                    PanelMethod: "PLEASE BUY A PLAN",
+                })
+            }
+            if user.HasPermission("vip") || user.HasPermission("admin") {
                 for name, meth := range floods.Methods {
                     s.Methods = append(s.Methods, &method{
                         Description: meth.Description,
                         Method:      name,
                         PanelMethod: meth.Name,
                         ID:          0,
-                        Subnet:      meth.Subnet,
-                        Type: func(t int) string {
-                            switch t {
-                            case 1:
-                                return "UDP (AMP)"
-                            case 2:
-                                return "UDP"
-                            case 3:
-                                return "TCP"
-                            case 4:
-                                return "NETWORK"
-                            case 5:
-                                return "BOTNET"
-                            }
-                            return "UNKNOWN"
-                        }(meth.Mtype),
+                        Subnet:      models.Config.Methods[fmt.Sprintf("subnet%d", meth.Subnet)],
+                        VIP:         "VIP",  
+                        Mtype:       meth.Mtype,
                     })
                 }
-            } else {
-                s.Methods = append(s.Methods, &method{
-                    Description: "HOME",
-                    Method:      "HOME",
-                    PanelMethod: "HOME",
-                    ID:          0,
-                    Subnet:      0, // Adjust subnet value accordingly
-                    Type:        "Free", // Adjust type value accordingly
-                })
+            } else if user.HasPermission("basic") {
+                for name, meth := range floods.Methods {
+                    if meth.VIP == false {
+                        s.Methods = append(s.Methods, &method{
+                            Description: meth.Description,
+                            Method:      name,
+                            PanelMethod: meth.Name,
+                            ID:          0,
+                            Subnet:      models.Config.Methods[fmt.Sprintf("subnet%d", meth.Subnet)],
+                            VIP:         "BASIC",  
+                            Mtype:       meth.Mtype,
+                        })
+                    }
+                }
             }
             json.NewEncoder(w).Encode(s)
             return

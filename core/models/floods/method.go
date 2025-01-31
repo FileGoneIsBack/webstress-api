@@ -11,6 +11,7 @@ type Method struct {
 	Description string
 	Subnet      int
 	Mtype       int
+	VIP       	bool
 }
 
 func Get(name string) *Method {

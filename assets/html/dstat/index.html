@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Requests Per Second Monitor</title>
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
+    <style>
+        /* General body styling to match site theme */
+        body {
+            background-color: #0D1117; /* Dark background */
+            color: #C9D1D9; /* Light gray text */
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Main container */
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #161B22; /* Slightly lighter background for contrast */
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        /* Header styling */
+        h1 {
+            color: #58A6FF; /* Blue for header text */
+        }
+
+        /* Chart container */
+        #chart {
+            width: 100%;
+            height: 400px;
+        }
+
+        /* Table styling for summary (optional future extensions) */
+        .stats-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+        }
+
+        .stats-table th,
+        .stats-table td {
+            border: 1px solid #30363D;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .stats-table th {
+            background-color: #21262D;
+            color: #58A6FF;
+        }
+
+        .stats-table td {
+            background-color: #161B22;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Requests Per Second Monitor</h1>
+        <div id="chart"></div>
+    </div>
+
+    <script>
+        // Mock function for fetching data (replace with actual API)
+        const fetchRPSData = async () => {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    const now = new Date();
+                    const simulatedRPS = Math.floor(Math.random() * 50) + 10; // Simulated RPS data
+                    resolve({
+                        timestamp: now.toISOString(),
+                        rps: simulatedRPS,
+                    });
+                }, 1000);
+            });
+        };
+
+        const data = {
+            x: [], // Timestamps for the x-axis
+            y: [], // RPS values for the y-axis
+        };
+
+        const layout = {
+            title: 'Requests Per Second',
+            xaxis: {
+                title: 'Time',
+                tickformat: '%H:%M:%S',
+                showgrid: false,
+            },
+            yaxis: {
+                title: 'RPS',
+                showgrid: true,
+                gridcolor: '#30363D',
+            },
+            plot_bgcolor: '#161B22',
+            paper_bgcolor: '#0D1117',
+            font: {
+                color: '#C9D1D9',
+            },
+        };
+
+        const updateChart = async () => {
+            const newData = await fetchRPSData();
+
+            // Add the new data to the chart
+            data.x.push(newData.timestamp);
+            data.y.push(newData.rps);
+
+            // Keep only the last 30 data points for display
+            if (data.x.length > 30) {
+                data.x.shift();
+                data.y.shift();
+            }
+
+            // Update the chart
+            Plotly.newPlot('chart', [data], layout);
+        };
+
+        setInterval(updateChart, 1000); // Update the chart every second
+        updateChart(); // Initial load
+    </script>
+</body>
+</html>

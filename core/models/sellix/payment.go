@@ -2,6 +2,7 @@ package sellix
 
 import (
 	"encoding/json"
+	"api/core/models"
 	"errors"
 	"fmt"
 	"net"
@@ -133,7 +134,7 @@ func (c *Client) NewPayment(amount int, fiat, title, email, gateway, coupon stri
 			Currency:      fiat,
 			CouponCode:    coupon,
 			Confirmations: 2,
-			Webhook:       "https://test.twilight.lol/api/payments/webhook",
+			Webhook:       models.Config.Domain+"api/payments/webhook",
 			FraudShield: func() struct {
 				IP           string "json:\"ip\""
 				UserAgent    string "json:\"user_agent\""

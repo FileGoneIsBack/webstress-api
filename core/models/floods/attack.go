@@ -7,7 +7,7 @@ type Attack struct {
 	Target string
 	*Method
 	Port, Threads, PPS, Subnet int
-	Parent, Stopped            int
+	Parent, Stopped, Conns     int
 	Duration                   int
 	Created                    int64
 }

@@ -1,4 +1,26 @@
 (function() {
+            $.post('/api/dashboard/running-attacks', function (data) {
+                var json = $.parseJSON(data)
+                console.log(json.Layer4)
+                updateLayer4(json);
+                updateLayer7(json);
+            }).fail(handleErrors);
+
+
+            $.post('/api/dashboard/data', function (data) {
+                var json = $.parseJSON(data)
+                console.log(json);
+                populateData(json);
+            }).fail(handleErrors);
+
+            setInterval(function () {
+                $.post('/api/dashboard/data', function (data) {
+                    var json = $.parseJSON(data);
+                    console.log(json); // Log the entire data object to ensure response times are changing
+                    refreshResponseTimes(json); // Update the UI with the new data
+                }).fail(handleErrors);
+            }, 10000);
+})();
 
     function handleErrors() {
         console.error("AJAX Request Failed:", status, error);
@@ -135,6 +157,27 @@
                 },
 
             };
+
+            function refreshResponseTimes(servers) {
+                // Update response times for Layer4 servers
+                servers['serversLayer4'].forEach(function (server, index) {
+                    const cardId = `server-layer4-${index}`;
+                    const responseTimeElement = $(`#${cardId}`).find('.server-response-time'); // Assuming you use a class for the response time element
+                    if (responseTimeElement) {
+                        responseTimeElement.text(server.responsetime); // Update the response time in the server card
+                    }
+                });
+
+                // Update response times for Layer7 servers
+                servers['serversLayer7'].forEach(function (server, index) {
+                    const cardId = `server-layer7-${index}`;
+                    const responseTimeElement = $(`#${cardId}`).find('.server-response-time'); // Assuming you use a class for the response time element
+                    if (responseTimeElement) {
+                        responseTimeElement.text(server.responsetime); // Update the response time in the server card
+                    }
+                });
+            }
+
             function updateLayer4(data) {
                 network_loadConfig.series = [{ data: data.Layer4 }]
                 const network_load = new ApexCharts(layer4_network, network_loadConfig);
@@ -199,7 +242,7 @@
                                     <div class="col-md-4 mb-4">
                                         <small class="text-muted">Response Time</small>
                                         <br>
-                                        ${status}
+                                        <span class="server-response-time">${server.responsetime}</span> <!-- Display initial response time -->
                                     </div>
                                     <div class="col-md-4 mb-4">
                                         <small class="text-muted">Server Name</small>
@@ -282,14 +325,6 @@
                 loadServerData(data);
             }
 
-            function formatDate(timestamp) {
-                const time = timestamp * 1000;
-                console.log(timestamp, time);
-                const date = new Date(time);
-                const options = { month: 'long', day: 'numeric', year: 'numeric' };
-                return date.toLocaleDateString('en-US', options)
-            }
-
             function renderTimeline(item) {
                 const formattedDate = formatDate(item.Date);
                 return `
@@ -313,81 +348,71 @@
                                               </li>
                                               `
             }
+        //news
+        function formatDate(timestamp) {
+            const time = timestamp * 1000;
+            console.log(timestamp, time);
+            const date = new Date(time);
+            const options = { month: 'long', day: 'numeric', year: 'numeric' };
+            return date.toLocaleDateString('en-US', options)
+        }
 
-            function loadTimeline(news) {
-                const timelineList = $('#timeline-list')
-                news.forEach(function (item) {
-                    const timelineItem = renderTimeline(item);
-                    timelineList.append(timelineItem);
-                })
+        function UpdateNews() {
+            var title   =   document.getElementById('title').value;
+            var from    =   "Admin";
+            var content =   document.getElementById('content').value;
+        // Get the current date without the time components
+        var currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
+
+        // Convert the date to a Unix timestamp
+        var unixTimestamp = Math.floor(currentDate.getTime() / 1000); // Divide by 1000 to convert milliseconds to seconds
+
+
+            // Check if any field is empty
+            if (title === '' || content === '') {
+                toastr['error']('Please fill in all fields!', 'Error', { "toastClass": "toast-dark" });
+                return; // Exit the function if validation fails
             }
-
-            $.post('/api/dashboard/running-attacks', function (data) {
-                var json = $.parseJSON(data)
-                console.log(json.Layer4)
-                updateLayer4(json);
-                updateLayer7(json);
-            }).fail(handleErrors);
-
-
+            
+            // Prepare the data to be sent in the AJAX request
+            var userData = {
+                title: title,
+                from: from,
+                content: content,
+                date: unixTimestamp
+            };
+            console.log('News Data:', userData);
+            // Make a POST request to the server
+            fetch('/api/admin/news', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    console.log('News updated successfully');
+                    toastr['success']('News updated successfully', 'Success', { "toastClass": "toast-dark" });
+                } else {
+                    toastr['error']('Update Error', 'Error', { "toastClass": "toast-dark" });
+                }
+            })
+            .catch(error => {
+                console.error('Failed to update News:', error.message);
+                toastr['error']('Failed to update News: ' + error.message, 'Error', { "toastClass": "toast-dark" });
+            });
             $.post('/api/dashboard/data', function (data) {
                 var json = $.parseJSON(data)
                 console.log(json);
                 populateData(json);
             }).fail(handleErrors);
-
-})();
-
-
-function UpdateNews() {
-    var title   =   document.getElementById('title').value;
-    var from    =   "Admin";
-    var content =   document.getElementById('content').value;
-// Get the current date without the time components
-var currentDate = new Date();
-currentDate.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0
-
-// Convert the date to a Unix timestamp
-var unixTimestamp = Math.floor(currentDate.getTime() / 1000); // Divide by 1000 to convert milliseconds to seconds
-
-
-    // Check if any field is empty
-    if (title === '' || content === '') {
-        toastr['error']('Please fill in all fields!', 'Error', { "toastClass": "toast-dark" });
-        return; // Exit the function if validation fails
-    }
-    
-    // Prepare the data to be sent in the AJAX request
-    var userData = {
-        title: title,
-        from: from,
-        content: content,
-        date: unixTimestamp
-    };
-    console.log('News Data:', userData);
-    // Make a POST request to the server
-    fetch('/api/admin/news', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(userData)
-    })
-    .then(response => {
-        if (response.ok) {
-            console.log('News updated successfully');
-            toastr['success']('News updated successfully', 'Success', { "toastClass": "toast-dark" });
-        } else {
-            toastr['error']('Update Error', 'Error', { "toastClass": "toast-dark" });
         }
-    })
-    .catch(error => {
-        console.error('Failed to update News:', error.message);
-        toastr['error']('Failed to update News: ' + error.message, 'Error', { "toastClass": "toast-dark" });
-    });
-    $.post('/api/dashboard/data', function (data) {
-        var json = $.parseJSON(data)
-        console.log(json);
-        populateData(json);
-    }).fail(handleErrors);
-}
+        function loadTimeline(news) {
+            const timelineList = $('#timeline-list')
+            news.forEach(function (item) {
+                const timelineItem = renderTimeline(item);
+                timelineList.append(timelineItem);
+            })
+        }

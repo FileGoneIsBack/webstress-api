@@ -5,7 +5,7 @@ import (
 	"time"
 )
 func (conn *Instance) NewBlacklist(host string) error {
-    stmt, err := conn.conn.Prepare("INSERT INTO `blacklist` (`host`) VALUES (?)")
+    stmt, err := conn.conn.Prepare("INSERT INTO `blacklists` (`host`) VALUES (?)")
     if err != nil {
         logger.Println("NewNews(): error preparing SQL statement:", err)
         return err
@@ -20,6 +20,24 @@ func (conn *Instance) NewBlacklist(host string) error {
 
     return nil
 }
+
+func (conn *Instance) RemoveBlacklist(host string) error {
+    stmt, err := conn.conn.Prepare("DELETE FROM `blacklists` WHERE `host` = ?")
+    if err != nil {
+        logger.Println("RemoveBlacklist(): error preparing SQL statement:", err)
+        return err
+    }
+    defer stmt.Close()
+
+    _, err = stmt.Exec(host)
+    if err != nil {
+        logger.Println("RemoveBlacklist(): error executing SQL statement:", err)
+        return err
+    }
+
+    return nil
+}
+
 
 func (conn *Instance) GetAllBlacklists() ([]string, error) {
     var blacklists []string

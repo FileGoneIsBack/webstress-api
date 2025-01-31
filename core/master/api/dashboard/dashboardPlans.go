@@ -22,6 +22,7 @@ func init() {
 				Duration int    `json:"duration"`
 				Conns    int    `json:"concurrents"`
 				API      bool   `json:"api"`
+				VIP      bool   `json:"vip"`
 				Expiry   int    `json:"expiry"`
 				Price    int    `json:"price"`
 			}
@@ -39,6 +40,7 @@ func init() {
 					Duration: plan.Duration,
 					Conns:    plan.Conns,
 					API:      plan.API,
+					VIP:      plan.VIP,
 					Expiry:   plan.Expiry,
 					Price:    plan.Price,
 				})

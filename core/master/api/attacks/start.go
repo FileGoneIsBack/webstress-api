@@ -10,7 +10,6 @@ import (
 	"api/core/models/servers"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
@@ -27,9 +26,11 @@ func init() {
 			Message string `json:"message"`
 			Attacks []int  `json:"attack_ids"`
 		}
+		errChan := make(chan error)
 		handleError := func(message string) {
 			json.NewEncoder(w).Encode(status{Status: "error", Message: message})
 		}
+		blacklists, _ := database.Container.GetAllBlacklists()
 		validateTarget := func(target string) bool {
 			// Check if the target is an IPv4 address
 			if net.ParseIP(target) != nil {
@@ -84,7 +85,10 @@ func init() {
 				handleError("Invalid target provided")
 				return
 			}
-
+			if isTargetInBlacklist(target, blacklists) {
+				handleError("Invalid target provided, target is blacklist!")
+				return
+			}
 			flood := floods.New(data["method"])
 			if flood == nil {
 				handleError("Invalid attack method provided!")
@@ -193,6 +197,10 @@ func init() {
 				handleError("Invalid target provided")
 				return
 			}
+			if isTargetInBlacklist(target, blacklists) {
+				handleError("Invalid target provided, target is blacklist!")
+				return
+			}
 			flood := floods.New(r.PostFormValue("method"))
 			if flood == nil {
 				json.NewEncoder(w).Encode(status{Status: "error", Message: "invalid attack method provided!"})
@@ -216,6 +224,7 @@ func init() {
 					return
 				}
 				conns = conncurrents
+				flood.Conns = conncurrents
 			}
 			if ok := r.PostFormValue("threads"); ok != "" {
 				val := strings.Split(r.PostFormValue("threads"), ".")[0]
@@ -238,11 +247,10 @@ func init() {
 			duration, err := strconv.Atoi(r.PostFormValue("duration"))
 			if err != nil || duration <= 0 || duration > user.Duration {
 				handleError("Invalid attack duration provided or exceeds maximum allowed!")
-				log.Println(err)
 				return
 			}
 			flood.Duration = duration
-		
+
 			port, err := strconv.Atoi(r.PostFormValue("port"))
 			if err != nil || port < 0 || port > 65535 {
 				handleError("Invalid destination port provided!")
@@ -268,11 +276,24 @@ func init() {
 					json.NewEncoder(w).Encode(status{Status: "error", Message: "database error occured!"})
 					return
 				}
-
-				servers.Distribute(flood)
+				go func() {
+					errChan <- servers.Distribute(flood)
+				}()
+				err = <-errChan
+					if err != nil {
+						json.NewEncoder(w).Encode(status{Status: "error", Message: err.Error()})
+						return
+					}
 				ids = append(ids, id)
 			}
-			go apis.Send(flood)
+			go func() {
+				errChan <- apis.Send(flood)
+			}()
+			err = <-errChan
+			if err != nil {
+				json.NewEncoder(w).Encode(status{Status: "error", Message: err.Error()})
+				return
+			}
 			functions.WriteJson(w, status{Status: "success", Message: "attack succesfully started", Attacks: ids})
 		}
 
@@ -280,24 +301,33 @@ func init() {
 }
 
 func Copy(source interface{}, destin interface{}) {
-    srcValue := reflect.ValueOf(source)
-    destValue := reflect.ValueOf(destin)
+	srcValue := reflect.ValueOf(source)
+	destValue := reflect.ValueOf(destin)
 
-    // Ensure destin is a pointer
-    if destValue.Kind() != reflect.Ptr {
-        panic("destin must be a pointer")
-    }
+	// Ensure destin is a pointer
+	if destValue.Kind() != reflect.Ptr {
+		panic("destin must be a pointer")
+	}
 
-    // Get the element value of source
-    if srcValue.Kind() == reflect.Ptr {
-        srcValue = srcValue.Elem()
-    }
+	// Get the element value of source
+	if srcValue.Kind() == reflect.Ptr {
+		srcValue = srcValue.Elem()
+	}
 
-    // Ensure destin points to a value of the same type as source
-    if srcValue.Type() != destValue.Elem().Type() {
-        panic("source and destin must be of the same type")
-    }
+	// Ensure destin points to a value of the same type as source
+	if srcValue.Type() != destValue.Elem().Type() {
+		panic("source and destin must be of the same type")
+	}
 
-    // Set the value of destin
-    destValue.Elem().Set(srcValue)
+	// Set the value of destin
+	destValue.Elem().Set(srcValue)
+}
+
+func isTargetInBlacklist(target string, blacklists []string) bool {
+	for _, host := range blacklists {
+		if host == target {
+			return true
+		}
+	}
+	return false
 }

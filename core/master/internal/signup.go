@@ -12,6 +12,8 @@ import (
 	"html/template"
 	"io"
 	"math/rand"
+	"regexp"
+	"net/url"
 	"net"
 	"net/http"
 	"strconv"
@@ -109,10 +111,15 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	username := GetBodyData(data[0])
-	password := GetBodyData(data[1])
-	cpassword := GetBodyData(data[2])
-	captcha := GetBodyData(data[4])
-	tos := GetBodyData(data[5])
+	password, err := url.QueryUnescape(GetBodyData(data[1]))
+	if err != nil {
+		fmt.Println("Error during URL decoding:", err)
+	}
+	fmt.Println("Decoded password:", password)
+	cpassword, _ := url.QueryUnescape(GetBodyData(data[2]))
+	auth	 := GetBodyData(data[4])
+	captcha := GetBodyData(data[5])
+	tos := GetBodyData(data[6])
 
 	// Validate form data
 	if err := validateSignupData(username, password, cpassword, tos); err != nil {
@@ -128,11 +135,22 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	delete(captchas, ip)
 
 	// Check if user already exists
+_, exp, err := database.Container.GetInvite(auth, username)
+if err != nil {
+    // Convert the error to a string using err.Error()
+    renderErrorPage(w, r, err.Error())
+    return
+}
 	user, err := database.Container.GetUser(username)
 	if err != nil && !errors.Is(err, database.ErrUserNotFound) {
 		renderDatabaseErrorPage(w, r, "Error retrieving user from database.")
 		return
 	}
+	if time.Now().After(exp) {
+		renderErrorPage(w, r, "token expired")
+		return
+	}
+
 
 	if user != nil {
 		renderErrorPage(w, r, "User already exists.")
@@ -140,18 +158,21 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Create new user
-	err = database.Container.NewUser(&database.User{
+	user = &database.User{
 		Username:    username,
 		Key:         []byte(password),
 		Membership: "Free",
 		Ranks: []*ranks.Rank{
 			ranks.GetRole("member", true),
 		},
-		Concurrents: 1,
-		Servers:     0,
-		Duration:    120,
-		Expiry:      -1,
-	})
+	}
+	if models.Config.FreeUser.Enabled1 {
+		user.Concurrents = 1
+		user.Servers = 0
+		user.Duration = 120
+		user.Expiry = -1
+	}
+	err = database.Container.NewUser(user)
 	if err != nil {
 		renderDatabaseErrorPage(w, r, "Error creating new user in database.")
 		return
@@ -203,15 +224,20 @@ func validateSignupData(username, password, cpassword, tos string) error {
 	if len(username) < 4 {
 		return errors.New("username must be at least 4 characters")
 	}
-
+	usernameRe := regexp.MustCompile(`^[a-zA-Z0-9!@#$_-]+$`)
+	if !usernameRe.MatchString(username) {
+		return fmt.Errorf("username can only contain letters & numbers")
+	}
 	if len(password) < 8 {
 		return errors.New("password must be at least 8 characters")
 	}
-
+	passwordRe := regexp.MustCompile(`^[a-zA-Z0-9!@#$_-]+$`)
+	if !passwordRe.MatchString(password) {
+		return fmt.Errorf("password can only contain letters, numbers, and !@#$_-")
+	}
 	if password != cpassword {
 		return errors.New("passwords do not match")
 	}
-
 	if tos != "on" {
 		return errors.New("you must agree to the terms of service")
 	}

@@ -8,12 +8,13 @@ import (
 	"api/core/models/server"
 	"api/core/models/servers"
 	"fmt"
-	"log"
 	"math/rand"
 	"net/http"
 	"strings"
 )
+
 var layer7Total = 0
+
 func init() {
 	Route.NewSub(server.NewRoute("/data", func(w http.ResponseWriter, r *http.Request) {
 		if strings.ToLower(r.Method) == "post" {
@@ -27,10 +28,12 @@ func init() {
 				ID             int     "json:\"id\""
 				Name           string  "json:\"name\""
 				Type           string  "json:\"type\""
+				ResponseTime   float64 "json:\"responsetime\""
 				Slots          int     "json:\"slots\""
 				Status         string  "json:\"status\""
 				RunningAttacks int     "json:\"runningAttacks\""
-				Load           float64 "json:\"load\""		
+				Load           float64 "json:\"load\""
+				Methods        []string  "json:\"methods\""
 			}
 			type Data struct {
 				UserInfo struct {
@@ -59,7 +62,6 @@ func init() {
 			d := new(Data)
 			news, err := database.Container.GetNews()
 			if err != nil {
-				log.Println(err)
 				return
 			}
 			d.UserInfo = struct {
@@ -123,23 +125,27 @@ func init() {
 							Slots:          server.Slots,
 							Status:         "Online",
 							Type:           "Layer4",
+							ResponseTime: 	server.ResponseTime,
 							RunningAttacks: server.Running(),
 							Load:           server.Load(),
+							Methods:        server.Methods,
 						})
 					}
 				}
 				for _, api := range apis.Apis {
 					if api.Type == "Layer4" {
-					servs = append(servs, serverStruct{
-						ID:             i,
-						Name:           api.Name,
-						Slots:          api.Slots,
-						Status:         "Online",
-						Type:           "Layer4",
-						RunningAttacks: api.Running(),
-						Load:           api.Load(),
-					})
-				 }
+						servs = append(servs, serverStruct{
+							ID:             i,
+							Name:           api.Name,
+							Slots:          api.Slots,
+							Status:         "Online",
+							Type:           "Layer4",
+							ResponseTime: 	-1,
+							RunningAttacks: api.Running(),
+							Load:           api.Load(),
+							Methods:        mapKeysToSlice(api.Methods),
+						})
+					}
 				}
 				return servs
 			}()
@@ -153,24 +159,28 @@ func init() {
 							Name:           server.Name,
 							Slots:          server.Slots,
 							Status:         "Online",
-							Type:			"Layer7",
+							Type:           "Layer7",
+							ResponseTime:	server.ResponseTime,
 							RunningAttacks: server.Running(),
 							Load:           server.Load(),
+							Methods:        server.Methods,
 						})
 					}
 				}
 				for _, api := range apis.Apis {
 					if api.Type == "Layer7" {
-					servs = append(servs, serverStruct{
-						ID:             i,
-						Name:           api.Name,
-						Slots:          api.Slots,
-						Status:         "Online",
-						Type:			"Layer7",
-						RunningAttacks: api.Running(),
-						Load:           api.Load(),
-					})
-				 }
+						servs = append(servs, serverStruct{
+							ID:             i,
+							Name:           api.Name,
+							Slots:          api.Slots,
+							Status:         "Online",
+							Type:           "Layer7",
+							ResponseTime: 	-1,
+							RunningAttacks: api.Running(),
+							Load:           api.Load(),
+							Methods:        mapKeysToSlice(api.Methods),
+						})
+					}
 				}
 				return servs
 			}()
@@ -180,4 +190,12 @@ func init() {
 			w.WriteHeader(404)
 		}
 	}))
+}
+
+func mapKeysToSlice(m map[string]string) []string {
+    keys := make([]string, 0, len(m))
+    for key := range m {
+        keys = append(keys, key)
+    }
+    return keys
 }

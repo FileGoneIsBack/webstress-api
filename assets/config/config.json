@@ -1,22 +1,39 @@
 {
-    "name": "Demo Website Made By File",
-    "domain": "http://frosted.dev/",
-    "secure": true,
-    "version": "2.5.5",
-    "cert": "assets/cert.pem",
-    "key": "assets/key.pem",
+    "name": "House API",
+    "domain": "https://ieatpackets.lol/",
+    "secure": false,
+    "version": "3.1.0 (client update!)",
+    "cert": "",
+    "key": "",
     "autobuy":{
-        "key":"testkey",
-        "email": "test@test.com",
-        " - comment - ":"https://dashboard.sellix.io/settings/security API Key."
+        "key":"NCGZ6oRPn4Eu84ErjC9EGsQBqyiSK998FpG5CLzIBHZjhnICmFoBR3YMmoDgYfxW",
+        "email": "notroristreeter@gmail.com",
+        " - comment - ":"https://dashboard.sellix.io/settings/security API Key. must add btc addy at least before work"
     },
+    "freeuser": {
+        "enabled": false,
+        "concurrents": "10",
+        "duration": "30m"
+      },
     "fake":{
-        "users": 100,
-        "attacks": 100
+        "users": 2,
+        "attacks": 28
     },
     "cnc":{
-        "enabled": true,
+        "enabled": false,
         "ssh": "1337",
         "telnet": "1447"
+    },
+    "methods":{
+        "subnet1":"UDP",
+        "subnet2":"TCP",
+        "subnet3":"BYPASS",
+        "subnet4":"GAME",
+        "subnet5":"LAYER7",
+        "subnet6":"RAW",
+        "subnet7":"SPOOFED",
+        "subnet8":"",
+        "subnet9":"",
+        " - comment - ":"each subnet is a group name inside the panel and how we sort methods `subnet`:`1` would be subnet1 in methods config"
     }
 }

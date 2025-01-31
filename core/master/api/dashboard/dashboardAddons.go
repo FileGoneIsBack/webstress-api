@@ -13,6 +13,7 @@ func init() {
 		if strings.ToLower(r.Method) == "post" {
 			type Addons struct {
 				Name     string  `json:"name"`
+				Text     string  `json:"text"`
 				Value    int     `json:"value"`
 				Expiry   int     `json:"expiry"`
 				Price    int	 `json:"price"`
@@ -28,6 +29,7 @@ func init() {
 			for Name, plan := range plans.Addons {
 				a.Addons = append(a.Addons, &Addons{
 					Name:     Name,
+					Text:	  plan.Text,
 					Expiry:   plan.Expiry,
 					Value:	  plan.Value,
 					Price:    plan.Price,

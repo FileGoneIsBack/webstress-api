@@ -4,6 +4,7 @@
             "duration": 120,
             "concurrents": 1,
             "api": true,
+            "vip": true,
             "expiry": 31,
             "price": 20,
             "fiat": "USD"
@@ -12,6 +13,7 @@
             "duration": 300,
             "concurrents": 2,
             "api": true,
+            "vip": true,
             "expiry": 31,
             "price": 45,
             "fiat": "USD"
@@ -20,6 +22,7 @@
             "duration": 500,
             "concurrents": 4,
             "api": true,
+            "vip": false,
             "expiry": 31,
             "price": 70,
             "fiat": "USD"
@@ -28,6 +31,7 @@
             "duration": 120,
             "concurrents": 2,
             "api": false,
+            "vip": false,
             "expiry": 31,
             "price": 15,
             "fiat": "USD"
@@ -36,6 +40,7 @@
             "duration": 200,
             "concurrents": 3,
             "api": false,
+            "vip": false,
             "expiry": 31,
             "price": 40,
             "fiat": "USD"
@@ -44,6 +49,7 @@
             "duration": 300,
             "concurrents": 4,
             "api": false,
+            "vip": false,
             "expiry": 31,
             "price": 65,
             "fiat": "USD"
@@ -52,6 +58,7 @@
             "duration": 54000,
             "concurrents": 1,
             "api": false,
+            "vip": false,
             "expiry": 31,
             "price": 25,
             "fiat": "USD"
@@ -62,22 +69,46 @@
             "price":20,
             "fiat":"USD",
             "upgrade":"api",
+            "text":"Unlock API Access",
             "value":1,
             "expiry":31
+            ,"type":"rank"
         },
         "vip":{
             "price":20,
             "fiat":"USD",
             "upgrade":"vip",
+            "text":"Unlock VIP Access",
             "value":1,
-            "expiry":31
+            "expiry":31,
+            "type":"rank"
         },
         "cnc":{
             "price":10,
             "fiat":"USD",
             "upgrade":"cnc",
+            "text":"Unlock CNC Access",
             "value":1,
-            "expiry":31
+            "expiry":31,
+            "type":"rank"
+        },
+        "time":{
+            "price":10,
+            "fiat":"USD",
+            "upgrade":"time",
+            "text":"Add 100 Sec too plan",
+            "value":100,
+            "expiry":31,
+            "type":"rank"
+        },
+        "concurrents":{
+            "price":10,
+            "fiat":"USD",
+            "upgrade":"time",
+            "text":"Add 1 Conn to plan",
+            "value":1,
+            "expiry":31,
+            "type":"rank"
         }
     },
     "limits":{

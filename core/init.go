@@ -8,8 +8,8 @@ import (
 	"api/core/models/servers"
 	"api/modules/goconfig"
 	"encoding/json"
-	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 )
 
@@ -17,6 +17,7 @@ var (
 	Options = &goconfig.Options{
 		Config: goconfig.NewConfig(),
 	}
+	logger  = log.New(os.Stderr, "[init] ", log.Ltime|log.Lshortfile)
 	Vers string = models.Config.Vers
 )
 
@@ -43,14 +44,14 @@ func Initialize() {
 			plans.Plans = plans.GeneralConfig.Plans
 			plans.Addons = plans.GeneralConfig.Addons
 			plans.LimitsConfig = plans.LimitsConfig
-			fmt.Println(plans.Plans)
+			logger.Println(plans.Plans)
 			return nil
 		case filepath.Join("assets/config", "apis.json"):
 			apis.Apis = make(map[string]*apis.Api)
 			json.Unmarshal(content, &apis.Apis)
 			return nil
 		default:
-			fmt.Println(file, m, string(content))
+			logger.Println(file, m, string(content))
 			return json.Unmarshal(content, &m)
 		}
 	})
@@ -60,13 +61,13 @@ func Initialize() {
 
 	err := Options.Config.Parse("assets")
 	if err != nil {
-		log.Println(err)
+		logger.Println(err)
 		return
 	}
 
 	Options, err = Options.Config.Options()
 	if err != nil {
-		log.Println(err)
+		logger.Println(err)
 		return
 	}
 	return

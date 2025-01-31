@@ -1,79 +1,123 @@
 {
-    "HOME":{
-        "type":1,
-        "name":"HOME (HOME)",
-        "description":"",
-        "subnet":1,
-        "mtype":1
+    "HOLD": {
+        "type": 1,
+        "name": "HOLD (Amplification)",
+        "description": "",
+        "subnet": 1,
+        "mtype": 1,
+        "vip": false
     },
-    "SOCKET":{
-        "type":1,
-        "name":"SOCKET (BYPASS)",
-        "description":"",
-        "subnet":1,
-        "mtype":1
+    "TEST": {
+        "type": 1,
+        "name": "TEST",
+        "description": "",
+        "subnet": 1,
+        "mtype": 1,
+        "vip": false
     },
-    "GUDP":{
-        "type":1,
-        "name":"GUDP (BYPASS)",
-        "description":"",
-        "subnet":1,
-        "mtype":1
+    "TCP-SYN": {
+        "type": 1,
+        "name": "TCP-SYN (Amplification)",
+        "description": "",
+        "subnet": 1,
+        "mtype": 1,
+        "vip": true
     },
-    "OVH":{
-        "type":1,
-        "name":"OVH (BYPASS)",
-        "description":"",
-        "subnet":1,
-        "mtype":1
+    "WEB": {
+        "type": 1,
+        "name": "WEB (Proxied)",
+        "description": "",
+        "subnet": 1,
+        "mtype": 1,
+        "vip": true
     },
-    "TCP BYPASS":{
-        "type":1,
-        "name":"TCP (Bypass)",
-        "description":"Amplification vector using TCP servers",
-        "subnet":1,
-        "mtype":1
+    "ACK": {
+        "type": 1,
+        "name": "ACK (Spoofed)",
+        "description": "ACK (Spoofed)",
+        "subnet": 2,
+        "mtype": 2,
+        "vip": true
     },
-    "UDP BYPASS":{
-        "type":1,
-        "name":"UDP (High Gbit Bypass)",
-        "description":"Amplification vector using UDP servers",
-        "subnet":1,
-        "mtype":1
+    "SYN": {
+        "type": 1,
+        "name": "SYN (Spoofed)",
+        "description": "",
+        "subnet": 1,
+        "mtype": 1,
+        "vip": true
     },
-    "GAME":{
-        "type":1,
-        "name":"GAME (TCP Game Servers)",
-        "description":"Amplification vector, great for game servers",
-        "subnet":1,
-        "mtype":1
+    "SOCKET": {
+        "type": 1,
+        "name": "SOCKET (Proxied)",
+        "description": "",
+        "subnet": 3,
+        "mtype": 1,
+        "vip": true
     },
-    "HTTPS":{
-        "type":1,
-        "name":"HTTPS (Layer 7)",
-        "description":"Layer 7, good for web targets",
-        "subnet":1,
-        "mtype":1
+    "UDPBYPASS": {
+        "type": 1,
+        "name": "UDPBYPASS (Spoofed)",
+        "description": "",
+        "subnet": 1,
+        "mtype": 1,
+        "vip": true
     },
-    "TLS":{
-        "type":1,
-        "name":"TLS (Layer 7)",
-        "description":"Layer 7, good for web targets",
-        "subnet":1,
-        "mtype":1
-        },
-    "BROWSER":{
-        "type":1,
-        "name":"BROWSER (Layer 7)",
-        "description":"Layer 7, good for web targets",
-        "subnet":1,
-        "mtype":1
-                },
-    "HOLD":{
-        "type":1,
-        "name":"HOLD (HOME HOLD)",
-        "description":"Layer 4, Home Hold Flood",
-        "subnet":1,
-        "mtype":1
+    "SOCKS-DATA": {
+        "type": 1,
+        "name": "SOCKS-DATA (Proxied/Spoofed)",
+        "description": "",
+        "subnet": 5,
+        "mtype": 1,
+        "vip": true
+    },
+    "TFO": {
+        "type": 1,
+        "name": "TFO (Proxied/Spoofed)",
+        "description": "",
+        "subnet": 5,
+        "mtype": 1,
+        "vip": true
+    },
+    "TLS": {
+        "type": 2,
+        "name": "TLS (Proxied/L7)",
+        "description": "",
+        "subnet": 5,
+        "mtype": 2,
+        "vip": true
+    },
+    "PPS": {
+        "type": 1,
+        "name": "PPS (Spoofed/Raw)",
+        "description": "PPS (Spoofed/Raw)",
+        "subnet": 1,
+        "mtype": 1,
+        "vip": true
+    },
+    "RAPID": {
+        "type": 2,
+        "name": "RAPID (Proxied/L7)",
+        "description": "",
+        "subnet": 5,
+        "mtype": 2,
+        "vip": true
+   
+    },
+    "CF": {
+        "type": 2,
+        "name": "CF (Proxied/L7)",
+        "description": "",
+        "subnet": 5,
+        "mtype": 2,
+        "vip": true
+    },
+    "KILL": {
+        "type": 2,
+        "name": "KILL (Proxied/L7)",
+        "description": "",
+        "subnet": 5,
+        "mtype": 2,
+        "vip": true
     }
 }

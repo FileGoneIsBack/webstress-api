@@ -5,13 +5,12 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 )
 
 func (user *User) Sync() error {
 	ranks, err := base64.RawStdEncoding.DecodeString(user.ranks)
 	if err != nil {
-		log.Println("failed to sync users ranks", err)
+		logger.Println("failed to sync users ranks", err)
 		return err
 	}
 	var permissions []*rranks.Rank
@@ -23,9 +22,6 @@ func (user *User) Sync() error {
 	}
 	return nil
 }
-
-
-
 
 func (user *User) UpdateRoles(name string, role *rranks.Rank, has bool) error {
 	if user.HasPermission(name) && has {
@@ -46,7 +42,7 @@ func (user *User) UpdateRoles(name string, role *rranks.Rank, has bool) error {
 	}
 	r, err := json.Marshal(user.Ranks)
 	if err != nil {
-		log.Println(err)
+		logger.Println(err)
 		return err
 	}
 	fmt.Println(string(r))
@@ -81,7 +77,7 @@ func (user *User) HasRoles(roles []string) bool {
 func (user *User) NewRoles() string {
 	r, err := json.Marshal(user.Ranks)
 	if err != nil {
-		log.Println(err)
+		logger.Println(err)
 		return ""
 	}
 	fmt.Println(string(r))

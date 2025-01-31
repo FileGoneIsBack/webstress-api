@@ -6,7 +6,6 @@ function handleErrors(xhr, status, error) {
 (function() {
     loadTickets();
 
-    // Function to render ticket cards
     function renderTickets(tickets) {
         console.log('Rendering tickets:', tickets);
         var ticketContainer = document.getElementById('ticketContainer');
@@ -48,7 +47,7 @@ function handleErrors(xhr, status, error) {
 
     function ticketData(data) {
         console.log('Tickets:', data.tickets);
-        renderTickets(data.tickets); // Pass only the tickets array to renderTickets
+        renderTickets(data.tickets); 
     }
 })();
 

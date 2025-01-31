@@ -54,35 +54,42 @@ function startAttack() {
 function loadMethods() {
     var methodSelect = document.getElementById("method");
 
-    $.post('/api/dashboard/user_id', function (data) {
-        var json = $.parseJSON(data);
-        console.log
-        console.log("data2", json);
-        
-        if (json.user_membership === "Free") {
-            // If user membership is "Free", display only one method
-            var option = document.createElement("option");
-            option.value = Free;
-            option.text = Free;
-            console.log(option);
-            methodSelect.appendChild(option);
-        }
-    }).fail(handleErrors);
+    // Clear the select dropdown before populating
+    methodSelect.innerHTML = '';
 
     $.post('/api/attacks/methods', function (response) {
         var json = $.parseJSON(response);
+        
         if (json.status == "success") {
             console.log(json.methods);
-            if (json.user_membership !== "Free") {
-                // If user membership is not "Free", display all available methods
-                for (var i = 0; i < json.methods.length; i++) {
-                    var option = document.createElement("option");
-                    option.value = json.methods[i].method;
-                    option.text = json.methods[i].panel_method;
-                    console.log(option);
-                    methodSelect.appendChild(option);
+
+            // Create an object to store optgroup elements dynamically based on subnet
+            var subnets = {};
+
+            // Loop through each method and group them by subnet
+            for (var i = 0; i < json.methods.length; i++) {
+                var method = json.methods[i];
+
+                // If an optgroup for the subnet doesn't exist, create one
+                if (!subnets[method.subnet]) {
+                    subnets[method.subnet] = document.createElement("optgroup");
+                    subnets[method.subnet].label = method.subnet; // Set label to the subnet name
                 }
+
+                // Create an option element for each method
+                var option = document.createElement("option");
+                option.value = method.method;
+                option.text = method.panel_method;
+
+                // Append the option to the corresponding subnet group
+                subnets[method.subnet].appendChild(option);
             }
+
+            // Append each optgroup to the select dropdown
+            for (var subnet in subnets) {
+                methodSelect.appendChild(subnets[subnet]);
+            }
+
         } else if (json.status == "error") {
             toastr['warning'](response.message, 'Attacks', { "toastClass": "toast-dark" });
         }

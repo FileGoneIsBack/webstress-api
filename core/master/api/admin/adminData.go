@@ -6,6 +6,7 @@ import (
 	"api/core/models/functions"
 	"api/core/models/plans"
 	"api/core/models/server"
+	"api/core/models/servers"
 	"net/http"
 	"strings"
 )
@@ -29,13 +30,18 @@ func init() {
 				Username string `json:"username"`
 				ID       int    `json:"id"`
 			}
+			type serverInfo struct {
+				Name    string   `json:"name"`
+				Methods []string `json:"methods"`
+			}
 			type Data struct {
-				UserCount          int     `json:"userCount"`
-				AttackCount        int     `json:"dailyAttackCount"`
-				RunningAttackCount int     `json:"runningAttackCount"`
-				ProfitCount        int     `json:"profitCount"`
-				Users              []*user `json:"users"`
-				Plans              []*plan `json:"plans"`
+				UserCount          int            `json:"userCount"`
+				AttackCount        int            `json:"dailyAttackCount"`
+				RunningAttackCount int            `json:"runningAttackCount"`
+				ProfitCount        int            `json:"profitCount"`
+				Users              []*user        `json:"users"`
+				Plans              []*plan        `json:"plans"`
+				Servers            []serverInfo   `json:"servers"`  // New field for methods per server
 			}
 			d := new(Data)
 			d.UserCount = database.Container.Users()
@@ -59,6 +65,18 @@ func init() {
 					p = append(p, &plan{Name: name})
 				}
 				return p
+			}()
+
+			// Fetch server methods
+			d.Servers = func() []serverInfo {
+				var serversInfo []serverInfo
+				for _, srv := range servers.Servers {  // Assuming 'server.Servers' contains all the servers
+					serversInfo = append(serversInfo, serverInfo{
+						Name:    srv.Name,
+						Methods: srv.Methods,
+					})
+				}
+				return serversInfo
 			}()
 
 			functions.WriteJson(w, d)

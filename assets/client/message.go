@@ -14,6 +14,12 @@ type Message struct {
 	Content   []byte `json:"mcontent"`
 }
 
+type MethodsMessage struct {
+    ID        int      `json:"mmid"`
+    MessageID int      `json:"messageid"`
+    Methods   []string `json:"methods"`
+}
+
 type AttackMessage struct {
 	ID        int `json:"mmid"`
 	MessageID int `json:"messageid"`
@@ -53,7 +59,6 @@ func ReadMessage(conn net.Conn) (*Message, error) {
 	if err != nil || n != 1 {
 		return nil, err
 	}
-	logger.Println("New message incoming (length=" + fmt.Sprint(length[0]) + ")")
 	buf := make([]byte, length[0])
 	n, err = conn.Read(buf)
 	if err != nil || n < 0 {
@@ -66,9 +71,10 @@ func ReadMessage(conn net.Conn) (*Message, error) {
 		return nil, err
 	}
 	err = json.Unmarshal(decoded, &m)
-	//fmt.Println(string(decoded))
-	if err != nil {
-		logger.Println(err)
+	if string(m.Content) == "ping!" {
+		
+	} else {
+		logger.Println("Decoded mcontent:", string(m.Content))
 	}
 	CurrentID++
 	return m, nil
@@ -101,4 +107,32 @@ func ReadAttack(conn net.Conn) (*AttackMessage, error) {
 	}
 	CurrentID++
 	return m, nil
+}
+
+func NewMethodsMessage(ID int, methods []string) (*MethodsMessage, []byte) {
+	CurrentID++
+	logger.Printf("Creating MethodsMessage with methods: %v", methods)
+
+	m := &MethodsMessage{
+		ID:        ID,
+		MessageID: CurrentID,
+		Methods:   methods,
+	}
+	
+	// Marshal the message to JSON
+	bytes, err := json.Marshal(m)
+	if err != nil {
+		logger.Println("error while encoding methods message:", err)
+		return nil, nil
+	}
+	
+	// Log the JSON before encoding to base64
+	logger.Printf("JSON encoded methods message: %s", string(bytes))
+
+	// Encode to base64
+	msg := base64.RawStdEncoding.EncodeToString(bytes)
+	
+	// Log the base64 message
+	logger.Printf("Base64 encoded methods message: %s", msg)
+	return m, []byte(msg)
 }

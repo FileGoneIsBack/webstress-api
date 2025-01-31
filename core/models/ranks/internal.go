@@ -5,6 +5,10 @@ var Internal = map[string]*Rank{
 		Name:        "admin",
 		Description: "network administrator/maintainer",
 	},
+	"basic": {
+		Name:        "basic",
+		Description: "basic User",
+	},
 	"vip": {
 		Name:        "vip",
 		Description: "VIP User",

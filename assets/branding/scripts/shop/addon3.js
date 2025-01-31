@@ -34,7 +34,7 @@ function buyPlan(type) {
     var i = 0;
 
     function renderAddon(addon) {
-        if (i < 4) {
+        if (i < 3) {
             var container = document.querySelector('.addons-list');
             var myDiv = document.createElement("div");
             myDiv.className = "col-lg mb-md-0 mb-4";
@@ -50,11 +50,38 @@ function buyPlan(type) {
                         <sub class="h6 pricing-duration mt-auto mb-2 text-muted fw-normal">/${addon.expiry}d</sub>
                     </div>
                 </div>
+                <ul class="ps-3 my-4 pt-2">
+                    <li class="mb-2">${addon.text}</li>
+                </ul>
                 <button class="btn btn-primary btn-md waves-effect waves-light" type="submit" onclick="buyPlan('${addon.name}')">Upgrade</button>
             </div>
         </div>
     `;
             container.appendChild(myDiv);
+        } else if (i >= 3) {
+            var container = document.querySelector('.addons-list2');
+            var myDiv = document.createElement("div");
+            myDiv.className = "col-lg mb-md-0 mb-4";
+            myDiv.innerHTML = `
+        <div class="card border rounded shadow-none">
+            <div class="card-body">
+                <h3 class="card-title text-center text-capitalize mb-1"></h3>
+                <p class="text-center">${addon.name}</p>
+                <div class="text-center">
+                    <div class="d-flex justify-content-center">
+                        <sup class="h6 pricing-currency mt-3 mb-0 me-1 text-primary">$</sup>
+                        <h1 class="display-4 mb-0 text-primary">${addon.price}</h1>
+                        <sub class="h6 pricing-duration mt-auto mb-2 text-muted fw-normal">/${addon.expiry}d</sub>
+                    </div>
+                </div>
+                <ul class="ps-3 my-4 pt-2">
+                    <li class="mb-2">${addon.text}</li>
+                </ul>
+                <button class="btn btn-primary btn-md waves-effect waves-light" type="submit" onclick="buyPlan('${addon.name}')">Upgrade</button>
+            </div>
+        </div>
+    `;
+    container.appendChild(myDiv);
         }
         i++;
     }

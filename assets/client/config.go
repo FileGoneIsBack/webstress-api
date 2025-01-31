@@ -10,9 +10,12 @@ var (
 )
 
 type conf struct {
-	Name  string `json:"name"`
-	Slots string `json:"slots"`
-	Type  string `json:"type"`
+	Name   	 string `json:"name"`
+	Slots  	 string `json:"slots"`
+	Type   	 string `json:"type"`
+	Key	     string `json:"key"`
+	Master 	 string `json:"master"`
+	MThread  int `json:"maxthreads"`
 }
 
 func Load() {
