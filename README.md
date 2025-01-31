@@ -60,24 +60,26 @@ export CGO_ENABLED=1
 go build api
 ./api
 ```
-========== (updateV3.1)
-connecting a server
+
+# connecting a server (updateV3.1)
 
 1. download client files from assets/client
 2. install client files to server
 3. install golang to server (follow parts of tut before...)
 4. go build . 
 
-Client setup
-make sure key matches website server.json key value
-make sure methods are correct w the site 
+5a. Client setup
+- make sure key matches website server.json key value
+- make sure methods are correct w the site 
 
-Website setup
-make sure key is secure password 
-white list servers to connect in servers.json
+5b. Website setup
+- make sure key is secure password 
+- white list servers to connect in servers.json
 
-5. ./client and they should connect, the server should send the methdos to the website to confirm matching funnel
+6. ./client and they should connect, the server should send the methdos to the website to confirm matching funnel
+   
 ==========
+
 also added more admin options, fixed panel, updated error logs/sending notis, and much more ;)
 
 Note: I've never used this source; this is something I made in my free time. I don't partake in these shitty activities, but use at your own risk and legally on your own networks.
