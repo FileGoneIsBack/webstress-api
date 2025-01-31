@@ -3,13 +3,8 @@
 ## Overview
 
 This is a simple webstresser in golang using my https handle and serve (https://github.com/FileGoneIsBack/Golang-HTTPS-Handler)
-this uses api and raw server connections (i will not be dropping the client files uncompiled thats something your gonna need to trust or remake)
+this uses api and raw server connections 
 
-## Prerequisites
-
-1. **Go Programming Language**: You need Go installed to build and run the application.
-2. **GCC Compiler**: Required for building Go applications with cgo.
-3. **Cloudflare Account**: Required to obtain SSL/TLS certificates for your domain.
 
 ## Installation
 
@@ -45,8 +40,8 @@ sudo apt-get install build-essential
 
 ### 4. Clone the repo
 ```
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
+git clone https://github.com/FileGoneIsBack/webstress-api
+cd webstress-api
 ```
 
 ### 5. Edit Files
@@ -65,3 +60,24 @@ export CGO_ENABLED=1
 go build api
 ./api
 ```
+========== (updateV3.1)
+connecting a server
+
+1. download client files from assets/client
+2. install client files to server
+3. install golang to server (follow parts of tut before...)
+4. go build . 
+
+Client setup
+make sure key matches website server.json key value
+make sure methods are correct w the site 
+
+Website setup
+make sure key is secure password 
+white list servers to connect in servers.json
+
+5. ./client and they should connect, the server should send the methdos to the website to confirm matching funnel
+==========
+also added more admin options, fixed panel, updated error logs/sending notis, and much more ;)
+
+Note: I've never used this source; this is something I made in my free time. I don't partake in these shitty activities, but use at your own risk and legally on your own networks.
