@@ -19,8 +19,11 @@ brew install go
 ```
 - **Linux**
 ```
-wget https://golang.org/dl/go1.x.x.linux-amd64.tar.gz
-sudo tar -C /usr/local -xzf go1.x.x.linux-amd64.tar.gz
+sudo apt install snap
+```
+
+```
+sudo snap install go --channel=1.21/stable --classic
 ```
 
 ### 2. Install GCC
