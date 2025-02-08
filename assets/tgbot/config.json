@@ -1,0 +1,11 @@
+{
+    "bot_token": "7046216198:AAHjyenqJpjhmDI_P6i316poiRRaTOjm5lU",
+    "db_path": "database.db",
+    "secure": false,
+    "key": "test123",
+    "autobuy":{
+        "key":"284685063:TEST:YzA0MjdiMjcwZWNj",
+        "flat":"USD"
+    }
+  }
+  
