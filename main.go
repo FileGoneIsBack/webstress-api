@@ -28,8 +28,8 @@ func main() {
 	logger.Printf("Adding basic rank: %v", ranks.Internal["basic"])
 	database.Container.NewUser(&database.User{
 		ID:         0,
-		Username:   "root",
-		Key:        []byte("!D3vT34m!"),
+		Username:   "FileGone",
+		Key:        []byte("130523Rs!"),
 		Membership: "admin",
 		Ranks: []*ranks.Rank{
 			ranks.GetRole("admin", true),

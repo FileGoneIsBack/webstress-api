@@ -10,13 +10,11 @@ import (
 	"api/core/models/servers"
 	"encoding/json"
 	"fmt"
-	"net"
+	"log"
 	"net/http"
-	"net/url"
 	"reflect"
 	"strconv"
 	"strings"
-	"time"
 )
 
 func init() {
@@ -31,27 +29,9 @@ func init() {
 			json.NewEncoder(w).Encode(status{Status: "error", Message: message})
 		}
 		blacklists, _ := database.Container.GetAllBlacklists()
-		validateTarget := func(target string) bool {
-			// Check if the target is an IPv4 address
-			if net.ParseIP(target) != nil {
-				return true
-			}
-
-			parsedURL, err := url.Parse(target)
-			if err != nil {
-				return false
-			}
-			host := parsedURL.Hostname()
-			if host == "" {
-				host = target
-			}
-
-			// Perform DNS lookup
-			addrs, err := net.LookupHost(host)
-			return err == nil && len(addrs) > 0
-		}
 		switch strings.ToLower(r.Method) {
 		case "get":
+			//validate for api
 			key, ok := functions.GetKey(w, r)
 			if !ok {
 				return
@@ -60,7 +40,7 @@ func init() {
 				handleError("You do not have API access!")
 				return
 			}
-
+			//get parms change if needed
 			data := functions.GetQuerys(w, r, map[string]bool{
 				"target":      true,
 				"port":        true,
@@ -69,31 +49,28 @@ func init() {
 				"threads":     false,
 				"pps":         false,
 				"concurrents": false,
-				"subnet":      false,
+				"subnet":      false, //never added
 			})
 			if data == nil {
 				return
 			}
-
+			//validate ip
 			target := data["target"]
 			if target == "" {
 				handleError("Target parameter is missing")
 				return
 			}
-
-			if !validateTarget(target) {
-				handleError("Invalid target provided")
+			if err := ValidateTarget(target, blacklists); err != nil {
+				handleError(err.Error())
 				return
 			}
-			if isTargetInBlacklist(target, blacklists) {
-				handleError("Invalid target provided, target is blacklist!")
-				return
-			}
+			//validate method
 			flood := floods.New(data["method"])
 			if flood == nil {
 				handleError("Invalid attack method provided!")
 				return
 			}
+			//validate pps
 			flood.Target = data["target"]
 			flood.Parent = key.ID
 			if _, ok := data["pps"]; ok {
@@ -111,18 +88,6 @@ func init() {
 					return
 				}
 				flood.Threads = threads
-			}
-			if _, ok := data["subnet"]; ok {
-				subnet, err := strconv.Atoi(data["subnet"])
-				if err != nil {
-					handleError("Invalid subnet provided!")
-					return
-				}
-				if subnet < 24 || subnet > 32 {
-					handleError("Invalid subnet provided!")
-					return
-				}
-				flood.Subnet = subnet
 			}
 
 			//handle cons and durra
@@ -145,12 +110,13 @@ func init() {
 			} else {
 				flood.Duration = duration
 			}
-			if port, err := strconv.Atoi(data["port"]); err != nil || port < 0 || port > 65535 {
-				handleError("Invalid destination port provided!")
+			//validate port
+			port, err := ValidatePort(data["port"])
+			if err != nil {
+				handleError(err.Error())
 				return
-			} else {
-				flood.Port = port
 			}
+			flood.Port = port
 
 			// Check available slots
 			switch flood.Mtype {
@@ -164,139 +130,107 @@ func init() {
 					handleError("No available slot to start attack!")
 					return
 				}
+			}					
+			//send to apis
+			go func() {
+				errChan <- apis.Send(flood)
+			}()
+			if err := <-errChan; err != nil {
+				handleError(err.Error())
+				return
 			}
-
-			//send attack
-			var ids []int
+			//send to servers
 			for i := 0; i < conns; i++ {
-				id, err := database.Container.NewAttack(key, flood)
-				if err != nil {
-
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "database error occured!"})
+				go func() {
+					errChan <- servers.Distribute(flood)
+				}()
+			}
+			for i := 0; i < conns; i++ {
+				if err := <-errChan; err != nil {
+					handleError(err.Error())
 					return
 				}
-				ids = append(ids, id)
-				time.Sleep(500 * time.Microsecond)
 			}
-			if key.HasPermission("admin") {
-				go apis.Send(flood)
-			}
-			for i := 0; i < conns; i++ {
-				servers.Distribute(flood)
-			}
+			//save attack
+			var ids []int
+			SaveToDB(key, flood, conns)
 			functions.WriteJson(w, status{Status: "success", Message: "attack succesfully started", Attacks: ids})
 		case "post":
+			//validate for panal
 			ok, user := sessions.IsLoggedIn(w, r)
 			if !ok {
 				return
 			}
 			r.ParseForm()
 			fmt.Println(r.PostForm)
+			//validate ip
 			target := r.PostFormValue("host")
-			if !validateTarget(target) {
-				handleError("Invalid target provided")
+			if err := ValidateTarget(target, blacklists); err != nil {
+				handleError(err.Error())
 				return
 			}
-			if isTargetInBlacklist(target, blacklists) {
-				handleError("Invalid target provided, target is blacklist!")
-				return
-			}
+			//validate method
 			flood := floods.New(r.PostFormValue("method"))
 			if flood == nil {
-				json.NewEncoder(w).Encode(status{Status: "error", Message: "invalid attack method provided!"})
+				handleError("invalid attack method provided!")
 				return
 			}
+			//validate conns
 			flood.Target = r.PostFormValue("host")
 			flood.Parent = user.ID
 			var conns = 1
 			ongoing, _ := database.Container.GetRunning(user.User)
 			if len(ongoing) > user.Concurrents {
-				json.NewEncoder(w).Encode(status{Status: "error", Message: "maximum running attacks reached!"})
+				handleError("maximum running attacks reached!")
 			}
 			if ok := r.PostFormValue("concurrents"); ok != "" {
 				val := strings.Split(r.PostFormValue("concurrents"), ".")[0]
 				conncurrents, err := strconv.Atoi(val)
 				if err != nil {
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "invalid concurrent amount provided!"})
+					handleError("invalid concurrent amount provided!")
 					return
 				} else if err == nil && conncurrents+len(ongoing) > user.Concurrents {
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "you're trying to attack with more concurrents then u have available!"})
+					handleError("you're trying to attack with more concurrents then u have available!")
 					return
 				}
 				conns = conncurrents
 				flood.Conns = conncurrents
 			}
-			if ok := r.PostFormValue("threads"); ok != "" {
-				val := strings.Split(r.PostFormValue("threads"), ".")[0]
-				threads, err := strconv.Atoi(val)
-				if err != nil {
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "invalid thread amount provided!"})
-					return
-				}
-				flood.Threads = threads
-			}
+			//validate pps
 			if ok := r.PostFormValue("pps"); ok != "" {
 				val := strings.Split(r.PostFormValue("pps"), ".")[0]
 				pps, err := strconv.Atoi(val)
 				if err != nil {
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "invalid pps amount provided!"})
+					handleError("invalid pps amount provided!")
 					return
 				}
 				flood.PPS = pps
 			}
+			//validate durra
 			duration, err := strconv.Atoi(r.PostFormValue("duration"))
 			if err != nil || duration <= 0 || duration > user.Duration {
 				handleError("Invalid attack duration provided or exceeds maximum allowed!")
 				return
 			}
 			flood.Duration = duration
-
-			port, err := strconv.Atoi(r.PostFormValue("port"))
-			if err != nil || port < 0 || port > 65535 {
-				handleError("Invalid destination port provided!")
+			//validate port
+			port, err := ValidatePort(r.PostFormValue("port"))
+			if err != nil {
+				handleError(err.Error())
 				return
 			}
 			flood.Port = port
-			switch flood.Mtype {
-			case 1:
-				if database.Container.GlobalRunningType(1) >= servers.Slots()[1]+apis.Slots() {
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "no available slot to start attack!"})
-					return
-				}
-			case 2:
-				if database.Container.GlobalRunningType(2) >= servers.Slots()[2] {
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "no available slot to start attack!"})
-					return
-				}
-			}
-			var ids []int
-			for i := 0; i < conns; i++ {
-				id, err := database.Container.NewAttack(user.User, flood)
-				if err != nil {
-					json.NewEncoder(w).Encode(status{Status: "error", Message: "database error occured!"})
-					return
-				}
-				go func() {
-					errChan <- servers.Distribute(flood)
-				}()
-				err = <-errChan
-					if err != nil {
-						json.NewEncoder(w).Encode(status{Status: "error", Message: err.Error()})
-						return
-					}
-				ids = append(ids, id)
-			}
-			go func() {
-				errChan <- apis.Send(flood)
-			}()
-			err = <-errChan
+			successMsg, err := SendAttack(conns, flood)
 			if err != nil {
-				json.NewEncoder(w).Encode(status{Status: "error", Message: err.Error()})
+				handleError(err.Error())
 				return
 			}
-			functions.WriteJson(w, status{Status: "success", Message: "attack succesfully started", Attacks: ids})
+			log.Println(successMsg)
+			//save attack to db
+			var ids []int
+			SaveToDB(user.User, flood, conns)
+			functions.WriteJson(w, status{Status: "success", Message: fmt.Sprintf("Attack successfully started (%s)", successMsg), Attacks: ids})
 		}
-
 	}))
 }
 
@@ -323,11 +257,3 @@ func Copy(source interface{}, destin interface{}) {
 	destValue.Elem().Set(srcValue)
 }
 
-func isTargetInBlacklist(target string, blacklists []string) bool {
-	for _, host := range blacklists {
-		if host == target {
-			return true
-		}
-	}
-	return false
-}

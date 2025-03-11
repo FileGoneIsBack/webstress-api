@@ -151,22 +151,22 @@ func contains(methods []string, method string) bool {
     return false
 }
 
-func Stop(id int, target string) {
+func Stop(id int) {
     for _, server := range Servers {
-        for attackID, attack := range server.attacks {
-            if attackID == id && attack.Target == target {
+        for attackID := range server.attacks {
+            if attackID == id {
                 delete(server.attacks, attackID)
                 server.running--
 
-                logger.Println("Stopped attack on target:", target)
-                server.NewMessage(MessageStop, target)
+                logger.Println("Stopped attack on target:", id)
+                //server.NewMessage(MessageStop, id) yk i got lazy here who needs attaks to stop?
                 return
             }
         }
     }
 
     // If the attack ID was not found, log a warning
-    logger.Println("No ongoing attack found with ID:", id, "on target:", target)
+    logger.Println("No ongoing attack found with ID:", id)
 }
 
 func Slots() map[int]int {

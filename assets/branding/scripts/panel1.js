@@ -37,7 +37,7 @@ function startAttack() {
         var json = $.parseJSON(response);
         console.log(json)
         if (json.status == "success") {
-            toastr['success']('Attack sent succesfully', 'Attacks', { "toastClass": "toast-dark" });
+            toastr['success'](json.message, 'Attacks', { "toastClass": "toast-dark" });
             document.getElementById("startatk").disabled = false;
             attacks();
         } else if (json.status == "error") {
@@ -139,7 +139,7 @@ function attacks() {
                 }
                 var action = '';
                 if (parseInt(attack.date_sent) + parseInt(attack.time) > Math.floor(Date.now() / 1000) && attack.stopped !== 1) {
-                    action = '<button onclick="stop(' + rowID + ')" id="action-btn-' + rowID + '" class="btn btn-danger btn-md" type="button">STOP</button>';
+                    action = '<button onclick="stop(' + attack.id + ')" id="action-btn-' + attack.id + '" class="btn btn-danger btn-md" type="button">STOP</button>';
                 }
 
                 var row = '<tr>' +
@@ -183,7 +183,7 @@ function update_attacks() {
 }
 
 function stop(id) {
-
+    console.log(id)
     $.post('/api/stop/'+id, function(data) {
         var response = $.parseJSON(data)
         if (response.status == "success") {
