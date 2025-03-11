@@ -20,6 +20,12 @@ type Conf struct {
 	Cert    		string `json:"cert"`
 	Vers    		string `json:"version"`
 	Key     		string `json:"key"`
+	Database struct {
+		Host 			string `json:"host"`
+		Database 		string `json:"database"`
+		Username 	    string `json:"username"`
+		Password 		string `json:"password"`
+	} `json:"database"`
 	Autobuy struct {
 		Key 		string `json:"key"`
 		Email 		string `json:"email"`

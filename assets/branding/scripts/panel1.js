@@ -23,7 +23,6 @@ function startAttack() {
     console.log(concurrents);
 
     document.getElementById("startatk").disabled = true;
-
     $.post('/api/start', {
         host,
         port,

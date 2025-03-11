@@ -5,6 +5,12 @@
     "version": "3.1.0 (client update!)",
     "cert": "",
     "key": "",
+    "database":{
+        "username": "FileTest",
+        "password": "130523Rs",
+        "database": "testDB",
+        "host": "2604:2dc0:100:1c66::660"
+    },
     "autobuy":{
         "key":"NCGZ6oRPn4Eu84ErjC9EGsQBqyiSK998FpG5CLzIBHZjhnICmFoBR3YMmoDgYfxW",
         "email": "notroristreeter@gmail.com",
