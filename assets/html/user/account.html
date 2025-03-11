@@ -220,6 +220,11 @@
                                         data-bs-target="#email" aria-controls="email"
                                         aria-selected="false">Email</button>
                                 </li>
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                        data-bs-target="#telegram" aria-controls="email"
+                                        aria-selected="false">Telegram</button>
+                                </li>
                             </ul>
                             <div class="tab-content">
                                 <div class="tab-pane fade show active" id="logs" role="tabpanel">
@@ -341,6 +346,31 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="tab-pane fade" id="telegram" role="tabpanel">
+                                    <div class="card mb-4">
+                                        <h5 class="card-header">Update Telegram Username</h5>
+                                        <div class="card-body">
+                                            <form id="formChangeTelegram" method="GET" onsubmit="return false"
+                                                class="fv-plugins-bootstrap5 fv-plugins-framework"
+                                                novalidate="novalidate">
+                                                <div class="row">
+                                                    <div class="mb-3 col-12 col-sm-6 form-email-toggle fv-plugins-icon-container">
+                                                        <label class="form-label" for="telegram">New Telegram Username</label>
+                                                        <div class="input-group input-group-merge has-validation">
+                                                            <input type="text" name="telegramText" id="telegramText" class="form-control" placeholder="Telegram Username">  
+                                                            <span class="input-group-text cursor-pointer"><i class="ti ti-eye-off"></i></span>
+                                                        </div>
+                                                        <div class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback"></div>
+                                                    </div>
+                                                    <div>
+                                                        <button type="submit" class="btn btn-primary me-2 waves-effect waves-light" id="changeTelegramButton">Change Telegram</button>
+                                                    </div>
+                                                </div>
+                                                <input type="hidden">
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -381,6 +411,7 @@
 <script src="/_assets/vendors/js/tables/datatable/buttons.print.min.js"></script>
 <script src="/_assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
 <script src="/_assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <!-- END: Page Vendor JS-->
 
 <!-- BEGIN: Theme JS-->
@@ -416,7 +447,38 @@
             });
         }
     })
+    $(document).ready(function () {
+    $("#changeTelegramButton").click(function (e) {
+        e.preventDefault(); 
+
+        var newUsername = $("#telegramText").val();
+        if (!newUsername) {
+            toastr['warning']('Please enter a valid username', 'Warning', { "toastClass": "toast-dark" });
+            return;
+        }
+
+        var data = {
+            telegram: newUsername  
+        };
+        $.ajax({
+            url: "/api/account/update", 
+            type: "POST", 
+            data: JSON.stringify(data), 
+            contentType: "application/json", 
+            success: function (response) {
+                toastr['success']('Account updated!', 'Success', { "toastClass": "toast-dark" });
+                console.log(response); 
+            },
+            error: function (xhr, status, error) {
+                toastr['error']('Error: ' + xhr.responseText, 'Error', { "toastClass": "toast-dark" });
+                console.error(xhr.responseText);  
+            }
+        });
+    });
+});
+
 </script>
+
 </body>
 <!-- END: Body-->
 

@@ -35,5 +35,9 @@
         "subnet8":"",
         "subnet9":"",
         " - comment - ":"each subnet is a group name inside the panel and how we sort methods `subnet`:`1` would be subnet1 in methods config"
+    },
+    "bot":{
+        "key":"test123",
+        "url":"http://[2604:2dc0:100:1c66::660]:8080/api"
     }
 }

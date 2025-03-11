@@ -38,6 +38,10 @@ type Conf struct {
 		SSH    		string `json:"ssh"`
 		Telnet 		string `json:"telnet"`
 	} `json:"cnc"`
+	Bot struct {
+		Auth 	string   `json:"key"`
+		URL		string	 `json:"url"`
+	} `json:"bot"`
 	Methods map[string]string `json:"methods"`
 }
 

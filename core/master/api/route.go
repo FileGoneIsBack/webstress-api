@@ -7,6 +7,7 @@ import (
 	panelapi "api/core/master/api/panel"
 	paymentsapi "api/core/master/api/payments"
 	ticketapi "api/core/master/api/tickets"
+	accountapi "api/core/master/api/account"
 	"api/core/models/server"
 )
 
@@ -22,5 +23,6 @@ func init() {
 		adminapi.Route,
 		ticketapi.Route,
 		attackapi.Route,
+		accountapi.Route,
 	)
 }
