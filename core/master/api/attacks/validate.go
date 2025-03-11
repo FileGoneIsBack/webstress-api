@@ -110,8 +110,6 @@ func SendAttack(conns int, flood *floods.Attack) (string, error) {
 			apiOK = true
 		}
 	}()
-
-	// Wait for all goroutines to complete
 	wg.Wait()
 	close(errChan)
 
@@ -123,8 +121,6 @@ func SendAttack(conns int, flood *floods.Attack) (string, error) {
 			apiErr = err
 		}
 	}
-
-	// Construct success message
 	var successMsg string
 	if serverOK && apiOK {
 		successMsg = "Success: both servers and API"

@@ -5,11 +5,12 @@ sudo -v
 # Configuration 
 SQL_DUMP_PATH="./assets/dump.sql"    
 CONFIG_JSON="./assets/config/config.json"  
-TOTAL_STEPS=5 #do not edit
-PROGRESS_FILE="./assets/branding/vendors/install_progress.txt" #do not edit
-STATUS_FILE="./assets/branding/vendors/install_status.txt" #do not edit
+TOTAL_STEPS=5
+PROGRESS_FILE="./assets/branding/vendors/install_progress.txt"
+STATUS_FILE="./assets/branding/vendors/install_status.txt"
 #############################
 
+# --- Functions to update progress and status ---
 update_progress() {
     local curr=$(cat "$PROGRESS_FILE")
     echo $(( curr + 1 )) > "$PROGRESS_FILE"
@@ -19,12 +20,12 @@ update_status() {
     echo "$1" > "$STATUS_FILE"
 }
 
-
+# --- Function: Display a dynamic progress bar ---
 progress_bar() {
     local bar_width=50 
 
     while true; do
-        clear 
+        clear  # Clear the terminal screen at the start of each loop iteration
         
         curr=$(cat "$PROGRESS_FILE")
         percentage=$(( curr * 100 / TOTAL_STEPS ))
@@ -35,17 +36,21 @@ progress_bar() {
         bar=$(printf "%0.s█" $(seq 1 $filled))
         bar+=$(printf "%0.s▒" $(seq 1 $empty))
 
+        # Randomize positions of the stars
+        # Generate random positions for 5-6 stars
         declare -A stars
         for i in {1..6}; do
-            stars[$i,"x"]=$(( RANDOM % 35 + 1 ))  
-            stars[$i,"y"]=$(( RANDOM % 7 + 1 ))   
+            stars[$i,"x"]=$(( RANDOM % 35 + 1 ))  # Random horizontal position (1-35)
+            stars[$i,"y"]=$(( RANDOM % 7 + 1 ))   # Random vertical position (1-7)
         done
 
+        # Print stars in their new random positions
         for i in {1..6}; do
             tput cup "${stars[$i,"y"]}" "${stars[$i,"x"]}"
             echo "⋆"
         done
 
+        # Print banner
         tput cup 2 0; echo "  _____          _ _ _       _     _    "  
         tput cup 3 0; echo " |_   _|_      _(_) (_) __ _| |__ | |_  "  
         tput cup 4 0; echo "   | | \ \ /\ / / | | |/ _  |  _ \| __| "  
@@ -90,10 +95,25 @@ fi
 
 
 # --- Prompt for SQL credentials and database name ---
-read -rp "Enter SQL username to create: " SQLUSER
-read -rsp "Enter password for $SQLUSER: " SQLPASS
-echo
-read -rp "Enter new database name: " DBNAME
+while true; do
+    read -rp "Do you need a SQL user? (yes/no): " CREATE_SQL_USER
+    if [[ "$CREATE_SQL_USER" == "yes" || "$CREATE_SQL_USER" == "no" ]]; then
+        break
+    else
+        echo "Invalid input. Please enter 'yes' or 'no'."
+    fi
+done
+
+if [[ "$CREATE_SQL_USER" == "yes" ]]; then
+    read -rp "Enter SQL username to create: " SQLUSER
+    read -rsp "Enter password for $SQLUSER: " SQLPASS
+    echo
+    read -rp "Enter new database name: " DBNAME
+else
+    SQLUSER=""
+    SQLPASS=""
+    DBNAME=""
+fi
 
 # --- Initialize progress and status files ---
 echo 0 > "$PROGRESS_FILE"
@@ -134,36 +154,32 @@ echo "Starting installation tasks..." > "$STATUS_FILE"
     sudo apt-get install -y mysql-server
     update_progress
 
-    # Task 3: Setup SQL user and database
+# Task 3: Setup SQL user and database
+if [[ "$CREATE_SQL_USER" == "yes" ]]; then
     update_status "Creating SQL user and database..."
-    sudo mysql <<EOF
+   sudo mysql <<EOF
 CREATE USER IF NOT EXISTS '$SQLUSER'@'localhost' IDENTIFIED BY '$SQLPASS';
 GRANT ALL PRIVILEGES ON *.* TO '$SQLUSER'@'localhost' WITH GRANT OPTION;
 FLUSH PRIVILEGES;
 CREATE DATABASE IF NOT EXISTS $DBNAME;
 EOF
-    update_progress
+else
+    update_status "Skipping SQL user and database creation..."
+fi
+update_progress
 
-        # Task 4: Import SQL dump and update JSON config
-        if [ ! -f "$SQL_DUMP_PATH" ] || [ ! -f "$CONFIG_JSON" ]; then
-            update_status "✖ $SQL_DUMP_PATH or $CONFIG_JSON not found ✖"
-            exit 1
-        fi
+    # Task 4: Import SQL dump and update JSON (only if dump and config files exist)
+    if [[ "$CREATE_SQL_USER" == "yes" && -f "$SQL_DUMP_PATH" && -f "$CONFIG_JSON" ]]; then
         update_status "Importing SQL dump"
-        if [ -f "$SQL_DUMP_PATH" ]; then
-            sudo mysql "$DBNAME" < "$SQL_DUMP_PATH"
-        else
-            update_status "✖ SQL dump file not found at $SQL_DUMP_PATH. Skipping import."
-        fi
+        sudo mysql "$DBNAME" < "$SQL_DUMP_PATH"
         update_progress
         update_status "Updating JSON"
-        if [ -f "$CONFIG_JSON" ]; then
-            jq --arg user "$SQLUSER" --arg pass "$SQLPASS" --arg table "$DBNAME" \
-            '.username = $user | .password = $pass | .table = $table' \
-            "$CONFIG_JSON" > tmp.$$.json && mv tmp.$$.json "$CONFIG_JSON"
-        else
-            update_status "✖ JSON config file not found at $CONFIG_JSON. Skipping JSON update."
-        fi
+        jq --arg user "$SQLUSER" --arg pass "$SQLPASS" --arg table "$DBNAME" \
+        '.username = $user | .password = $pass | .table = $table' \
+        "$CONFIG_JSON" > tmp.$$.json && mv tmp.$$.json "$CONFIG_JSON"
+    else
+        update_status "Skipping SQL dump and JSON update..."
+    fi
         update_progress
         sleep .5
 
