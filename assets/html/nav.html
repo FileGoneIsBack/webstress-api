@@ -40,25 +40,26 @@
                             <h4 class="notification-title mb-0 me-auto">Notifications</h4>
                         </div>
                     </li>
-
                     {{if .FlashMessages}}
                     {{range .FlashMessages}}
-                    <li class="scrollable-container media-list">
-                        <a class="d-flex" href="#">
-                            <div class="list-item d-flex align-items-start">
-                                <div class="list-item-body flex-grow-1">
-                                    <p class="media-heading"><span class="fw-bolder">System</span></p>
-                                    <small class="notification-text"> {{.Message}}</small>
+                    <li class="scrollable-container media-list notification-item">
+                            <a class="d-flex" href="#">
+                                <div class="list-item d-flex align-items-start">
+                                    <div class="list-item-body flex-grow-1">
+                                        <p class="media-heading"><span class="fw-bolder">System</span></p>
+                                        <small class="notification-text"> {{.Message}}</small>
+                                    </div>
+                                    <span class="notification-dot"></span>
                                 </div>
-                            </div>
-                        </a>
-                        {{end}}
-                            {{else}}
-                                <div class="notification-item">No new notifications</div>
-                            {{end}}
+                            </a>
                         </li>
+                    {{end}}
+                {{else}}
+                    <li class="notification-item">No new notifications</li>
+                {{end}}
+                </li>
                     <li class="dropdown-menu-footer">
-                        <a class="btn btn-primary w-100" href="#">Read all notifications</a>
+                        <a class="btn btn-primary w-100 clear-notifications" href="#">Read all notifications</a>
                     </li>
                 </ul>
             </li>
@@ -94,6 +95,16 @@
         </ul>
     </div>
 </nav>
+<style>
+    .notification-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #007bff; /* Blue color */
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 10px;
+}
+</style>
 <!-- END: Header -->
 
 
@@ -283,3 +294,4 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 </script>
+

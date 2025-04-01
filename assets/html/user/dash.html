@@ -341,6 +341,57 @@
             }
         })
     </script>
+    <script>
+$(document).ready(function () {
+    function updateNotificationCount() {
+        let count = $(".dropdown-menu-media li.notification-item").length;
+        let badge = $(".dropdown-notification .badge");
+
+        if (count > 0) {
+            badge.text(count).show();
+        } else {
+            badge.hide();
+        }
+    }
+
+    // Initialize notification count after DOM loads
+    updateNotificationCount();
+
+    // Event delegation for dynamically loaded notifications
+    $(document).on("mouseenter", ".notification-item", function () {
+        let badge = $(".dropdown-notification .badge");
+        let currentCount = parseInt(badge.text());
+
+        if (currentCount > 0) {
+            let newCount = currentCount - 1;
+            badge.text(newCount);
+            if (newCount === 0) {
+                badge.hide();
+            }
+        }
+
+        // Remove hovered notification dot
+        $(this).find(".notification-dot").fadeOut(200, function () {
+            $(this).remove();
+        });
+    });
+
+    // Clear all notifications when clicking "Read all notifications"
+    $(document).on("click", ".clear-notifications", function (e) {
+        e.preventDefault();
+
+        // Remove all notification dots
+        $(".media-list .notification-item").each(function () {
+            $(this).find(".notification-dot").fadeOut(200, function () {
+                $(this).remove();
+            });
+        });
+
+        // Reset notification count
+        updateNotificationCount();
+    });
+});
+        </script>
 </body>
 <!-- END: Body-->
 
