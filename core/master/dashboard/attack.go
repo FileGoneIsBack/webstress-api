@@ -33,6 +33,6 @@ func init() {
 			Slots:        servers.Slots()[0],
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Session:      user,
-		}, w, "attack", "attack.html")
+		}, w, r, "attack", "attack.html")
 	}))
 }

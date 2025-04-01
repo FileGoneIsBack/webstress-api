@@ -36,6 +36,6 @@ func init() {
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Remotes:      servers.Servers,
 			Session:      user,
-		}, w, "user", "tickets.html")
+		}, w, r, "user", "tickets.html")
 	}))
 }

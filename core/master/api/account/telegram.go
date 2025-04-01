@@ -4,6 +4,7 @@ import (
 	//"api/core/database"
 	"api/core/master/sessions"
 	"api/core/models"
+	"api/core/models/log"
 	"api/core/models/server"
 	"bytes"
 	"encoding/json"
@@ -43,7 +44,7 @@ func handlePostRequest(w http.ResponseWriter, r *http.Request) {
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
 		http.Error(w, "Invalid request body", http.StatusBadRequest)
-		logger.Print("Failed to decode JSON body") 
+		log.Println("Failed to decode JSON body")
 		return
 	}
 
@@ -56,22 +57,22 @@ func handlePostRequest(w http.ResponseWriter, r *http.Request) {
 	jsonData, err := json.Marshal(payload)
 	if err != nil {
 		http.Error(w, "Failed to marshal JSON", http.StatusInternalServerError)
-		logger.Print("Failed to marshal JSON payload") 
+		log.Println("Failed to marshal JSON payload")
 		return
 	}
 
-	apiURL := models.Config.Bot.URL 
+	apiURL := models.Config.Bot.URL
 	resp, err := sendAPIRequest(apiURL, jsonData)
 	if err != nil {
 		http.Error(w, "Failed to send request to API", http.StatusInternalServerError)
-		logger.Print("Failed to send API request: " + err.Error()) 
+		log.Println("Failed to send API request: " + err.Error())
 		return
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode == http.StatusOK {
 		w.WriteHeader(http.StatusOK)
-		logger.Printf("User %s passed telegram auth with @%s", user.Username, request.TGusername)
+		log.Printf("User %s passed telegram auth with @%s", user.Username, request.TGusername)
 	} else {
 	}
 }

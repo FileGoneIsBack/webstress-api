@@ -3,12 +3,12 @@ package admin
 import (
 	"api/core/database"
 	"api/core/master/sessions"
-	sess "api/core/net/sessions"
 	"api/core/models"
 	"api/core/models/apis"
 	"api/core/models/functions"
 	"api/core/models/server"
 	"api/core/models/servers"
+	sess "api/core/net/sessions"
 	"net/http"
 )
 
@@ -37,8 +37,8 @@ func init() {
 			Ongoing:      database.Container.GlobalRunning(),
 			Slots:        servers.Slots()[0],
 			Users:        database.Container.Users(),
-			Remotes:      sessions.Count() + sess.Count(), 
+			Remotes:      sessions.Count() + sess.Count(),
 			Session:      user,
-		}, w, "admin", "dashV2.html")
+		}, w, r, "admin", "dashV2.html")
 	}))
 }

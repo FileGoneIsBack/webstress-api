@@ -26,7 +26,7 @@ func init() {
 			functions.Render(Page{
 				Name:  models.Config.Name,
 				Title: "Login",
-			}, w, "login", "login.html")
+			}, w, r, "login", "login.html")
 		case "post":
 			internal.Login(w, r)
 		}

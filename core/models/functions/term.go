@@ -8,6 +8,7 @@ import (
 	"time"
 	"api/core/models"
 	"github.com/shirou/gopsutil/cpu"
+	"api/core/models/log"
 )
 
 // commandListener listens for user input in the terminal
@@ -39,7 +40,7 @@ func CommandListener() {
 
 		// Check for scanner error
 		if scanner.Err() != nil {
-			logger.Println("Error reading input:", scanner.Err())
+			log.Println("Error reading input:", scanner.Err())
 			return
 		}
 	}
@@ -58,7 +59,7 @@ func ShowSystemInfo() {
 	// Get the CPU usage percentage
 	percent, err := cpu.Percent(0, true)
 	if err != nil {
-		logger.Println("Error retrieving CPU usage:", err)
+		log.Println("Error retrieving CPU usage:", err)
 		return
 	}
 

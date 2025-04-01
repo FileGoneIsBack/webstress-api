@@ -1,6 +1,7 @@
 package database
 
 import (
+	"api/core/models/log"
 	"api/core/models/plans"
 	"api/core/models/ranks"
 	"bytes"
@@ -11,15 +12,22 @@ import (
 	"time"
 )
 
+type FlashMessage struct {
+    Message string `json:"message"`
+    Time    int64  `json:"time"` 
+}
+
 type Role string
 type User struct {
 	ID                                      int
 	Username                                string
 	Key, Salt                               []byte
-	ranks, Membership                       string
+	ranks			                        string
+	Membership								string
 	Ranks                                   []*ranks.Rank
 	Concurrents, Servers, Duration, Balance int
 	Expiry                                  int64
+	Flashes  []FlashMessage
 }
 
 var (
@@ -47,14 +55,14 @@ func (conn *Instance) NewUser(user *User) (err error) {
 }
 
 func (conn *Instance) UserUpdateAddon(username string, balance, duration, concurrents int, roles []*ranks.Rank, addon *plans.Addon) error {
-	logger.Printf("Updating addon for user %s\n", username)
+	log.Printf("Updating addon for user %s\n", username)
 
 	// Convert ranks to JSON string if addon is of type rank
 	var encodedJSON string
 	if addon.Type == "rank" {
 		ranksJSON, err := json.Marshal(roles)
 		if err != nil {
-			logger.Println("Error marshalling ranks to JSON:", err)
+			log.Println("Error marshalling ranks to JSON:", err)
 			return err
 		}
 		encodedJSON = base64.RawStdEncoding.EncodeToString(ranksJSON)
@@ -64,7 +72,7 @@ func (conn *Instance) UserUpdateAddon(username string, balance, duration, concur
 	query := "UPDATE `users` SET `balance` = ?, `duration` = ?, `concurrents` = ?, `roles` = ? WHERE `username` = ?"
 	stmt, err := conn.conn.Prepare(query)
 	if err != nil {
-		logger.Println("Error preparing SQL statement:", err)
+		log.Println("Error preparing SQL statement:", err)
 		return err
 	}
 	defer stmt.Close()
@@ -90,7 +98,7 @@ func (conn *Instance) UserUpdateAddon(username string, balance, duration, concur
 	// Execute the update query with the calculated values
 	_, err = stmt.Exec(balance-addon.Price, newDuration, newConcurrents, newRoles, username)
 	if err != nil {
-		logger.Println("Error executing SQL statement:", err)
+		log.Println("Error executing SQL statement:", err)
 		return err
 	}
 
@@ -192,8 +200,8 @@ func (conn *Instance) UpdateUserPlan(user *User, plan *plans.Plan) error {
 		user.Membership = "basic"
 	}
 
-	user.ranks = user.NewRoles() 
-	user.Balance -= plan.Price  
+	user.ranks = user.NewRoles()
+	user.Balance -= plan.Price
 	if _, err := stmt.Exec(user.ranks, time.Now().Add((time.Duration(plan.Expiry)*time.Hour)*24).Unix(), plan.Conns, 5, plan.Duration, user.Balance, user.Membership, user.Username); err != nil {
 		return err
 	}
@@ -234,7 +242,7 @@ func (conn *Instance) Users() (users int) {
 	defer stmt.Close()
 	result, err := stmt.Query()
 	if err != nil {
-		logger.Println("GlobalUsers(): error occured while executing statement \"" + err.Error() + "\"")
+		log.Println("GlobalUsers(): error occured while executing statement \"" + err.Error() + "\"")
 		return 0
 	}
 	for result.Next() {
@@ -305,4 +313,3 @@ func (conn *Instance) UserData(row *sql.Row) (*User, error) {
 	}
 	return &u, nil
 }
-

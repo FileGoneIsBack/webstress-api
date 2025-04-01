@@ -3,6 +3,7 @@ package adminapi
 import (
 	"api/core/database"
 	"api/core/master/sessions"
+	"api/core/models/log"
 	"api/core/models/server"
 	"encoding/json"
 	"net/http"
@@ -47,12 +48,12 @@ func handlePostRequest(w http.ResponseWriter, r *http.Request) {
 		Host string `json:"host"`
 	}
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		logger.Println("Error decoding JSON request:", err)
+		log.Println("Error decoding JSON request:", err)
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	if err := database.Container.NewBlacklist(request.Host); err != nil {
-		logger.Println("Error adding host to the blacklist:", err)
+		log.Println("Error adding host to the blacklist:", err)
 		http.Error(w, "Failed to add host to the blacklist", http.StatusInternalServerError)
 		return
 	}
@@ -63,14 +64,14 @@ func handlePostRequest(w http.ResponseWriter, r *http.Request) {
 func handleGetRequest(w http.ResponseWriter, r *http.Request) {
 	blacklists, err := database.Container.GetAllBlacklists()
 	if err != nil {
-		logger.Println("Error retrieving blacklists from the database:", err)
+		log.Println("Error retrieving blacklists from the database:", err)
 		http.Error(w, "Failed to retrieve blacklists", http.StatusInternalServerError)
 		return
 	}
 
 	blacklistJSON, err := json.Marshal(blacklists)
 	if err != nil {
-		logger.Println("Error marshaling blacklists into JSON:", err)
+		log.Println("Error marshaling blacklists into JSON:", err)
 		http.Error(w, "Failed to marshal blacklists into JSON", http.StatusInternalServerError)
 		return
 	}
@@ -99,14 +100,14 @@ func init() {
 			}
 			// Decode the incoming JSON request body
 			if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-				logger.Println("Error decoding JSON request:", err)
+				log.Println("Error decoding JSON request:", err)
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 
 			// Remove the host from the blacklist in the database
 			if err := database.Container.RemoveBlacklist(request.Host); err != nil {
-				logger.Println("Error removing host from the blacklist:", err)
+				log.Println("Error removing host from the blacklist:", err)
 				http.Error(w, "Failed to remove host from the blacklist", http.StatusInternalServerError)
 				return
 			}

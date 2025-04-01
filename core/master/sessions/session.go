@@ -2,13 +2,10 @@ package sessions
 
 import (
 	"api/core/database"
-	"log"
-	"os"
 	"time"
 )
 
 var (
-	logger   = log.New(os.Stderr, "[sessions] ", log.Ltime|log.Lshortfile)
 	Sessions = map[string]Session{}
 )
 
@@ -16,6 +13,7 @@ var (
 type Session struct {
 	*database.User
 	Expiry time.Time
+	Flashes []interface{}
 }
 
 // IsExpired is used to determine if the Session has expired

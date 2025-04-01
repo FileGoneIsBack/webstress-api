@@ -35,6 +35,6 @@ func init() {
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Remotes:      servers.Servers,
 			Session:      user,
-		}, w, "user", "addons.html")
+		}, w, r, "user", "addons.html")
 	}))
 }

@@ -26,6 +26,6 @@ func init() {
 			Vers:         models.Config.Vers,
 			ServersCount: len(servers.Servers) + len(apis.Apis),
 			Users:        database.Container.Users(),
-		}, w, "landing", "index.html")
+		}, w, r, "landing", "index.html")
 	}))
 }

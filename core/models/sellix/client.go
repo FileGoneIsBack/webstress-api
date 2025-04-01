@@ -12,19 +12,19 @@ var (
 )
 
 type Client struct {
-	client         *http.Client
-	Authentication string
+	client *http.Client
+	APIKey string
 }
 
-func NewClient(authentication string) *Client {
+func NewClient(apiKey string) *Client {
 	return &Client{
-		client:         http.DefaultClient,
-		Authentication: "Bearer " + authentication,
+		client: http.DefaultClient,
+		APIKey: apiKey,
 	}
 }
 
-func (c *Client) CreateRequest(method, data, query string) (*http.Request, error) {
-	r, err := http.NewRequest(method, RootURL+query, func() io.Reader {
+func (c *Client) CreateRequest(method, data, endpoint string) (*http.Request, error) {
+	r, err := http.NewRequest(method, RootURL+endpoint, func() io.Reader {
 		if strings.ToLower(method) == "post" {
 			return strings.NewReader(data)
 		}
@@ -34,6 +34,6 @@ func (c *Client) CreateRequest(method, data, query string) (*http.Request, error
 		return nil, err
 	}
 	r.Header.Add("Content-Type", "application/json")
-	r.Header.Add("Authorization", "Bearer " + models.Config.Autobuy.Key)
+	r.Header.Add("x-api-key", models.Config.Autobuy.Key)
 	return r, nil
 }

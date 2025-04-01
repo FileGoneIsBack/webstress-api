@@ -5,27 +5,25 @@ import (
 	"api/core/database"
 	"api/core/master"
 	"api/core/models"
+	"api/core/models/log"
 	"api/core/models/functions"
 	"api/core/models/ranks"
 	"api/core/models/servers"
 	"api/core/net"
 	"api/core/net/commands"
-	"log"
-	"os"
 	"time"
 )
 
-var logger = log.New(os.Stderr, "[main] ", log.Ltime|log.Lshortfile)
 
 func main() {
 	core.Initialize()
 	if err := database.New(); err != nil {
-		logger.Println("failed to initialize database", err)
+		log.Println("failed to initialize database", err)
 		return
 	}
 
 	// Adding basic rank
-	logger.Printf("Adding basic rank: %v", ranks.Internal["basic"])
+	log.Printf("Adding basic rank: %v", ranks.Internal["basic"])
 	database.Container.NewUser(&database.User{
 		ID:         0,
 		Username:   "FileGone",
@@ -54,7 +52,7 @@ func main() {
 			}
 		}()
 	} else {
-		logger.Printf("[main] %s main.go CnC Turned Off!\n", time.Now().Format("15:04:05"))
+		log.Printf("[main] %s main.go CnC Turned Off!\n", time.Now().Format("15:04:05"))
 		go servers.Listen()  
 		go func() {
 			for {

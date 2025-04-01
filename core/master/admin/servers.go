@@ -39,6 +39,6 @@ func init() {
 			Users:        database.Container.Users(),
 			Remotes:      servers.Servers,
 			Session:      user,
-		}, w, "admin", "servers.html")
+		}, w, r, "admin", "servers.html")
 	}))
 }

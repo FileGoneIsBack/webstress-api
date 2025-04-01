@@ -5,21 +5,34 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 )
 
 func (user *User) Sync() error {
+	// Decode the base64 string into the ranks
 	ranks, err := base64.RawStdEncoding.DecodeString(user.ranks)
 	if err != nil {
-		logger.Println("failed to sync users ranks", err)
+		log.Println("failed to sync users ranks", err)
 		return err
 	}
+
+	// Parse the decoded ranks into a list of permissions
 	var permissions []*rranks.Rank
-	json.Unmarshal(ranks, &permissions)
+	err = json.Unmarshal(ranks, &permissions)
+	if err != nil {
+		log.Println("failed to unmarshal ranks", err)
+		return err
+	}
+
+	// Initialize user.Ranks as a slice of *rranks.Rank
+	var rankObjects []*rranks.Rank
 	for _, permission := range permissions {
 		if rank, ok := rranks.Internal[permission.Name]; ok {
-			user.Ranks = append(user.Ranks, rank)
+			rankObjects = append(rankObjects, rank)
 		}
 	}
+
+	user.Ranks = rankObjects
 	return nil
 }
 
@@ -42,7 +55,7 @@ func (user *User) UpdateRoles(name string, role *rranks.Rank, has bool) error {
 	}
 	r, err := json.Marshal(user.Ranks)
 	if err != nil {
-		logger.Println(err)
+		log.Println(err)
 		return err
 	}
 	fmt.Println(string(r))
@@ -57,6 +70,9 @@ func (user *User) HasPermission(role string) bool {
 		}
 	}
 	return false
+}
+func (user *User) HasAdminRole() bool {
+	return true
 }
 
 func (user *User) HasRoles(roles []string) bool {
@@ -77,7 +93,7 @@ func (user *User) HasRoles(roles []string) bool {
 func (user *User) NewRoles() string {
 	r, err := json.Marshal(user.Ranks)
 	if err != nil {
-		logger.Println(err)
+		log.Println(err)
 		return ""
 	}
 	fmt.Println(string(r))

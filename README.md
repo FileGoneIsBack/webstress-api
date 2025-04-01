@@ -81,8 +81,32 @@ go build api
 
 6. ./client and they should connect, the server should send the methdos to the website to confirm matching funnel
    
-==========
-
+====
+i cannot give a date VERS 3.2
 also added more admin options, fixed panel, updated error logs/sending notis, and much more ;)
 
 Note: I've never used this source; this is something I made in my free time. I don't partake in these shitty activities, but use at your own risk and legally on your own networks.
+
+
+change logs simpler then git logs
+====
+4/1/25 vers 3.5
+-fix auto pay changed to https://nowpayments.io simply make an account go to settings and get api key and add cryptos
+--while adding cryptos since ive only added like 2 your going to need to replace 
+```
+	var coinNameMap = map[string]string{
+		"btc": "bitcoin",
+		"eth": "ethereum",
+	}
+``` 
+in core/master/api/payments/transaction.go
+
+-also added notis used with
+--sessions.SetFlash(w, r, "message", "from")
+
+to come...
+-im looking to fix auth tokens and tg bot to log messages by users and log who uses what token to keep the site secure!
+-finish admin panel
+-fix L7 chart
+i been lazy and update this every few months its already passed a year old might make a new src but also been working on other shit.
+====

@@ -1,21 +1,18 @@
 package main
 
 import (
-	"log"
+	"api/core/models/log"
 	"bot/database"
-	"os"
-	handler "bot/core"
+ 	 handler "bot/core"
 	"bot/models/bot"
 	"bot/models/server"
 	"bot/models"
 )
 
-var logger = log.New(os.Stderr, "[main] ", log.Ltime|log.Lshortfile)
-
 func main() {
 	models.InitConfig()
 	if err := database.New(); err != nil {
-		logger.Println("failed to initialize database", err)
+		log.Println("failed to initialize database", err)
 		return
 	}
 

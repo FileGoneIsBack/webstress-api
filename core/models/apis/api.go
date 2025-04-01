@@ -5,16 +5,15 @@ import (
 	"api/core/models/floods"
 	"fmt"
 	"math"
+
 	//"net/http"
+	"api/core/models/log"
 	"strings"
 	"time"
-	"os"
-	"log"
 )
 
 var (
 	Apis map[string]*Api
-	logger = log.New(os.Stdout, "[apis] ", log.LstdFlags)
 )
 
 type Api struct {
@@ -45,7 +44,7 @@ func trackAttack(api *Api, attack *floods.Attack) {
 	<-time.After(duration)
 	api.running--
 	delete(ongoingAttacks, attack)
-	logger.Printf("Attack on API %s finished.\n", api.Name)
+	log.Printf("Attack on API %s finished.\n", api.Name)
 }
 
 // Slots returns the total available slots across all APIs
@@ -96,7 +95,7 @@ func Send(a *floods.Attack) error {
 		//	return fmt.Errorf("error sending attack via API %s: %v", api.Name, err)
 		//}
 		/*if resp.StatusCode == 200 {
-			logger.Println("successfully sent attack using " + api.Name)
+			log.Println("successfully sent attack using " + api.Name)
 			api.running++
 			go trackAttack(api, a)
 			continue
@@ -108,7 +107,7 @@ func Send(a *floods.Attack) error {
 	return nil
 }
 func (api *Api) Load() float64 {
-	logger.Println(api.Name, api.running, api.Slots, fmt.Sprintf("%.2f", (float64(api.running)/float64(api.Slots))*100))
+	log.Println(api.Name, api.running, api.Slots, fmt.Sprintf("%.2f", (float64(api.running)/float64(api.Slots))*100))
 	return toFixed(((float64(api.running) / float64(api.Slots)) * 100), 2)
 }
 func (s *Api) Running() int {
@@ -131,7 +130,7 @@ func Stop(target string) {
 		if strings.Contains(api.URL, target) {
 			api.running--
 			delete(ongoingAttacks, attack)
-			logger.Printf("Stopped ongoing attack on API: %s\n", api.Name)
+			log.Printf("Stopped ongoing attack on API: %s\n", api.Name)
 		}
 	}
 }

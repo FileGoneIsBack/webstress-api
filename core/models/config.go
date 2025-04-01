@@ -1,16 +1,15 @@
 package models
 import (
 	"encoding/json"
-	"log"
-	"os"
+	"api/core/models/log"
 	"path/filepath"
 	"api/core/models/apis"
 	"api/core/models/plans"
 	"api/core/models/servers"
+	"os"
 )
 var (
 	Config *Conf = new(Conf)
-	logger  = log.New(os.Stderr, "[init] ", log.Ltime|log.Lshortfile)
 )
 
 type Conf struct {
@@ -28,7 +27,7 @@ type Conf struct {
 	} `json:"database"`
 	Autobuy struct {
 		Key 		string `json:"key"`
-		Email 		string `json:"email"`
+		Flat 		string `json:"flat"`
 	} `json:"autobuy"`
     FreeUser struct {
         Enabled1    bool   `json:"enabled"`
@@ -75,6 +74,6 @@ func reloadConfigFile(filePath string, target interface{}) error {
 	if err := json.Unmarshal(content, target); err != nil {
 		return err
 	}
-	logger.Printf("Successfully reloaded %s", filePath)
+	log.Printf("Successfully reloaded %s", filePath)
 	return nil
 }

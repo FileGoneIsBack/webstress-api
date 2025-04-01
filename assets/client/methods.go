@@ -1,21 +1,20 @@
 package main
 
 import (
+	"api/core/models/log"
 	"encoding/json"
 	"os"
-
 )
 
 func LoadMethods() {
 	file, err := os.Open("methods.json")
 	if err != nil {
-		logger.Fatal(err)
+		log.Fatal(err)
 	}
 	defer file.Close()
 	if err := json.NewDecoder(file).Decode(&methods); err != nil {
-		logger.Fatal("Failed to decode methods.json:", err)
+		log.Fatal("Failed to decode methods.json:", err)
 	}
 
-	logger.Println(len(methods), "registered methods!")
+	log.Println(len(methods), "registered methods!")
 }
-

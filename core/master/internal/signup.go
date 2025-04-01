@@ -210,7 +210,7 @@ func renderErrorPage(w http.ResponseWriter, r *http.Request, errorMessage string
 			captcha.placeholder = '` + exp + `';
 		});
 		</script>`),
-	}, w, "login", "signup.html")
+	}, w, r, "login", "signup.html")
 	delete(captchas, KeyByRealIP(r))
 	NewCaptcha(r, ans)
 }

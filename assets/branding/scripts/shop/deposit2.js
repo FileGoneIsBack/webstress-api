@@ -40,7 +40,7 @@ function updatePayments() {
             paymentInfoArray.forEach((payment) => {
                 const newRow = document.createElement("tr");
                 var cryptoNames = {
-                    btc: 'bitcoin',
+                    btc: 'btc',
                     eth: 'ethereum',
                     ltc: 'litecoin',
                     xmr: 'monero',

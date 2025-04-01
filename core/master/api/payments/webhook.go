@@ -3,6 +3,7 @@ package paymentsapi
 import (
 	"api/core/database"
 	//"api/core/models/sellix"
+	"api/core/master/sessions"
 	"api/core/models/server"
 	"bytes"
 	"crypto/hmac"
@@ -316,6 +317,7 @@ func init() {
 				return
 			}
 			user.Balance += sale.Amount
+			sessions.SetFlash(w, r, fmt.Sprintf("Balance updated! New Balance: %d", user.Balance), "System")
 			database.Container.UpdateUser(user)
 			database.Container.UpdateSale(sale)
 		case "order:partial":

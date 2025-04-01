@@ -40,16 +40,23 @@
                             <h4 class="notification-title mb-0 me-auto">Notifications</h4>
                         </div>
                     </li>
+
+                    {{if .FlashMessages}}
+                    {{range .FlashMessages}}
                     <li class="scrollable-container media-list">
                         <a class="d-flex" href="#">
                             <div class="list-item d-flex align-items-start">
                                 <div class="list-item-body flex-grow-1">
-                                    <p class="media-heading"><span class="fw-bolder">kitty (admin)</span></p>
-                                    <small class="notification-text"> is cute but wont admit it.</small>
+                                    <p class="media-heading"><span class="fw-bolder">System</span></p>
+                                    <small class="notification-text"> {{.Message}}</small>
                                 </div>
                             </div>
                         </a>
-                    </li>
+                        {{end}}
+                            {{else}}
+                                <div class="notification-item">No new notifications</div>
+                            {{end}}
+                        </li>
                     <li class="dropdown-menu-footer">
                         <a class="btn btn-primary w-100" href="#">Read all notifications</a>
                     </li>
@@ -58,8 +65,8 @@
             <li class="nav-item dropdown dropdown-user">
                 <a class="nav-link dropdown-toggle dropdown-user-link" id="dropdown-user" href="#" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <div class="user-nav d-sm-flex d-none">
-                        <span class="user-name fw-bolder">{{.Username}}</span>
-                        <span class="user-status">{{ if .User.HasPermission "admin" }}Admin {{ else }} User{{ end }}</span>
+                        <span class="user-name fw-bolder">{{.Session.Username}}</span>
+                        <span class="user-status">{{if .Session.HasPermission "admin"}}Admin {{ else }} User{{ end }}</span>
                     </div>
                     <span class="avatar"></span>
                 </a>
@@ -72,7 +79,7 @@
                         <i class="me-50" data-feather="check-square"></i>
                         Logs
                     </a>
-                    {{if .HasPermission "admin"}}
+                    {{if .Session.HasPermission "admin"}}
                     <a class="dropdown-item" href="/admin/dash">
                         <i class="me-50" data-feather="shield"></i>
                         Admin
@@ -175,7 +182,7 @@
                 </a>
             </li>
 
-            {{if .HasPermission "admin"}}
+            {{ if .Session.HasPermission "admin" }}
             <li class=" navigation-header">
                 <span>Administration</span><i data-feather="more-horizontal"></i>
             </li>
@@ -233,6 +240,13 @@
                     </li>
                 </ul>
             </li>
+            <div class="menu-divider mb-0"></div>
+            <ul class="m-0 p-0">
+              <li class="menu-block my-1 d-flex flex-row justify-content-between">
+                <a class="fold-show"title="Settings" data-bs-placement="top" data-bs-toggle="tooltip" href="javascript:%20void(0);"><span aria-hidden="true" class="text-body ti tabler-settings"></span></a> <atitle="Lock" data-bs-placement="top" data-bs-toggle="tooltip" href="javascript:%20void(0);"><span aria-hidden="true" class="text-body ti tabler-hide"></span></a> <atitle="Logout" data-bs-placement="top" data-bs-toggle="tooltip" href="javascript:%20void(0);"><span aria-hidden="true" class="text-body ti tabler-power-off"></span></a>
+              </li>
+            </ul>
+          </div>
             {{end}}
             <div class="divider">
                 <div class="divider-text">/\</div>

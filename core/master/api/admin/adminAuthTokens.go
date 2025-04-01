@@ -3,14 +3,16 @@ package adminapi
 import (
 	"api/core/database"
 	"api/core/master/sessions"
+	"api/core/models/log"
 	"api/core/models/server"
 	"encoding/json"
+	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
-	"fmt"
-	"strconv"
 )
+
 // Custom type for time to handle Unix timestamp in milliseconds
 type CustomTime struct {
 	time.Time
@@ -40,40 +42,39 @@ func init() {
 }
 
 func PostAuthTokens(w http.ResponseWriter, r *http.Request) {
-    type request struct {
-        Token  int       `json:"token"`
-        Expire time.Time `json:"expire"`
-    }
-    var req request
-    if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-        http.Error(w, "Invalid request body", http.StatusBadRequest)
-        return
-    }
-    if req.Token <= 0 {
-        http.Error(w, "Invalid token", http.StatusBadRequest)
-        return
-    }
-    if req.Expire.Before(time.Now()) {
-        http.Error(w, "Expiration time cannot be in the past", http.StatusBadRequest)
-        return
-    }
-    if err := database.Container.AddInvite(req.Token, req.Expire); err != nil {
-        http.Error(w, "Failed to add token to the database", http.StatusInternalServerError)
-        return
-    }
+	type request struct {
+		Token  int       `json:"token"`
+		Expire time.Time `json:"expire"`
+	}
+	var req request
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "Invalid request body", http.StatusBadRequest)
+		return
+	}
+	if req.Token <= 0 {
+		http.Error(w, "Invalid token", http.StatusBadRequest)
+		return
+	}
+	if req.Expire.Before(time.Now()) {
+		http.Error(w, "Expiration time cannot be in the past", http.StatusBadRequest)
+		return
+	}
+	if err := database.Container.AddInvite(req.Token, req.Expire); err != nil {
+		http.Error(w, "Failed to add token to the database", http.StatusInternalServerError)
+		return
+	}
 
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte("Token Added!"))
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte("Token Added!"))
 }
-
 
 func GetAuthTokens(w http.ResponseWriter, r *http.Request) {
-invites, err := database.Container.GetAllInvites()
-if err != nil {
-    // Send the error message to the client
-    http.Error(w, fmt.Sprintf("Failed to retrieve blacklists: %v", err), http.StatusInternalServerError)
-    return
-}
+	invites, err := database.Container.GetAllInvites()
+	if err != nil {
+		// Send the error message to the client
+		http.Error(w, fmt.Sprintf("Failed to retrieve blacklists: %v", err), http.StatusInternalServerError)
+		return
+	}
 
 	invitesJSON, err := json.Marshal(invites)
 	if err != nil {
@@ -101,14 +102,14 @@ func init() {
 			}
 
 			type request struct {
-				Expire CustomTime `json:"exp"`  // Use CustomTime type to handle the Unix timestamp
-				Token  string        `json:"token"`
+				Expire CustomTime `json:"exp"` // Use CustomTime type to handle the Unix timestamp
+				Token  string     `json:"token"`
 			}
 
 			var req request
 			// Decode the incoming JSON request body
 			if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-				logger.Println("Error decoding JSON request:", err)
+				log.Println("Error decoding JSON request:", err)
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}

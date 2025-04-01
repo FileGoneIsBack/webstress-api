@@ -27,7 +27,7 @@ func init() {
 		}
 		functions.Render(Page{
 			Name:         models.Config.Name,
-			Domain:		  models.Config.Domain,
+			Domain:       models.Config.Domain,
 			Title:        "Manager",
 			Vers:         models.Config.Vers,
 			ServersCount: len(servers.Servers) + len(apis.Apis),
@@ -36,6 +36,6 @@ func init() {
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Remotes:      servers.Servers,
 			Session:      user,
-		}, w, "api", "api.html")
+		}, w, r, "api", "api.html")
 	}))
 }

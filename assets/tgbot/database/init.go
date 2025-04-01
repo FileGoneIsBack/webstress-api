@@ -3,8 +3,7 @@ package database
 import (
 	"bot/models"
 	"database/sql"
-	"log"
-	"os"
+	"api/core/models/log"
 	"time"
 
 	_ "github.com/mattn/go-sqlite3"
@@ -12,7 +11,6 @@ import (
 
 var (
 	Container = new(Instance)
-	logger    = log.New(os.Stderr, "[database] ", log.Ltime|log.Lshortfile)
 )
 
 type Query interface{ Scan(...any) error }
@@ -33,6 +31,6 @@ func New() error {
 		return err
 	}
 	Container.conn = db
-	logger.Println("New(): succesfully connected to database")
+	lologgger.Println("New(): succesfully connected to database")
 	return nil
 }

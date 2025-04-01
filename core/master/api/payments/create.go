@@ -3,9 +3,9 @@ package paymentsapi
 import (
 	"api/core/database"
 	"api/core/master/sessions"
+	"api/core/models"
 	"api/core/models/sellix"
 	"api/core/models/server"
-	"api/core/models"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -28,36 +28,40 @@ func init() {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
+	
 			Currency := r.PostFormValue("coin")
-			Coupon := r.PostFormValue("coupon")
-			Amount, err := strconv.Atoi(r.PostFormValue("amount"))
+			//Coupon := r.PostFormValue("coupon")
+			Amount, err := strconv.ParseFloat(r.PostFormValue("amount"), 64)
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), ID: 0})
 				return
 			}
-			payment := sellix.Manager.NewPayment(Amount, "USD", "Twilight Payment", models.Config.Autobuy.Email, Currency, Coupon, r)
-			response, err := sellix.Manager.CreatePayment(payment)
+	
+			// NowPayments CreatePayment call
+			response, err := sellix.Manager.CreatePayment(Amount, models.Config.Autobuy.Flat, Currency, strconv.Itoa(user.ID))
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), ID: 0})
 				return
 			}
+	
+			// Updated response handling
 			id, err := database.Container.NewSale(&database.Sale{
-				UniqID:       response.Data.Invoice.Uniqid,
-				Amount:       Amount,
+				UniqID:       response.PaymentID,
+				Amount:       int(Amount),
 				Parent:       user.ID,
 				Coin:         Currency,
-				Status:       "waiting",
-				Product:      "Recharge for " + user.Username + " " + fmt.Sprintf("%d$", Amount) + "",
+				Status:       response.Status,
+				Product:      fmt.Sprintf("Recharge for %s $%.2f", user.Username, Amount),
 				Date:         time.Now().Unix(),
-				Address:      response.Data.Invoice.CryptoAddress,
-				CryptoAmount: response.Data.Invoice.CryptoAmount,
+				Address:      response.PayAddress,
+				CryptoAmount: response.PayAmount,
 			})
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), ID: 0})
 				return
 			}
-			json.NewEncoder(w).Encode(&Status{Status: "success", Message: "succesfully created invoice " + fmt.Sprint(response.Data.Invoice.Uniqid) + "", ID: id})
-			return
+	
+			json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully created invoice " + response.PaymentID, ID: id})
 		}
 	}))
 }

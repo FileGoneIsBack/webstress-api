@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"os"
+	"api/core/models/log"
 )
 
 var (
@@ -21,8 +22,8 @@ type conf struct {
 func Load() {
 	file, err := os.Open("config.json")
 	if err != nil {
-		logger.Fatal(err)
+		log.Fatal(err)
 	}
 	json.NewDecoder(file).Decode(&Config)
-	logger.Println("succesfully read config! (s.name=\"" + Config.Name + "\")")
+	log.Println("succesfully read config! (s.name=\"" + Config.Name + "\")")
 }

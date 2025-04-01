@@ -62,7 +62,7 @@ $(window).on('load', function() {
 	captcha.placeholder = '` + exp + `';
 });
 </script>`),
-			}, w, "login", "signup.html")
+			}, w,r, "login", "signup.html")
 		case "post":
 			internal.Signup(w, r)
 			/*

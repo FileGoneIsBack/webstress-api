@@ -1,5 +1,7 @@
 package server
 
+import "api/core/models/log"
+
 func (s *Server) AddRoute(route *Route) {
 	if s.routeExists(route) {
 		return
@@ -7,7 +9,7 @@ func (s *Server) AddRoute(route *Route) {
 	s.addNamedRoute(route)
 	if route.Name != "" && !route.Subrouter {
 		s.router.HandleFunc(route.Name, route.Handler)
-		s.logger.Println("succesfully added \"/" + route.Name + "\" route")
+		log.Println("succesfully added \"/" + route.Name + "\" route")
 	}
 	if len(route.Subroutes) > 0 {
 		for _, sub := range route.Subroutes {
@@ -29,7 +31,7 @@ func (s *Server) addSubRoute(name string, route *Route) {
 		return
 	}
 	if route.Subrouter && route.Name != "" {
-		s.logger.Println("succesfully added \"" + name + route.Name + "\" subrouter!")
+		log.Println("[ROUTE] succesfully added \"" + name + route.Name + "\" subrouter!")
 	}
 	s.addNamedRoute(&Route{
 		Name:      name + route.Name,
@@ -39,10 +41,10 @@ func (s *Server) addSubRoute(name string, route *Route) {
 	})
 	if name == "" && route.Handler != nil {
 		s.router.HandleFunc(route.Name, route.Handler)
-		s.logger.Println("succesfully added \"" + name + route.Name + "\" route")
+		log.Println("[ROUTE] succesfully added \"" + name + route.Name + "\" route")
 	} else if route.Handler != nil {
 		s.router.HandleFunc(name+route.Name, route.Handler)
-		s.logger.Println("succesfully added \"" + name + route.Name + "\" route")
+		log.Println("[ROUTE] succesfully added \"" + name + route.Name + "\" route")
 	}
 	if len(route.Subroutes) > 0 {
 		for _, sub := range route.Subroutes {

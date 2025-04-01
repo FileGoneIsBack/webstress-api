@@ -3,15 +3,12 @@ package adminapi
 import (
 	"api/core/database"
 	"api/core/master/sessions"
+	"api/core/models/log"
 	"api/core/models/server"
 	"encoding/json"
-	"log"
 	"net/http"
-	"os"
 	"strings"
 )
-
-var logger = log.New(os.Stderr, "[Admin] ", log.Ltime|log.Lshortfile)
 
 func init() {
 	Route.NewSub(server.NewRoute("/update-user", func(w http.ResponseWriter, r *http.Request) {
@@ -27,14 +24,14 @@ func init() {
 			}
 			var updatedUser database.User
 			if err := json.NewDecoder(r.Body).Decode(&updatedUser); err != nil {
-				logger.Println("Error decoding JSON request:", err)
+				log.Println("Error decoding JSON request:", err)
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 
 			// Update the user in the database
 			if err := database.Container.UpdateUser(&updatedUser); err != nil {
-				logger.Println("Error updating user in the database:", err)
+				log.Println("Error updating user in the database:", err)
 				http.Error(w, "Failed to update user", http.StatusInternalServerError)
 				return
 			}
@@ -65,7 +62,7 @@ func init() {
 				Username string `json:"username"`
 			}
 			if err := json.NewDecoder(r.Body).Decode(&deleteUserReq); err != nil {
-				logger.Println("Error decoding JSON request:", err)
+				log.Println("Error decoding JSON request:", err)
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
@@ -73,15 +70,15 @@ func init() {
 			// Fetch the user ID
 			userID, err := database.Container.GetUserID(deleteUserReq.Username)
 			if err != nil {
-				logger.Println("Error fetching user ID from the database:", err)
+				log.Println("Error fetching user ID from the database:", err)
 				http.Error(w, "Failed to delete user", http.StatusInternalServerError)
-				logger.Print(deleteUserReq.Username)
+				log.Println(deleteUserReq.Username)
 				return
 			}
 
 			// Delete the user
 			if err := database.Container.DeleteUser(deleteUserReq.Username, userID); err != nil {
-				logger.Println("Error deleting user from the database:", err)
+				log.Println("Error deleting user from the database:", err)
 				http.Error(w, "Failed to delete user", http.StatusInternalServerError)
 				return
 			}

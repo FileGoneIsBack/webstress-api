@@ -3,6 +3,7 @@ package adminapi
 import (
 	"api/core/database"
 	"api/core/master/sessions"
+	"api/core/models/log"
 	"api/core/models/server"
 	"encoding/json"
 	"net/http"
@@ -23,13 +24,13 @@ func init() {
 			}
 			var newNews database.News
 			if err := json.NewDecoder(r.Body).Decode(&newNews); err != nil {
-				logger.Println("Error decoding JSON request:", err)
+				log.Println("Error decoding JSON request:", err)
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 			newNews.From = session.User.Username
 			if err := database.Container.NewNews(&newNews); err != nil {
-				logger.Println("Error adding news to the database:", err)
+				log.Println("Error adding news to the database:", err)
 				http.Error(w, "Failed to add news", http.StatusInternalServerError)
 				return
 			}

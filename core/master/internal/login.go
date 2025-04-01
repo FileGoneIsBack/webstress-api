@@ -33,7 +33,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				Title: "Error!",
 				Text:  "Username is required.",
 			})),
-		}, w, "login", "login.html")
+		}, w, r, "login", "login.html")
 		return
 	}
 
@@ -47,7 +47,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				Title: "Error!",
 				Text:  "Password is required.",
 			})),
-		}, w, "login", "login.html")
+		}, w, r, "login", "login.html")
 		return
 	}
 
@@ -61,7 +61,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				Title: "Error!",
 				Text:  "Invalid credentials.",
 			})),
-		}, w, "login", "login.html")
+		}, w, r, "login", "login.html")
 		return
 	}
 
@@ -74,7 +74,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				Title: "Error!",
 				Text:  "Invalid credentials.",
 			})),
-		}, w, "login", "login.html")
+		}, w, r, "login", "login.html")
 		return
 	}
 	if !user.IsKey([]byte(r.Form["login-password"][0])) {
@@ -86,7 +86,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 				Title: "Error!",
 				Text:  "Invalid credentials.",
 			})),
-		}, w, "login", "login.html")
+		}, w, r, "login", "login.html")
 		return
 	}
 	expiryTime := time.Unix(user.Expiry, 0)
@@ -112,7 +112,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 					Title: "Error!",
 					Text:  "There was an error updating your account status.",
 				}))},
-				w, "login", "login.html")
+				w, r, "login", "login.html")
 			return
 		}
 	}

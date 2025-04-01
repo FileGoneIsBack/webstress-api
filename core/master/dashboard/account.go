@@ -25,6 +25,11 @@ func init() {
 			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return
 		}
+		err := sessions.SetFlash(w, r, "Your changes have been saved successfully.")
+		if err != nil {
+			http.Error(w, "Error setting flash message: "+err.Error(), http.StatusInternalServerError)
+			return
+		}
 		functions.Render(Page{
 			Name:         models.Config.Name,
 			Title:        "Profile",
@@ -35,6 +40,6 @@ func init() {
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Remotes:      servers.Servers,
 			Session:      user,
-		}, w, "user", "account.html")
+		}, w, r, "user", "account.html")
 	}))
 }

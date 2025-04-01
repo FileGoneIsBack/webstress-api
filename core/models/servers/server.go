@@ -3,25 +3,26 @@ package servers
 import (
 	"api/core/models/apis"
 	"api/core/models/floods"
+	"api/core/models/log"
 	"fmt"
 	"math"
 	"net"
+	"slices"
 	"strings"
-    "slices"
 	"time"
 )
 
 type Server struct {
-	Name      string
-	Type      int
-	Slots     int
-	running   int
-	CurrentID int
-  Methods   []string
-	attacks   map[int]*floods.Attack
-	Queue     chan *floods.Attack
-	StopQueue chan string
-	conn      net.Conn
+	Name         string
+	Type         int
+	Slots        int
+	running      int
+	CurrentID    int
+	Methods      []string
+	attacks      map[int]*floods.Attack
+	Queue        chan *floods.Attack
+	StopQueue    chan string
+	conn         net.Conn
 	ResponseTime float64
 }
 
@@ -51,40 +52,39 @@ func (s *Server) Running() int {
 }
 
 func SelectHandler(atk *floods.Attack) (*Server, error) {
-    if len(Servers) == 0 {
-        return nil, fmt.Errorf("no servers available")
-    }
+	if len(Servers) == 0 {
+		return nil, fmt.Errorf("no servers available")
+	}
 
-    var load []int = make([]int, 0)
-    for _, server := range Servers {
-        if server.running == server.Slots {
-            continue
-        }
-        if contains(server.Methods, atk.Sname) {
-            load = append(load, server.running)
-        }
-    }
+	var load []int = make([]int, 0)
+	for _, server := range Servers {
+		if server.running == server.Slots {
+			continue
+		}
+		if contains(server.Methods, atk.Sname) {
+			load = append(load, server.running)
+		}
+	}
 
-    // If no servers can handle the method, return an error
-    if len(load) == 0 {
-        return nil, fmt.Errorf("no servers available with method %s", atk.Sname)
-    }
+	// If no servers can handle the method, return an error
+	if len(load) == 0 {
+		return nil, fmt.Errorf("no servers available with method %s", atk.Sname)
+	}
 
-    min := slices.Min(load)
+	min := slices.Min(load)
 
-    // Find and return the server with the minimum load that supports the attack method
-    for _, server := range Servers {
-        if server.running == server.Slots {
-            continue
-        }
-        if server.running == min && contains(server.Methods, atk.Sname) {
-            return server, nil
-        }
-    }
+	// Find and return the server with the minimum load that supports the attack method
+	for _, server := range Servers {
+		if server.running == server.Slots {
+			continue
+		}
+		if server.running == min && contains(server.Methods, atk.Sname) {
+			return server, nil
+		}
+	}
 
-    return nil, fmt.Errorf("no suitable server found for method %s", atk.Sname)
+	return nil, fmt.Errorf("no suitable server found for method %s", atk.Sname)
 }
-
 
 func (s *Server) KeepAlive() {
 	ticker := time.NewTicker(10 * time.Second)
@@ -97,7 +97,7 @@ func (s *Server) KeepAlive() {
 			if (s.running + 1) == s.Slots {
 				continue
 			}
-			logger.Println("starting attack on \"" + atk.Target + "\" with server \"" + s.Name + "\"")
+			log.Println("starting attack on \"" + atk.Target + "\" with server \"" + s.Name + "\"")
 			s.NewMessage(MessageAttack, "")
 			s.running++
 			s.attacks[len(s.attacks)] = atk
@@ -107,7 +107,7 @@ func (s *Server) KeepAlive() {
 				continue
 			}
 			s.NewMessage(MessageStop, stop)
-			logger.Println("stopped attack \"" + stop + "\"")
+			log.Println("stopped attack \"" + stop + "\"")
 		case <-ticker.C:
 			s.NewMessage(MessagePing, "ping!")
 			msg, err := s.ReadMessage()
@@ -115,7 +115,7 @@ func (s *Server) KeepAlive() {
 				return
 			}
 			if msg.ID != MessagePing {
-				logger.Println("ping id mismatch!")
+				log.Println("ping id mismatch!")
 				return
 			}
 		default:
@@ -123,13 +123,14 @@ func (s *Server) KeepAlive() {
 		}
 	}
 }
-//added err check
+
+// added err check
 func Distribute(atk *floods.Attack) error {
 	fmt.Println("distributing attack across all servers!")
-    handler, err := SelectHandler(atk)
-    if err != nil {
-        return err
-    }
+	handler, err := SelectHandler(atk)
+	if err != nil {
+		return err
+	}
 	if handler != nil {
 		handler.Queue <- atk
 	} else {
@@ -143,30 +144,30 @@ func Distribute(atk *floods.Attack) error {
 }
 
 func contains(methods []string, method string) bool {
-    for _, m := range methods {
-        if m == method {
-            return true
-        }
-    }
-    return false
+	for _, m := range methods {
+		if m == method {
+			return true
+		}
+	}
+	return false
 }
 
 func Stop(id int) {
-    for _, server := range Servers {
-        for attackID := range server.attacks {
-            if attackID == id {
-                delete(server.attacks, attackID)
-                server.running--
+	for _, server := range Servers {
+		for attackID := range server.attacks {
+			if attackID == id {
+				delete(server.attacks, attackID)
+				server.running--
 
-                logger.Println("Stopped attack on target:", id)
-                //server.NewMessage(MessageStop, id) yk i got lazy here who needs attaks to stop?
-                return
-            }
-        }
-    }
+				log.Println("Stopped attack on target:", id)
+				//server.NewMessage(MessageStop, id) yk i got lazy here who needs attaks to stop?
+				return
+			}
+		}
+	}
 
-    // If the attack ID was not found, log a warning
-    logger.Println("No ongoing attack found with ID:", id)
+	// If the attack ID was not found, log a warning
+	log.Println("No ongoing attack found with ID:", id)
 }
 
 func Slots() map[int]int {
@@ -176,20 +177,20 @@ func Slots() map[int]int {
 		i[0] += server.Slots
 	}
 	i[0] += apis.Slots()
-	logger.Println(i)
+	log.Println(i)
 	return i
 }
 
 func (s *Server) Ongoing() {
 	ticker := time.NewTicker(1 * time.Second)
-	for {
-		select {
-		case <-ticker.C:
-			for i, attack := range s.attacks {
-				if attack.Created+int64(attack.Duration) == time.Now().Unix() {
-					delete(s.attacks, i)
-					s.running--
-				}
+	defer ticker.Stop() // Ensure ticker is stopped when function exits
+
+	for range ticker.C {
+		now := time.Now().Unix()
+		for i, attack := range s.attacks {
+			if attack.Created+int64(attack.Duration) <= now { // Use <= to prevent skipped removals
+				delete(s.attacks, i)
+				s.running--
 			}
 		}
 	}
@@ -203,4 +204,3 @@ func toFixed(num float64, precision int) float64 {
 	output := math.Pow(10, float64(precision))
 	return float64(round(num*output)) / output
 }
-

@@ -12,6 +12,12 @@ import (
 )
 
 func init() {
+	// Mapping short coin names to full names
+	var coinNameMap = map[string]string{
+		"btc": "bitcoin",
+		"eth": "ethereum",
+	}
+
 	Route.NewSub(server.NewRoute("/status", func(w http.ResponseWriter, r *http.Request) {
 		type Payment struct {
 			ID            int     `json:"id"`
@@ -42,17 +48,31 @@ func init() {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), Payment: &Payment{}})
 				return
 			}
-			json.NewEncoder(w).Encode(&Status{Status: "success", Message: "transaction information", Payment: &Payment{
-				ID:            payment.ID,
-				Amount:        payment.Amount,
-				CryptoAmount:  payment.CryptoAmount,
-				CryptoAddress: payment.Address,
-				CryptoCoin:    payment.Coin,
-				QrCode:        "https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=" + payment.Coin + ":" + payment.Address + "?amount=" + fmt.Sprint(payment.CryptoAmount),
-				Recieved:      payment.Recieved,
-				Status:        payment.Status,
-				Date:          payment.Date,
-			}})
+			
+			// Get full coin name
+			fullCoinName, exists := coinNameMap[strings.ToLower(payment.Coin)]
+			if !exists {
+				fullCoinName = payment.Coin // fallback to original coin name if it's not in the map
+			}
+
+			// Generate the QR code URL with the full coin name
+			qrCodeURL := fmt.Sprintf("https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=%s:%s?amount=%s", fullCoinName, payment.Address, fmt.Sprint(payment.CryptoAmount))
+			// Send the response with the updated QR code URL
+			json.NewEncoder(w).Encode(&Status{
+				Status:  "success",
+				Message: "transaction information",
+				Payment: &Payment{
+					ID:            payment.ID,
+					Amount:        payment.Amount,
+					CryptoAmount:  payment.CryptoAmount,
+					CryptoAddress: payment.Address,
+					CryptoCoin:    payment.Coin,
+					QrCode:        qrCodeURL,
+					Recieved:      payment.Recieved,
+					Status:        payment.Status,
+					Date:          payment.Date,
+				},
+			})
 		}
 	}))
 }

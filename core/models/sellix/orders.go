@@ -15,16 +15,22 @@ type OrdersResp struct {
 	} `json:"data"`
 }
 
-func (c *Client) GetOrders() (*OrdersResp, error) {
-	r, err := c.CreateRequest("GET", "", RootURL+Orders)
+func (c *Client) GetPaymentStatus(paymentID string) (*PaymentResp, error) {
+	req, err := c.CreateRequest("GET", "", "/payment/"+paymentID)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := c.client.Do(r)
+
+	resp, err := c.client.Do(req)
 	if err != nil {
 		return nil, err
 	}
-	v := new(OrdersResp)
-	json.NewDecoder(resp.Body).Decode(&v)
-	return v, nil
+	defer resp.Body.Close()
+
+	var pResp PaymentResp
+	if err := json.NewDecoder(resp.Body).Decode(&pResp); err != nil {
+		return nil, err
+	}
+
+	return &pResp, nil
 }

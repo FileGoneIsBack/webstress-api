@@ -3,19 +3,18 @@ package sessions
 import (
 	"api/core/database"
 	websessions "api/core/master/sessions"
+	"api/core/models/log"
 	"api/core/net/term"
 	"net"
 	"net/http"
 	"sync"
 	"time"
-	"log"
-	"os"
+
 	"github.com/google/uuid"
 )
 
 var Sessions = make(map[int64]*Session)
 var SessionMutex sync.Mutex
-var logger  = log.New(os.Stderr, "[main] ", log.Ltime|log.Lshortfile)
 
 type Session struct {
 	ID     int64
@@ -30,13 +29,13 @@ func IsLoggedIn(userID int64) (*Session, bool) {
 	SessionMutex.Lock()
 	defer SessionMutex.Unlock()
 
-	logger.Println("Checking session for user ID:", userID)
+	log.Println("Checking session for user ID:", userID)
 	session, exists := Sessions[userID]
 	if exists {
-		logger.Println("Session found for user ID:", userID)
+		log.Println("Session found for user ID:", userID)
 		return session, true
 	} else {
-		logger.Println("Session not found for user ID:", userID)
+		log.Println("Session not found for user ID:", userID)
 		return nil, false
 	}
 }

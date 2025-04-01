@@ -3,6 +3,7 @@ package adminapi
 import (
 	"api/core/database"
 	"api/core/master/sessions"
+	"api/core/models/log"
 	"api/core/models/server"
 	"encoding/json"
 	"net/http"
@@ -28,14 +29,14 @@ func init() {
 				Status   string `json:"status"`
 			}
 			if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-				logger.Println("Error decoding JSON request:", err)
+				log.Println("Error decoding JSON request:", err)
 				http.Error(w, err.Error(), http.StatusBadRequest)
 				return
 			}
 
 			// Update the ticket status in the database
 			if err := database.Container.UpdateTicket(request.TicketID, request.Status); err != nil {
-				logger.Println("Error updating ticket status in the database:", err)
+				log.Println("Error updating ticket status in the database:", err)
 				http.Error(w, "Failed to update ticket status", http.StatusInternalServerError)
 				return
 			}

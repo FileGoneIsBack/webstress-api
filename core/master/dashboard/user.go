@@ -19,13 +19,17 @@ func init() {
             Users                   int
             Remotes                 map[string]*servers.Server
             *sessions.Session
+            FlashMessages           []sessions.FlashMessage        
         }
         ok, user := sessions.IsLoggedIn(w, r)
         if !ok {
             http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
             return
         }
-
+        //system noti
+        sessions.SetFlash(w, r, "Your changes have been saved successfully.", "System")
+        
+        flashMessages := sessions.GetFlash(w, r)
         functions.Render(Page{
             Name:    models.Config.Name,
             Title:   "Dashboard",
@@ -36,6 +40,7 @@ func init() {
             Users:   database.Container.Users() + models.Config.Fake.Users,
             Remotes: servers.Servers,
             Session: user,
-        }, w, "user", "dash.html")
+            FlashMessages: flashMessages,
+        }, w, r, "user", "dash.html")
     }))
 }
