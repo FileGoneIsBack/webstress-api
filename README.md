@@ -80,7 +80,11 @@ go build api
 - white list servers to connect in servers.json
 
 6. ./client and they should connect, the server should send the methdos to the website to confirm matching funnel
-   
+
+
+scroll for latest!
+
+
 ====
 i cannot give a date VERS 3.2
 also added more admin options, fixed panel, updated error logs/sending notis, and much more ;)
