@@ -1,4 +1,4 @@
-package managerapi
+package Managerapi
 
 import (
 	"api/core/models/server"

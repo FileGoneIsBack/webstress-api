@@ -28,7 +28,6 @@ func init() {
             }
 
             addonVal := r.PostFormValue("addon_name")
-            fmt.Println("Addon Name:", addonVal) // Log addonVal
 
             var addon *plans.Addon
             var addonRanks []*ranks.Rank
@@ -42,6 +41,7 @@ func init() {
                         return
                     }
                     json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully added time."})
+                    sessions.SetFlash(w, r,  fmt.Sprintf("succesfully purchased %s", addonVal), "")
                 } else {
                     json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})
                 }
@@ -54,6 +54,7 @@ func init() {
                         json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Failed to add concurrent connections."})
                         return
                     }
+                    sessions.SetFlash(w, r,  fmt.Sprintf("succesfully purchased %s", addonVal), "")
                     json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully added concurrent connections."})
                 } else {
                     json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})
@@ -72,6 +73,7 @@ func init() {
                         json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Error updating rank."})
                         return
                     }
+                    sessions.SetFlash(w, r,  fmt.Sprintf("succesfully purchased %s", addonVal), "")
                     json.NewEncoder(w).Encode(&Status{Status: "success", Message: "Successfully purchased addon " + addonVal})
                 } else {
                     json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})

@@ -4,10 +4,10 @@ import (
 	"api/core/database"
 	"api/core/master/sessions"
 	"api/core/models/server"
+    "api/core/models/ranks"
 	"encoding/json"
 	"net/http"
 	"strings"
-	"time"
 )
 
 func init() {
@@ -28,7 +28,7 @@ func init() {
                 Concurrents int    `json:"conns"`
                 Servers     int    `json:"servers"`
                 Duration    int    `json:"duration"`
-                Permissions string `json:"permissions"`
+                Permissions []*ranks.Rank `json:"permissions"`
                 Balance     int    `json:"balance"`
                 Expiry      int64  `json:"expiry"`
             }
@@ -53,21 +53,9 @@ func init() {
                     Concurrents: user.Concurrents,
                     Servers:     user.Servers,
                     Duration:    user.Duration,
-                    Permissions: func() string {
-                        if user.HasPermission("admin") {
-                            return "admin"
-                        } else if user.HasPermission("vip") {
-                            return "VIP"
-                        } else if user.HasPermission("cnc") {
-                            return "CNC"
-                        } else if user.HasPermission("api") {
-                            return "API"
-                        } else if user.Expiry > time.Now().Unix() {
-                            return "member"
-                        }
-                        return "member"
-                    }(),
-                    Expiry: user.Expiry,
+                    Permissions: user.Ranks,
+                    Expiry:      user.Expiry,
+                    Balance:     user.Balance,
                 })
             }
             w.Header().Set("Content-Type", "application/json")

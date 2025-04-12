@@ -12,12 +12,13 @@ import (
 )
 
 func init() {
-	Route.NewSub(server.NewRoute("/api", func(w http.ResponseWriter, r *http.Request) {
+	Route.NewSub(server.NewRoute("/api_manager", func(w http.ResponseWriter, r *http.Request) {
 		type Page struct {
 			Name, Title, Vers, Domain    string
 			ServersCount, Ongoing, Slots int
-			Users                        int
+			Users, Reqs, FailedReqs      int
 			Remotes                      map[string]*servers.Server
+			SuccessRate 				 int
 			*sessions.Session
 		}
 		ok, user := sessions.IsLoggedIn(w, r)
@@ -25,9 +26,13 @@ func init() {
 			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return
 		}
+		Reqs, FailedReqs, _ := database.Container.GetReqs(user.Username)
+		successRate := 100
+		if Reqs > 0 {
+			successRate = int(float64(Reqs-FailedReqs) / float64(Reqs) * 100)
+		}
 		functions.Render(Page{
 			Name:         models.Config.Name,
-			Domain:       models.Config.Domain,
 			Title:        "Manager",
 			Vers:         models.Config.Vers,
 			ServersCount: len(servers.Servers) + len(apis.Apis),
@@ -36,6 +41,10 @@ func init() {
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Remotes:      servers.Servers,
 			Session:      user,
+			Domain:       models.Config.Domain,
+			Reqs: 		  Reqs,
+			FailedReqs:	  FailedReqs,
+			SuccessRate:  successRate,
 		}, w, r, "api", "api.html")
 	}))
 }

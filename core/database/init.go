@@ -8,7 +8,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/mattn/go-sqlite3" // Import SQLite driver
+	_ "github.com/mattn/go-sqlite3" 
 )
 
 func New() error {
@@ -37,7 +37,6 @@ func New() error {
 		}
 	}
 
-	// Check database connection
 	if err := db.Ping(); err != nil {
 		return fmt.Errorf("could not ping the database: %v", err)
 	}

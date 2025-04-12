@@ -3,9 +3,6 @@ package internal
 import (
 	"api/core/database"
 	"api/core/master/sessions"
-	"api/core/models"
-	"api/core/models/functions"
-	"html/template"
 	"net/http"
 	"time"
 	"api/core/models/ranks"
@@ -13,11 +10,6 @@ import (
 )
 
 func Login(w http.ResponseWriter, r *http.Request) {
-	type Page struct {
-		Name   string
-		Title  string
-		Script template.HTML
-	}
 	err := r.ParseForm()
 	if err != nil {
 		return
@@ -25,68 +17,28 @@ func Login(w http.ResponseWriter, r *http.Request) {
 	
 	username := r.FormValue("login-username")
 	if username == "" {
-		functions.Render(Page{
-			Name:  models.Config.Name,
-			Title: "Login",
-			Script: template.HTML(functions.Toast(functions.Toastr{
-				Icon:  "error",
-				Title: "Error!",
-				Text:  "Username is required.",
-			})),
-		}, w, r, "login", "login.html")
+		renderErrorPage(w, r, "Missing fields", "error")
 		return
 	}
 
 	password := r.FormValue("login-password")
 	if password == "" {
-		functions.Render(Page{
-			Name:  models.Config.Name,
-			Title: "Login",
-			Script: template.HTML(functions.Toast(functions.Toastr{
-				Icon:  "error",
-				Title: "Error!",
-				Text:  "Password is required.",
-			})),
-		}, w, r, "login", "login.html")
+		renderErrorPage(w, r, "Missing fields", "error")
 		return
 	}
 
 	user, err := database.Container.GetUser(r.Form["login-username"][0])
 	if err != nil {
-		functions.Render(Page{
-			Name:  models.Config.Name,
-			Title: "Login",
-			Script: template.HTML(functions.Toast(functions.Toastr{
-				Icon:  "error",
-				Title: "Error!",
-				Text:  "Invalid credentials.",
-			})),
-		}, w, r, "login", "login.html")
+		renderErrorPage(w, r, "Invalid username or password", "error")
 		return
 	}
 
 	if user == nil {
-		functions.Render(Page{
-			Name:  models.Config.Name,
-			Title: "Login",
-			Script: template.HTML(functions.Toast(functions.Toastr{
-				Icon:  "error",
-				Title: "Error!",
-				Text:  "Invalid credentials.",
-			})),
-		}, w, r, "login", "login.html")
+		renderErrorPage(w, r, "Invalid username or password", "error")
 		return
 	}
 	if !user.IsKey([]byte(r.Form["login-password"][0])) {
-		functions.Render(Page{
-			Name:  models.Config.Name,
-			Title: "Login",
-			Script: template.HTML(functions.Toast(functions.Toastr{
-				Icon:  "error",
-				Title: "Error!",
-				Text:  "Invalid credentials.",
-			})),
-		}, w, r, "login", "login.html")
+		renderErrorPage(w, r, "Invalid username or password", "error")
 		return
 	}
 	expiryTime := time.Unix(user.Expiry, 0)
@@ -104,15 +56,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		}
 		err := database.Container.UpdateUser(user)
 		if err != nil {
-			functions.Render(Page{
-				Name:  models.Config.Name,
-				Title: "Login",
-				Script: template.HTML(functions.Toast(functions.Toastr{
-					Icon:  "error",
-					Title: "Error!",
-					Text:  "There was an error updating your account status.",
-				}))},
-				w, r, "login", "login.html")
+			renderErrorPage(w, r, "Error updating account! contact staff or try again", "error")
 			return
 		}
 	}

@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	Route.NewSub(server.NewRoute("/ticket_manager", func(w http.ResponseWriter, r *http.Request) {
+	Route.NewSub(server.NewRoute("/chats", func(w http.ResponseWriter, r *http.Request) {
 		type Page struct {
 			Name, Title, Vers            string
 			ServersCount, Ongoing, Slots int
@@ -39,6 +39,6 @@ func init() {
 			Users:        database.Container.Users(),
 			Remotes:      servers.Servers,
 			Session:      user,
-		}, w, r, "admin", "ticket.html")
+		}, w, r, "admin", "chat.html")
 	}))
 }

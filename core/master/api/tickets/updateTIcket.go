@@ -30,6 +30,10 @@ func init() {
             Status  string `json:"status"`
             Message string `json:"message"`
         }
+        type Ticket struct {
+            TicketID int64  `json:"ticketid"`
+            Message  string `json:"message"`
+        }
 
         switch strings.ToLower(r.Method) {
         case "post":
@@ -39,26 +43,20 @@ func init() {
                 return
             }
 
-            var updateticket Ticket
-            err := json.NewDecoder(r.Body).Decode(&updateticket)
-            if err != nil {
+            var req Ticket
+            if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
                 json.NewEncoder(w).Encode(&Status{Status: "error", Message: "failed to decode request body"})
                 return
             }
-
             // Sanitize and validate the ticket message
-            updateticket.Message = sanitizeInput(updateticket.Message)
-            if updateticket.Message == "" || !validateMessage(updateticket.Message) {
+            req.Message = sanitizeInput(req.Message)
+            if req.Message == "" || !validateMessage(req.Message) {
                 json.NewEncoder(w).Encode(&Status{Status: "error", Message: "invalid message"})
                 return
             }
 
             // Save the ticket information in the database
-            err = database.Container.UpdateMessage(updateticket.TicketID, user.ID, updateticket.Message)
-            if err != nil {
-                json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error()})
-                return
-            }
+            _ = database.Container.UpdateMessage(req.TicketID, user.ID, req.Message)
 
             json.NewEncoder(w).Encode(&Status{Status: "success", Message: "ticket submitted successfully"})
         }

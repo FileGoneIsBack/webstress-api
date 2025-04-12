@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type Message struct {
@@ -16,7 +15,7 @@ type Message struct {
 	TicketID  int64     `json:"ticketid"`
 	UserID    int64     `json:"user_id"`
 	Message   string    `json:"message"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt string `json:"created_at"`
 }
 
 func init() {

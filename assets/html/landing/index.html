@@ -1,1068 +1,195 @@
-<head>
-  <script src="https://kit.fontawesome.com/d106b983f3.js" crossorigin="anonymous"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@200;300;400;500&family=Raleway:wght@100;200;300;400;500&family=Roboto:wght@300;400;700&display=swap"
-    rel="stylesheet">
 
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
-    integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous" />
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/particlesjs/2.2.3/particles.min.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
-  <style>
-    * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  background: #1e1f26;
-}
-
-.offset:hover,
-.offset:focus {
-  box-shadow: 0 0.5em 0.5em -0.4em var(--hover);
-  transform: translateY(-0.25em);
-}
-
-.offset {
-  --color: #7367F0;
-  --hover: #7367F0;
-}
-
-button {
-  color: var(--color);
-  transition: 0.25s;
-}
-
-button:hover,
-button:focus {
-  border-color: var(--hover);
-  color: #7367F0;
-}
-
-button {
-  background: none;
-  border: 2px solid;
-  font: inherit;
-  line-height: .3;
-  margin: 1em;
-  padding: 1em 3em;
-}
-
-body {
-  font-family: "ROBOTO", sans-serif;
-}
-
-.nav,
-.slider {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  position: relative;
-  background-color: #1e1f26;
-  text-align: center;
-  padding: 0 2em;
-}
-
-.nav h1,
-.slider h1 {
-  font-family: "Josefin Sans", sans-serif;
-  font-size: 5vw;
-  margin: 0;
-  padding-bottom: 0.5rem;
-  letter-spacing: 0.3rem;
-  color: #7367F0;
-  transition: all 0.3s ease;
-  z-index: 3;
-}
-
-h1:hover {
-  transform: translate3d(0, -10px, 22px);
-  color: #ff0266;
-}
-
-h3.span {
-  font-size: 2vw;
-  letter-spacing: 0.7em;
-  font-family: "ROBOTO", sans-serif;
-  font-weight: 300;
-  color: #faebd7;
-  z-index: 4;
-}
-
-span:hover {
-  color: #ff0266;
-  font-weight: 500;
-  font-size: 2.2vw;
-}
-
-a {
-  text-decoration: none;
-}
-
-.nav h2,
-.slider h2 {
-  font-size: 2vw;
-  letter-spacing: 0.3rem;
-  font-family: "ROBOTO", sans-serif;
-  font-weight: 300;
-  color: #faebd7;
-  z-index: 4;
-}
-
-.nav-container {
-  display: flex;
-  flex-direction: row;
-  position: fixed;
-  top: 0;
-  width: 100%;
-  height: 75px;
-  z-index: 10;
-  background-color: transparent;
- transition: background-color 0.3s ease;
-  box-shadow: none;
-}
-
-.nav-highlight {
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.nav-container--top-first {
-  position: fixed;
-  top: 75px;
-  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-}
-
-.nav-container--top-second {
-  position: fixed;
-  top: 0;
-}
-
-.nav-tab {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex: 1;
-
-  color: #7367F0;
-  letter-spacing: 0.1rem;
-  transition: all 0.5s ease;
-  font-size: 1.5vw;
-  transition: all 0.5s ease;
-}
-
-.nav-tab:hover {
-  color: #1e1f26;
-  transition: all 0.5s ease;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.nav-tab-slider {
-  position: absolute;
-  bottom: 0;
-  width: 0;
-  height: 2px;
-  background: #03dac6;
-  transition: left 0.3s ease;
-}
-
-
-.background {
-  position: absolute;
-  height: 100vh;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 0;
-}
-
-.loader span {
-  color: #faebd7;
-  text-shadow: 0 0 0 #faebd7;
-  -webkit-animation: loading 1s ease-in-out infinite alternate;
-}
-
-@-webkit-keyframes loading {
-  to {
-    text-shadow: 30px 10px 80px #7367F0;
-    color: #7367F0;
-  }
-}
-
-.loader span:nth-child(2) {
-  -webkit-animation-delay: 0.1s;
-}
-
-.loader span:nth-child(3) {
-  -webkit-animation-delay: 0.2s;
-}
-
-.loader span:nth-child(4) {
-  -webkit-animation-delay: 0.3s;
-}
-
-.loader span:nth-child(5) {
-  -webkit-animation-delay: 0.4s;
-}
-
-.loader span:nth-child(6) {
-  -webkit-animation-delay: 0.5s;
-}
-
-.loader span:nth-child(7) {
-  -webkit-animation-delay: 0.6s;
-}
-
-.loader span:nth-child(8) {
-  -webkit-animation-delay: 0.7s;
-}
-
-.loader span:nth-child(9) {
-  -webkit-animation-delay: 0.8s;
-}
-
-.loader span:nth-child(10) {
-  -webkit-animation-delay: 0.9s;
-}
-
-.loader span:nth-child(11) {
-  -webkit-animation-delay: 1s;
-}
-
-.loader span:nth-child(12) {
-  -webkit-animation-delay: 1.1s;
-}
-
-.loader span:nth-child(13) {
-  -webkit-animation-delay: 1.2s;
-}
-
-.loader span:nth-child(14) {
-  -webkit-animation-delay: 1.3s;
-}
-
-.loader span:nth-child(15) {
-  -webkit-animation-delay: 1.4s;
-}
-
-.loader span:nth-child(16) {
-  -webkit-animation-delay: 1.5s;
-}
-
-.loader span:nth-child(17) {
-  -webkit-animation-delay: 1.6s;
-}
-
-.loader span:nth-child(18) {
-  -webkit-animation-delay: 1.7s;
-}
-
-.loader span:nth-child(19) {
-  -webkit-animation-delay: 1.8s;
-}
-
-.loader span:nth-child(20) {
-  -webkit-animation-delay: 1.9s;
-}
-
-.loader span:nth-child(21) {
-  -webkit-animation-delay: 2s;
-}
-
-.loader span:nth-child(22) {
-  -webkit-animation-delay: 2.1s;
-}
-
-
-h1 {
-  font-weight: 400;
-}
-
-code {
-  color: #faebd7;
-  font: inherit;
-}
-
-.nav2 h3 {
-  position: absolute;
-  top: 0;
-}
-
-/* chevron */
-.scroll {
-  position: absolute;
-  width: 24px;
-  height: 10px;
-  margin-top: 10%;
-}
-
-.chevron {
-  position: absolute;
-  width: 28px;
-  height: 8px;
-  opacity: 0;
-  transform: scale3d(0.5, 0.5, 0.5);
-  animation: move 3s ease-out infinite;
-  z-index: 1;
-}
-
-.chevron:first-child {
-  animation: move 3s ease-out 1s infinite;
-}
-
-.chevron:nth-child(2) {
-  animation: move 3s ease-out 2s infinite;
-}
-
-.chevron:before,
-.chevron:after {
-  content: ' ';
-  position: absolute;
-  top: 0;
-  height: 80%;
-  width: 51%;
-  background: #7367F0;
-}
-
-.chevron:before {
-  left: 0;
-  transform: skew(0deg, 30deg);
-}
-
-.chevron:after {
-  right: 0;
-  width: 50%;
-  transform: skew(0deg, -30deg);
-}
-
-@keyframes move {
-  25% {
-    opacity: 1;
-
-  }
-
-  33% {
-    opacity: 1;
-    transform: translateY(30px);
-  }
-
-  67% {
-    opacity: 1;
-    transform: translateY(40px);
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateY(55px) scale3d(0.5, 0.5, 0.5);
-  }
-}
-
-
-p1, p, h1, h2, h3, h4, h5, h6, span, a, ul,
-li {
-  background: transparent;
-  /* Makes the background transparent for text elements */
-}
-
-.text {
-  background: transparent 
-  display: block;
-  margin-top: 75px;
-  margin-left: -30px;
-  font-family: "Helvetica Neue", "Helvetica", Arial, sans-serif;
-  font-size: 12px;
-  color: #fff;
-  text-transform: uppercase;
-  white-space: nowrap;
-  opacity: .25;
-  animation: pulse 2s linear alternate infinite;
-}
-
-@keyframes pulse {
-  to {
-    opacity: 1;
-  }
-}
-
-
-::-webkit-scrollbar-track {
-  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #1e1f26;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  background-color: #1e1f26;
-}
-
-::-webkit-scrollbar-thumb {
-  background-color: #000000;
-}
-
-
-/* title */
-section .title span {
-  display: inline-block;
-  font-size: 5vw;
-  color: #efefef;
-  width: 100%;
-  text-transform: uppercase;
-  transform: translateX(-100%);
-  animation: byBottom 1s ease both;
-  font-weight: 600;
-  letter-spacing: 0.25vw;
-}
-
-section .title span a {
-  position: relative;
-  display: inline-block;
-  margin-left: 0.5rem;
-  text-decoration: none;
-  color: #7367F0;
-}
-
-section .title span a::after {
-  content: "";
-  height: 2px;
-  background-color: #7367F0;
-  position: absolute;
-  bottom: -10px;
-  left: 0;
-  width: 0;
-  animation: linkAfter 0.5s 1s ease both;
-}
-
-@-moz-keyframes pop {
-  0% {
-    transform: translateY(100%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@-webkit-keyframes pop {
-  0% {
-    transform: translateY(100%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@-o-keyframes pop {
-  0% {
-    transform: translateY(100%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes pop {
-  0% {
-    transform: translateY(100%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@-moz-keyframes byBottom {
-  0% {
-    transform: translateY(150%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@-webkit-keyframes byBottom {
-  0% {
-    transform: translateY(150%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@-o-keyframes byBottom {
-  0% {
-    transform: translateY(150%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@keyframes byBottom {
-  0% {
-    transform: translateY(150%);
-  }
-
-  100% {
-    transform: translateY(0);
-  }
-}
-
-@-moz-keyframes linkAfter {
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
-@-webkit-keyframes linkAfter {
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
-@-o-keyframes linkAfter {
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
-@keyframes linkAfter {
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 100%;
-  }
-}
-
-/* cards
-*/
-
-.container {
-  width: 1000px;
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-}
-
-.container .card .face {
-  width: 300px;
-  height: 200px;
-  transition: .4s;
-
-}
-
-.container .card .face.face1 {
-  position: relative;
-  background: #1e1f26;
-  display: flex;
-  justify-content: center;
-  align-content: center;
-  align-items: center;
-  z-index: 1;
-  transform: translateY(100px);
-  transition: transform 0.4s ease;
-}
-
-.container .card:hover .face.face1 {
-  transform: translateY(0);
-  box-shadow: inset 0 0 60px whitesmoke,
-    inset 20px 0 80px #7367F0,
-    inset -20px 0 80px #ff0266,
-    0 0 50px #fff;
-
-}
-
-
-.container .card .face.face1 .content {
-  opacity: .2;
-  transition: 0.5s;
-  text-align: center;
-
-
-
-
-
-
-}
-
-.container .card:hover .face.face1 .content {
-  opacity: 1;
-  background: transparent;
-
-}
-
-.container .card .face.face1 .content h2 {
-  font-size: 3em;
-  color: white;
-  display: inline-block;
-  background: transparent;
-}
-
-.container .card .face.face1 .content h3 {
-  font-size: 1em;
-  color: white;
-  text-align: center;
-  background: transparent;
-
-}
-
-.container .card .face.face1 .content a {
-  transition: .5s;
-}
-
-.container .card .face.face2 {
-  position: relative;
-  background: whitesmoke;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  box-sizing: border-box;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, .8);
-  transform: translateY(-100px);
-  background: transparent;
-  transition: transform 0.4s ease;
-}
-
-.container .card:hover .face.face2 {
-  transform: translateY(0);
-}
-
-.container .card .face.face2 .content h3 {
-  font-size: 1.2em;
-  color: black;
-  color: #7367F0;
-  text-align: center;
-  transform: translate(-70px, -15px);
-  background: transparent;
-  position: relative;
-}
-
-.container .card .face.face2 .content h3::after {
-  content: "";
-  height: 2px;
-  background-color: #7367F0;
-  position: absolute;
-  bottom: -5px;
-  left: 35%;
-  width: 0%;
-  transition: width 0.5s ease;
-}
-
-.container .card:hover h3::after {
-  animation: sliderlinkafter 1s ease-in-out forwards;
-}
-
-@keyframes sliderlinkafter {
-  0% {
-    width: 0;
-  }
-
-  100% {
-    width: 35%;
-  }
-}
-
-.container .card .face.face2 .content p1,
-a1 {
-  font-size: 10pt;
-  margin-bottom: ;
-  padding: 0;
-  color: #fff;
-  background: transparent;
-}
-
-.container .card .face.face2 .content a1 {
-  text-decoration: none;
-  color: black;
-  box-sizing: border-box;
-  outline: 1px dashed #333;
-  padding: 10px;
-  margin: 15px 0 0;
-  display: inline-block;
-}
-
-.container .card .face.face2 .content a:hover {
-  background: #333;
-  color: whitesmoke;
-  box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-}
-
-ul {
-  font-size: 1.125rem;
-  display: inline-block;
-  text-align: left;
-  margin-bottom: 15px;
-}
-
-
-/*mobile only*/
-@media screen and (max-width: 600px) {
-  .nav h1,
-
-  .slider h1 {
-    font-size: 8vw;
-  }
-
-  .nav h2,
-  .slider h2 {
-    font-size: 2vw;
-    letter-spacing: 0.2vw;
-  }
-
-  .nav-tab {
-    font-size: 1.2vw;
-  }
-
-  .section {
-    margin-top: 1px;
-    /* Ensure sections are properly spaced from the top */
-    margin-bottom: 1px;
-    /* Prevent sections from being too close to each other */
-    clear: both;
-    /* Ensure sections clear any floated elements */
-
-  }
-
-  .container {
-    flex-direction: column;
-    /* Stack the cards vertically */
-    align-items: center;
-    /* Center the cards horizontally */
-    width: 100%;
-    /* Make the container take full width */
-    margin-top: 40px;
-    z-index: 1;
-  }
-
-  .card2 {
-    display: none;
-  }
-
-  /* Adjust card width on mobile */
-  .container .card {
-    align-items: center;
-    margin-bottom: 5px;
-    /* Add space between stacked cards */
-  }
-
-  h2.span.loader {
-    transform: translateY(-175px);
-  }
-
-  .nav h1 {
-    transform: translateY(-400%);
-  }
-}
-
-html {
-  scroll-behavior: smooth;
-}
-  </style>
-
-</head>
-
-<body id="style-3">
-  <!-- partial:index.partial.html -->
-  <div id="particles-js">
-    <div class="nav">
-
-      <h1>
-        <section>
-          <div class="title"><span><a target="_blanck" href="#">{{.Name}}</a></span></div>
-        </section>
-      </h1>
-      <br>
-      <h2 class="span loader"><span class="m">d</span>&nbsp;<span class="m">e</span>&nbsp;<span
-          class="m">m</span>&nbsp;<span class="m">o</span></h2>
-      <br>
-      <div class="scroll">
-        <div class="chevron"></div>
-        <div class="chevron"></div>
-        <div class="chevron"></div>
-      </div>
-    </div>
-    <div class="nav-container" id="navbar">
-      <a class="nav-tab" href="#tab-login">Login</a>
-      <a class="nav-tab" href="#tab-Prices">Prices</a>
-      <a class="nav-tab" href="#tab-contact">Contact</a>
-      <span class="nav-tab-slider"></span>
-    </div>
-  </div>
-  </section>
-  <div class="Prices" style="background: 1e1f26;">
-    <section class="slider" id="tab-Prices">
-      <h1>Prices</h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Red Particles Portal</title>
+    <meta name="description" content="Red Particles Portal with amazing animations" />
+    <meta name="author" content="Lovable" />
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+    
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <!-- Particles.js -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    
+    <!-- Lovable Script -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="/_assets/new/css/style.css">
+  </head>
+
+  <body>
+    <!-- Navigation -->
+    <nav id="main-nav">
       <div class="container">
-        <div class="card">
-          <div class="face face1">
-            <div class="content">
-              <h2>10$<h2>
-                  <h3>plan1</h3>
-            </div>
-          </div>
-          <div class="face face2">
-            <div class="content">
-              <h3>- 10$/Mo</h3>
+        <div class="logo">RedParticles</div>
+        <ul class="nav-links">
+          <li><a href="#features">Features</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="/login" class="nav-login">Sign Up</a></li>
+        </ul>
+        <div class="mobile-menu-btn">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </nav>
 
-              <p1>
-                <ul class="basic-ul">
-                  <li class="basic-li">Limited Reports</li>
-                  <li class="basic-li">Unlimited Projects</li>
-                  <li class="basic-li">Unlimited Projects</li>
-                </ul>
-              </p1>
-              <button class="offset">Sign Up!</button>
+    <!-- Hero Section with Particles -->
+    <section id="hero">
+      <div id="particles-js"></div>
+      <div class="hero-content">
+        <h1>Experience the Power of <span>Particles</span></h1>
+        <p>Create stunning visual effects for your website with our particle system</p>
+        <a href="#pricing" class="btn btn-primary">Get Started</a>
+        <a href="/login" class="btn btn-outline">Sign Up Now</a>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing">
+      <div class="container">
+        <h2>Choose Your Plan</h2>
+        <p class="section-desc">Select the perfect package for your needs</p>
+        
+        <div class="pricing-tabs">
+          <div class="tab-buttons">
+            <button class="tab-btn active" data-tab="monthly">Monthly</button>
+            <button class="tab-btn" data-tab="yearly">Yearly <span class="discount">Save 20%</span></button>
+          </div>
+          
+          <div class="tab-content">
+            <div class="tab-pane active" id="monthly">
+              <div class="pricing-cards">
+                <div class="pricing-card">
+                  <div class="card-header">
+                    <h3>Basic</h3>
+                    <div class="price">$19<span>/month</span></div>
+                  </div>
+                  <div class="card-body">
+                    <ul>
+                      <li>5 Projects</li>
+                      <li>Basic Particles</li>
+                      <li>1GB Storage</li>
+                      <li>Email Support</li>
+                    </ul>
+                    <a href="#auth" class="btn btn-outline">Choose Plan</a>
+                  </div>
+                </div>
+                
+                <div class="pricing-card popular">
+                  <div class="popular-badge">Most Popular</div>
+                  <div class="card-header">
+                    <h3>Professional</h3>
+                    <div class="price">$49<span>/month</span></div>
+                  </div>
+                  <div class="card-body">
+                    <ul>
+                      <li>15 Projects</li>
+                      <li>Advanced Particles</li>
+                      <li>10GB Storage</li>
+                      <li>Priority Support</li>
+                      <li>Custom Colors</li>
+                    </ul>
+                    <a href="#auth" class="btn btn-primary">Choose Plan</a>
+                  </div>
+                </div>
+                
+                <div class="pricing-card">
+                  <div class="card-header">
+                    <h3>Enterprise</h3>
+                    <div class="price">$99<span>/month</span></div>
+                  </div>
+                  <div class="card-body">
+                    <ul>
+                      <li>Unlimited Projects</li>
+                      <li>Premium Particles</li>
+                      <li>100GB Storage</li>
+                      <li>24/7 Support</li>
+                      <li>API Access</li>
+                      <li>White Labeling</li>
+                    </ul>
+                    <a href="#auth" class="btn btn-outline">Choose Plan</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="tab-pane" id="yearly">
+              <div class="pricing-cards">
+                <div class="pricing-card">
+                  <div class="card-header">
+                    <h3>Basic</h3>
+                    <div class="price">$183<span>/year</span></div>
+                  </div>
+                  <div class="card-body">
+                    <ul>
+                      <li>5 Projects</li>
+                      <li>Basic Particles</li>
+                      <li>1GB Storage</li>
+                      <li>Email Support</li>
+                    </ul>
+                    <a href="#auth" class="btn btn-outline">Choose Plan</a>
+                  </div>
+                </div>
+                
+                <div class="pricing-card popular">
+                  <div class="popular-badge">Most Popular</div>
+                  <div class="card-header">
+                    <h3>Professional</h3>
+                    <div class="price">$470<span>/year</span></div>
+                  </div>
+                  <div class="card-body">
+                    <ul>
+                      <li>15 Projects</li>
+                      <li>Advanced Particles</li>
+                      <li>10GB Storage</li>
+                      <li>Priority Support</li>
+                      <li>Custom Colors</li>
+                    </ul>
+                    <a href="#auth" class="btn btn-primary">Choose Plan</a>
+                  </div>
+                </div>
+                
+                <div class="pricing-card">
+                  <div class="card-header">
+                    <h3>Enterprise</h3>
+                    <div class="price">$950<span>/year</span></div>
+                  </div>
+                  <div class="card-body">
+                    <ul>
+                      <li>Unlimited Projects</li>
+                      <li>Premium Particles</li>
+                      <li>100GB Storage</li>
+                      <li>24/7 Support</li>
+                      <li>API Access</li>
+                      <li>White Labeling</li>
+                    </ul>
+                    <a href="#auth" class="btn btn-outline">Choose Plan</a>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-
-        <div class="card">
-          <div class="face face1">
-            <div class="content">
-              <h2>10$<h2>
-                  <h3>plan1</h3>
-            </div>
-          </div>
-          <div class="face face2">
-            <div class="content">
-              <h3>- 10$/Mo</h3>
-
-              <p1>
-                <ul class="basic-ul">
-                  <li class="basic-li">Limited Reports</li>
-                  <li class="basic-li">Unlimited Projects</li>
-                  <li class="basic-li">Unlimited Projects</li>
-                </ul>
-              </p1>
-              <button class="offset">Sign Up!</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="card2">
-          <div class="card">
-            <div class="face face1">
-              <div class="content">
-                <h2>10$<h2>
-                    <h3>plan1</h3>
-              </div>
-            </div>
-            <div class="face face2">
-              <div class="content">
-                <h3>- 10$/Mo</h3>
-
-                <p1>
-                  <ul class="basic-ul">
-                    <li class="basic-li">Limited Reports</li>
-                    <li class="basic-li">Unlimited Projects</li>
-                    <li class="basic-li">Unlimited Projects</li>
-                  </ul>
-                </p1>
-                <button class="offset">Sign Up!</button>
-              </div>
-            </div>
-          </div>
-          <div>
-          </div>
+      </div>
     </section>
-  </div>
-  <div class="Login" style="margin-top: 175px; background: #1e1f26;">
-    <section class="slider" id="tab-login">
-      <h1>Join Us</h1>
-      <h2>Create an account today!</h2>
-      <br>
-      <h3>
-        <a href="/login">
-          <button class="offset">Signin!</button>
-        </a>
-        <a href="/signup" id="tab-signup">
-          <button class="offset">Signup!</button>
-        </a>
-      </h3>
-    </section>
-  </div>
 
-  <div class="Contact">
-    <section class="slider" id="tab-contact">
-      <h1>Contact</h1>
-      <h2>Join the telegram!</h2>
-      <br>
-      <a href="https://t.me/tsukislams">
-        <h3><button class="offset"><i class="fa fa-telegram" aria-hidden="true"></i>Contact Here!</button></h3>
-      </a>
-    </section>
-  </div>
+    <footer>
+      <div class="container">
+        <div class="copyright">© 2023 RedParticles. All rights reserved.</div>
+      </div>
+    </footer>
 
-  <canvas class="background"></canvas>
-  <!-- partial -->
-   <script>
-      window.onload = function () {
-        Particles.init({
-          selector: ".background"
-        });
-      };
-      const navTabs = document.querySelectorAll('.nav-tab');
-
-      // Add event listener to each navigation link
-      navTabs.forEach(tab => {
-        tab.addEventListener('click', (e) => {
-          // Remove 'active' class from all tabs
-          navTabs.forEach(tab => tab.classList.remove('active'));
-
-          // Add 'active' class to the clicked tab
-          e.target.classList.add('active');
-        });
-      });
-
-      var navbar = document.getElementById("navbar");
-      window.addEventListener("scroll", function () {
-        if (window.scrollY > 0) {
-          navbar.classList.add("nav-highlight");
-        } else {
-          navbar.classList.remove("nav-highlight");
-        }
-      });
-
-
-      const particles = Particles.init({
-        selector: ".background",
-        color: ["#7367F0", "#ff0266", "#000000"],
-        connectParticles: false
-      });
-
-      class NavigationPage {
-        constructor() {
-          this.currentId = null;
-          this.currentTab = null;
-          this.tabContainerHeight = 70;
-          this.lastScroll = 0;
-          let self = this;
-          $(".nav-tab").click(function () {
-            self.onTabClick(event, $(this));
-          });
-          $(window).scroll(() => {
-            this.onScroll();
-          });
-          $(window).resize(() => {
-            this.onResize();
-          });
-        }
-
-        onTabClick(event, element) {
-          event.preventDefault();
-          let scrollTop =
-            $(element.attr("href")).offset().top - this.tabContainerHeight + 1;
-          $("html, body").animate({ scrollTop: scrollTop }, 600);
-        }
-
-        onScroll() {
-          this.checkHeaderPosition();
-          this.findCurrentTabSelector();
-          this.lastScroll = $(window).scrollTop();
-        }
-
-        onResize() {
-          if (this.currentId) {
-            this.setSliderCss();
-          }
-        }
-
-        checkHeaderPosition() {
-          const headerHeight = 75;
-          if ($(window).scrollTop() > headerHeight) {
-            $(".nav-container").addClass("nav-container--scrolled");
-          } else {
-            $(".nav-container").removeClass("nav-container--scrolled");
-          }
-          let offset =
-            $(".nav").offset().top +
-            $(".nav").height() -
-            this.tabContainerHeight -
-            headerHeight;
-          if (
-            $(window).scrollTop() > this.lastScroll &&
-            $(window).scrollTop() > offset
-          ) {
-            $(".nav-container").addClass("nav-container--move-up");
-            $(".nav-container").removeClass("nav-container--top-first");
-            $(".nav-container").addClass("nav-container--top-second");
-          } else if (
-            $(window).scrollTop() < this.lastScroll &&
-            $(window).scrollTop() > offset
-          ) {
-            $(".nav-container").removeClass("nav-container--move-up");
-            $(".nav-container").removeClass("nav-container--top-second");
-            $(".nav-container-container").addClass("nav-container--top-first");
-          } else {
-            $(".nav-container").removeClass("nav-container--move-up");
-            $(".nav-container").removeClass("nav-container--top-first");
-            $(".nav-container").removeClass("nav-container--top-second");
-          }
-        }
-
-        findCurrentTabSelector(element) {
-          let newCurrentId;
-          let newCurrentTab;
-          let self = this;
-          $(".nav-tab").each(function () {
-            let id = $(this).attr("href");
-            let offsetTop = $(id).offset().top - self.tabContainerHeight;
-            let offsetBottom =
-              $(id).offset().top + $(id).height() - self.tabContainerHeight;
-            if (
-              $(window).scrollTop() > offsetTop &&
-              $(window).scrollTop() < offsetBottom
-            ) {
-              newCurrentId = id;
-              newCurrentTab = $(this);
-            }
-          });
-          if (this.currentId != newCurrentId || this.currentId === null) {
-            this.currentId = newCurrentId;
-            this.currentTab = newCurrentTab;
-            this.setSliderCss();
-          }
-        }
-
-        setSliderCss() {
-          let width = 0;
-          let left = 0;
-          if (this.currentTab) {
-            width = this.currentTab.css("width");
-            left = this.currentTab.offset().left;
-          }
-          $(".nav-tab-slider").css("width", width);
-          $(".nav-tab-slider").css("left", left);
-        }
-      }
-
-
-
-      new NavigationPage();
-    </script>
-</body>
+    <!-- Custom JS -->
+    <script src="/_assets/new/js/main.js"></script>
+  </body>
+</html>

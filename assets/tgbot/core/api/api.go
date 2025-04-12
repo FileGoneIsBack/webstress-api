@@ -1,19 +1,19 @@
 package api
 
 import (
-	"encoding/json"
+	//"encoding/json"
 	"bot/models"
-	"fmt"
-	"io/ioutil"
-	"log"
+	//"fmt"
+	//"io/ioutil"
+	//"log"
 	"net/http"
 	"strings"
-	"bot/database"
+	//"bot/database"
 )
 
 func RegisterRoutes(mux *http.ServeMux) {
 	mux.HandleFunc("/api", func(w http.ResponseWriter, r *http.Request) {
-		if r.Method != http.MethodPost {
+		/*if r.Method != http.MethodPost {
 			http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
 			return
 		}
@@ -61,8 +61,10 @@ func RegisterRoutes(mux *http.ServeMux) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, `{"status": "success", "message": "User added to database"}`)
+		*/
 	})
 }
+
 func isValidToken(authHeader string) bool {
 	storedToken := models.Config.Auth
 	return strings.HasPrefix(authHeader, "Bearer "+storedToken)

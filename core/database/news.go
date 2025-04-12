@@ -12,7 +12,7 @@ type News struct {
 }
 
 func (conn *Instance) GetNews() ([]*News, error) {
-	stmt, err := conn.conn.Prepare("SELECT * FROM `news` ORDER BY `id` DESC LIMIT 3")
+	stmt, err := conn.conn.Prepare("SELECT * FROM `news` ORDER BY `id` ASC LIMIT 5")
 	if err != nil {
 		log.Println("GetNews(): error occured while preparing statement \"" + err.Error() + "\"")
 		return nil, err

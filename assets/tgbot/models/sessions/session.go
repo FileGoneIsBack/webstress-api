@@ -9,7 +9,7 @@ import (
 type Session struct {
     ID        int
     Username  string
-    Telegram  string
+    Telegram  int64
     Balance   int
     Membership string
 }

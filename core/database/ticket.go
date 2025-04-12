@@ -3,6 +3,8 @@ package database
 import (
 	"api/core/models/log"
 	"time"
+	"fmt"
+	"database/sql"
 )
 
 // ticket stuct
@@ -15,7 +17,7 @@ type Ticket struct {
 	Status    string    `json:"status"`
 	Date      int64     `json:"date"`
 	Username  string    `json:"username"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt string `json:"created_at"`
 }
 
 // message stuct
@@ -24,23 +26,24 @@ type Message struct {
 	TicketID  int64     `json:"ticket_id"`
 	UserID    int64     `json:"user_id"`
 	Message   string    `json:"message"`
-	CreatedAt time.Time `json:"created_at"`
+	CreatedAt string `json:"created_at"`
 }
 
 // new tickets for user
-func (conn *Instance) NewTicket(userID int, title, message string) error {
+func (conn *Instance) NewTicket(userID int, title, message, username string) error {
 	if userID == 0 || title == "" || message == "" {
 		return ErrInvalidInput
 	}
 	status := "open"
+	log.Printf("UserID: %d, Title: %s, Status: %s, Username: %s", userID, title, status, username)
 
-	stmt, err := conn.conn.Prepare("INSERT INTO `tickets` (`user_id`, `title`, `status`) VALUES (?, ?, ?)")
+	stmt, err := conn.conn.Prepare("INSERT INTO `tickets` (`user_id`, `title`, `status`, `username`, `created_at`) VALUES (?, ?, ?, ?, ?)")
 	if err != nil {
 		log.Println("database/NewTicket(): error occurred while preparing statement:", err)
 		return err
 	}
 	defer stmt.Close()
-	res, err := stmt.Exec(userID, title, status)
+	res, err := stmt.Exec(userID, title, status, username, time.Now())
 	if err != nil {
 		log.Println("database/NewTicket(): error occurred while executing statement:", err)
 		return err
@@ -267,6 +270,32 @@ func (conn *Instance) GetMessagesByTicketID(ticketID int64) ([]*Message, error) 
 	}
 
 	return messages, nil
+}
+
+func (conn *Instance) GetUserForTicket(ticketID int) (*User, error) {
+	// Step 1: Prepare statement to fetch username from ticket
+	stmt, err := conn.conn.Prepare(`SELECT username FROM tickets WHERE id = ?`)
+	if err != nil {
+		return nil, fmt.Errorf("error preparing ticket query: %w", err)
+	}
+	defer stmt.Close()
+
+	var username string
+	err = stmt.QueryRow(ticketID).Scan(&username)
+	if err == sql.ErrNoRows {
+		return nil, fmt.Errorf("ticket ID %d not found", ticketID)
+	}
+	if err != nil {
+		return nil, fmt.Errorf("error executing ticket query: %w", err)
+	}
+
+	// Step 2: Reuse existing user lookup
+	user, err := conn.GetUser(username)
+	if err != nil {
+		return nil, fmt.Errorf("error fetching user '%s': %w", username, err)
+	}
+
+	return user, nil
 }
 
 func (conn *Instance) DeleteTicketByID(ticketID int64) error {

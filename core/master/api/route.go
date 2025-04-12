@@ -1,13 +1,15 @@
 package api
 
 import (
+	accountapi "api/core/master/api/account"
 	adminapi "api/core/master/api/admin"
 	attackapi "api/core/master/api/attacks"
 	dashboardapi "api/core/master/api/dashboard"
+	Managerapi "api/core/master/api/manager"
+
 	panelapi "api/core/master/api/panel"
 	paymentsapi "api/core/master/api/payments"
 	ticketapi "api/core/master/api/tickets"
-	accountapi "api/core/master/api/account"
 	"api/core/models/server"
 )
 
@@ -24,5 +26,6 @@ func init() {
 		ticketapi.Route,
 		attackapi.Route,
 		accountapi.Route,
+		Managerapi.Route, 
 	)
 }

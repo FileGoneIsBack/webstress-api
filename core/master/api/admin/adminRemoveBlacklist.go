@@ -1,7 +1,7 @@
 package adminapi
 
 import (
-	"api/core/database"
+	//"api/core/database"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"encoding/json"
@@ -54,11 +54,11 @@ func postDeleteInvites(w http.ResponseWriter, r *http.Request) {
     }
 
     // Call the DeleteInvite function to remove the token
-    err := database.Container.DeleteInvite(request.Token)
-    if err != nil {
-        http.Error(w, fmt.Sprintf("Error deleting invite: %v", err), http.StatusInternalServerError)
-        return
-    }
+    //err := database.Container.DeleteInvite(request.Token)
+    //if err != nil {
+    //    http.Error(w, fmt.Sprintf("Error deleting invite: %v", err), http.StatusInternalServerError)
+    //    return
+    //}
 
     // Send a success response
     w.WriteHeader(http.StatusOK)

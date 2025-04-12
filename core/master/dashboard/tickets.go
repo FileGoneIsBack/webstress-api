@@ -12,7 +12,7 @@ import (
 )
 
 func init() {
-	Route.NewSub(server.NewRoute("/tickets", func(w http.ResponseWriter, r *http.Request) {
+	Route.NewSub(server.NewRoute("/chat", func(w http.ResponseWriter, r *http.Request) {
 		type Page struct {
 			Name, Title, Vers            string
 			ServersCount, Ongoing, Slots int
@@ -25,10 +25,9 @@ func init() {
 			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return
 		}
-
 		functions.Render(Page{
 			Name:         models.Config.Name,
-			Title:        "Transaction",
+			Title:        "Ticket",
 			Vers:         models.Config.Vers,
 			ServersCount: len(servers.Servers) + len(apis.Apis),
 			Ongoing:      database.Container.GlobalRunning(),
@@ -36,6 +35,6 @@ func init() {
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Remotes:      servers.Servers,
 			Session:      user,
-		}, w, r, "user", "tickets.html")
+		}, w, r, "user", "chats.html")
 	}))
 }

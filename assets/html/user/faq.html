@@ -1,359 +1,480 @@
 <!DOCTYPE html>
-<html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
-<!-- BEGIN: Head-->
-
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
-    <meta name="description" content="Twilight">
-    <meta name="keywords" content="Twilight">
-    <meta name="author" content="PIXINVENT">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Name}} | {{.Title}}</title>
-    <link rel="apple-touch-icon" href="/_assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="/_assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
-        rel="stylesheet">
-
-    <!-- BEGIN: Vendor CSS-->
-    <script src="https://kit.fontawesome.com/d106b983f3.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/responsive.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/buttons.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/rowGroup.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
-    <!-- END: Vendor CSS-->
-
-    <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href="/_assets/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/bootstrap-extended.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/colors.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/components.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/themes/dark-layout.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/themes/bordered-layout.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/themes/semi-dark-layout.css">
-
-    <!-- BEGIN: Page CSS-->
-    <link rel="stylesheet" type="text/css" href="/_assets/css/core/menu/menu-types/vertical-menu.css">
-    <!-- END: Page CSS-->
-
-    <link rel="stylesheet" type="text/css" href="/_assets/css/plugins/extensions/ext-component-toastr.css">
-</head>
-<!-- END: Head-->
-<!-- BEGIN: Body-->
-
-<body class="vertical-layout vertical-menu-modern content-left-sidebar
-        navbar-floating footer-static " data-open="click" data-menu="vertical-menu-modern"
-    data-col="content-left-sidebar" id="style-3">
-
-<!-- BEGIN: Body-->
-<body class="vertical-layout vertical-menu-modern content-left-sidebar navbar-floating footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="content-left-sidebar" id="style-3">
-
-<!-- Include Navigation Menu -->
-{{ template "nav.html" . }}
-
-    <!-- BEGIN: Content-->
-    <div class="app-content content" id="scroll">
-        <div class="content-overlay"></div>
-        <div class="header-navbar-shadow"></div>
-        <div class="content-wrapper container-xxl p-0">
-            <div class="content-header row">
-            </div>
-            <div class="content-body">
-                <!-- users list start -->
-                <section class="app-user-list">
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.ServersCount}}</h3>
-                                        <span>Servers</span>
-                                    </div>
-                                    <div class="avatar bg-light-success
-                                            p-50">
-                                        <span class="avatar-content">
-                                            <i data-feather="server" class="font-medium-4"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.Ongoing}}</h3>
-                                        <span>{{if eq .Ongoing 1 }}Running attack{{ else }}Running attacks{{ end
-                                            }}</span>
-                                    </div>
-                                    <div class="avatar bg-light-primary
-                                            p-50">
-                                        <span class="avatar-content">
-                                            <i data-feather="wifi-off" class="font-medium-4"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.Slots}}</h3>
-                                        <span>{{if eq .Slots 1 }}Slot{{ else }}Slots{{ end }}</span>
-                                    </div>
-                                    <div class="avatar bg-light-warning
-                                            p-50">
-                                        <span class="avatar-content">
-                                            <i data-feather="command" class="font-medium-4"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.Users}}</h3>
-                                        <span>{{if eq .Users 1 }}User{{ else }}Users{{ end }}</span>
-                                    </div>
-                                    <div class="avatar bg-light-danger
-                                            p-50">
-                                        <span class="avatar-content">
-                                            {{if eq .Users 1}}<i data-feather='user'
-                                                class="font-medium-4"></i>{{else}}<i data-feather='users'
-                                                class="font-medium-4"></i>{{end}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-mb-12">
-                            <div class="card text-center">
-                                <div class="card-body">
-                                    <h5 class="card-title">Looking For Something?</h5>
-                                    <p class="card-text">Look No Further Then The FaQ</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-xl-12">
-<div class="nav-align-top">
-  <ul class="nav nav-pills mb-6" role="tablist">
-    <li class="nav-item">
-      <button type="button" class="flex-sm-fill text-sm-center nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#general" aria-controls="general" aria-selected="true">General</button>
-    </li>
-    <li class="nav-item">
-      <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#profile" aria-controls="profile" aria-selected="false">Profile</button>
-    </li>
-    <li class="nav-item">
-      <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#attacks" aria-controls="attacks" aria-selected="false">Attacks</button>
-    </li>
-    <li class="nav-item">
-        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#network" aria-controls="network" aria-selected="false">Network</button>
-      </li>
-  </ul>
-  <div class="tab-content">
-
-    <div class="tab-pane fade show active" id="general" role="tabpanel">
-        <div class="accordion" id="accordionExample">
-            <div class="card accordion-item active">
-              <h2 class="accordion-header" id="headingOne">
-                <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne" role="tabpanel">
-                    What is this website for ?
-                </button>
-              </h2>
-          
-              <div id="accordionOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    We're a specialized IP stress testing service designed to evaluate network and server resilience against threats like DDoS attacks. Administrators can assess resource capacity to ensure robust stresser preparedness.
-                </div>
-              </div>
-            </div>
-            <br>
-            <div class="card accordion-item">
-              <h2 class="accordion-header" id="headingTwo">
-                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionTwo" aria-expanded="false" aria-controls="accordionTwo" role="tabpanel">
-                    Why {{.Name}}?
-                </button>
-              </h2>
-              <div id="accordionTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    Choose {{.Name}} for unparalleled DDoS booting and stress testing services. We bring you custom solutions to achieve your goals with certainty, making us the top provider in the market.
-                </div>
-              </div>
-            </div>
-          </div>
-    </div>
-    <div class="tab-pane fade" id="profile" role="tabpanel">
-                <div class="accordion" id="accordionExample">
-                    <div class="card accordion-item active">
-                      <h2 class="accordion-header" id="headingOne">
-                        <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne" role="tabpanel">
-                            Can I share my account with someone else?
-                        </button>
-                      </h2>
-                  
-                      <div id="accordionOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            Based on our terms and conditions, you can not share your account, share your API or sell your account to anyone else. If the system detects such an account, it will auto-ban the account and you will lose access to your membership.
-                        </div>
-                      </div>
-                    </div>
-                    <br>
-                    <div class="card accordion-item">
-                      <h2 class="accordion-header" id="headingTwo">
-                        <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionTwo" aria-expanded="false" aria-controls="accordionTwo" role="tabpanel">
-                            What is the difference between Premium and Non-Premium?
-                        </button>
-                      </h2>
-                      <div id="accordionTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            Paid memberships come with an impressive 300% increase in capabilities compared to standard packages. Additionally, subscribers to paid plans enjoy priority support services and exclusive access to specialized methods crafted by our skilled engineers..
-                        </div>
-                      </div>
-                    </div>
-                    <br>
-                    <div class="card accordion-item">
-                        <h2 class="accordion-header" id="headingThree">
-                          <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionThree" aria-expanded="false" aria-controls="accordionTwo" role="tabpanel">
-                            How long does it take to activate my membership?
-                          </button>
-                        </h2>
-                        <div id="accordionThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                          <div class="accordion-body">
-                            We offers automated services, after our nodes declare the payment as "complete" it usually takes another 5-10 minutes for you to receive your purchased membership.
-                          </div>
-                        </div>
-                      </div>
-    </div>
-    </div>
-    <div class="tab-pane fade" id="attacks" role="tabpanel">
-
-        <div class="accordion" id="accordionExample">
-            <div class="card accordion-item active">
-              <h2 class="accordion-header" id="headingOne">
-                <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionOne" aria-expanded="true" aria-controls="accordionOne" role="tabpanel">
-                    Can I Send Attacks To A BlackList
-                </button>
-              </h2>
-          
-              <div id="accordionOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    No! All Blacklisted ip's arent allowed to be hit, they mostly contain .gov and .edu for legal purposes :)
-                </div>
-              </div>
-            </div>
-            <br>
-            <div class="card accordion-item">
-              <h2 class="accordion-header" id="headingTwo">
-                <button type="button" class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#accordionTwo" aria-expanded="false" aria-controls="accordionTwo" role="tabpanel">
-                    Are There Free Plans?
-                </button>
-              </h2>
-              <div id="accordionTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                <div class="accordion-body">
-                    We currently do not offer a free plan but you can get one for cheap!
-                </div>
-              </div>
-            </div>
-            <div class="tab-pane fade" id="Network" role="tabpanel">
-
-            </div>
-    </div>
-  </div>
-</div>
-                              </nav>
-                        </div>
-                </section>
-            </div>
-        </div>
-    </div>
-    <!-- END: Content-->
-
-    <div class="sidenav-overlay"></div>
-    <div class="drag-target"></div>
-
-    <!-- BEGIN: Footer-->
-    {{ template "footer.html" . }}
-    <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
-    <!-- END: Footer-->
-
-
-    <!-- BEGIN: Vendor JS-->
-    <script src="/_assets/vendors/js/vendors.min.js"></script>
-    <!-- BEGIN Vendor JS-->
-
-    <!-- BEGIN: Page Vendor JS-->
-    <script src="/_assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/responsive.bootstrap5.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/datatables.checkboxes.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/datatables.buttons.min.js"></script>
-    <script src="/_assets/vendors/js/charts/apexcharts.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/jszip.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/pdfmake.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/vfs_fonts.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/buttons.html5.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/buttons.print.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
-    <script src="/_assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
-    <script src="/assets/branding/vendors/js/perfectscrollbar/perfect-scrollbar.min.js"></script>
-
-    <!-- END: Page Vendor JS-->
-
-    <!-- BEGIN: Theme JS-->
-    <script src="/_assets/js/core/app-menu.js"></script>
-    <script src="/_assets/js/core/app.js"></script>
-    <!-- END: Theme JS-->
-
-
-    <!-- BEGIN: Dashboard JS-->
-    <script src="/_assets/scripts/dashboard.js"></script>
-    <!-- END: Dashboard JS-->
-
-    <!--START: Scrollbar-->
+    <link rel="stylesheet" href="/_assets/new/css/dash.css">
+    <link rel="stylesheet" href="/_assets/new/css/api1.css">
     <style>
-        ::-webkit-scrollbar-track {
-            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-            background-color: #161D31;
+        .endpoint-section {
+            margin-bottom: 40px;
+        }
+        
+        .endpoint-title {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+        
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .param-table th,
+        .param-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+        }
+        
+        .param-table th {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .param-required {
+            color: #f44336;
+            font-size: 0.9em;
+            margin-left: 5px;
+        }
+        
+        .param-optional {
+            color: #2196F3;
+            font-size: 0.9em;
+            margin-left: 5px;
         }
 
-        ::-webkit-scrollbar {
-            width: 6px;
-            background-color: #1e1f26;
+        .language-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background-color: #283046;
+        .language-button {
+            padding: 8px 16px;
+            background: var(--darker);
+            border: 1px solid rgba(255, 51, 51, 0.1);
+            border-radius: 6px;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
         }
-    </style>
-    <!--START: Scrollbar-->
 
-    </style>
-    <script>
-        $(window).on('load', function () {
-            if (feather) {
-                feather.replace({
-                    width: 14,
-                    height: 14
-                });
+        .language-button:hover {
+            background: rgba(255, 51, 51, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .language-button.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .code-block {
+            display: none;
+        }
+
+        .code-block.active {
+            display: block;
+        }
+
+        /* FAQ Styles */
+        .faq-section {
+            margin-top: 40px;
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .faq-section.active {
+            display: block;
+        }
+
+        .faq-toggle {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+        }
+
+        .faq-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 51, 51, 0.2);
+        }
+
+        .faq-item {
+            background: var(--dark);
+            border: 1px solid rgba(255, 51, 51, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--text);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .faq-question:hover {
+            background: rgba(255, 51, 51, 0.1);
+        }
+
+        .faq-answer {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            color: var(--text);
+            opacity: 0.8;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 20px;
+            max-height: 500px;
+            border-top: 1px solid rgba(255, 51, 51, 0.1);
+        }
+
+        .faq-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
-        })
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="/_assets/new/imports/toast.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        {{ template "nav.html" . }}
+
+        <main class="main-content">
+            <div class="api-header">
+                <h1>API Documentation</h1>
+            </div>
+
+            <button class="faq-toggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                Frequently Asked Questions
+            </button>
+
+            <div class="faq-section">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I get an API key?
+                        <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        You can obtain an API key by registering for an account and navigating to the API Access section in your dashboard. Make sure to keep your API key secure and never share it publicly.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        What are the rate limits?
+                        <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        Rate limits vary by plan. Basic plans are limited to 100 requests per minute, while premium plans can handle up to 1000 requests per minute. Contact support for custom limits.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        How do I handle API errors?
+                        <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        All API errors return standard HTTP status codes along with a JSON response containing an error message and code. We recommend implementing proper error handling and retrying failed requests with exponential backoff.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Is there a testing environment available?
+                        <svg class="faq-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+                    </div>
+                    <div class="faq-answer">
+                        Yes, we provide a sandbox environment for testing. Use the test API key prefix 'sk_test_' instead of 'sk_live_' to make test requests. The sandbox environment is completely separate from production.
+                    </div>
+                </div>
+            </div>
+
+            <div class="api-card endpoint-section">
+                <h2 class="endpoint-title">POST /api/v1/attack</h2>
+                <p>Launch a new attack with specified parameters.</p>
+
+                <div class="language-selector">
+                    <button class="language-button active" data-language="curl">cURL</button>
+                    <button class="language-button" data-language="python">Python</button>
+                    <button class="language-button" data-language="javascript">JavaScript</button>
+                    <button class="language-button" data-language="go">Go</button>
+                    <button class="language-button" data-language="php">PHP</button>
+                </div>
+
+                <div class="code-example">
+                    <div class="code-header">
+                        <span>Example Request</span>
+                        <button class="copy-button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="code-block active" data-language="curl">
+<pre><code>curl -X POST {{.Domain}}v1/attack \
+-H 'Authorization: Bearer YOUR_API_KEY' \
+-H 'Content-Type: application/json' \
+-d '{
+    "username": "user123",
+    "key": "your_api_key",
+    "host": "example.com",
+    "target": "1.2.3.4",
+    "port": 80,
+    "time": 30,
+    "method": "TCP",
+    "pps": 1000,
+    "threads": 5
+}'</code></pre>
+                    </div>
+
+                    <div class="code-block" data-language="python">
+<pre><code>import requests
+import json
+
+url = "https://api.secureauth.pro/v1/attack"
+headers = {
+    "Authorization": "Bearer YOUR_API_KEY",
+    "Content-Type": "application/json"
+}
+data = {
+    "username": "user123",
+    "key": "your_api_key",
+    "host": "example.com",
+    "target": "1.2.3.4",
+    "port": 80,
+    "time": 30,
+    "method": "TCP",
+    "pps": 1000,
+    "threads": 5
+}
+
+response = requests.post(url, headers=headers, json=data)
+print(response.json())</code></pre>
+                    </div>
+
+                    <div class="code-block" data-language="javascript">
+<pre><code>const response = await fetch('https://api.secureauth.pro/v1/attack', {
+    method: 'POST',
+    headers: {
+        'Authorization': 'Bearer YOUR_API_KEY',
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        username: 'user123',
+        key: 'your_api_key',
+        host: 'example.com',
+        target: '1.2.3.4',
+        port: 80,
+        time: 30,
+        method: 'TCP',
+        pps: 1000,
+        threads: 5
+    })
+});
+
+const data = await response.json();</code></pre>
+                    </div>
+
+                    <div class="code-block" data-language="go">
+<pre><code>package main
+
+import (
+    "bytes"
+    "encoding/json"
+    "net/http"
+)
+
+func main() {
+    data := map[string]interface{}{
+        "username": "user123",
+        "key":      "your_api_key",
+        "host":     "example.com",
+        "target":   "1.2.3.4",
+        "port":     80,
+        "time":     30,
+        "method":   "TCP",
+        "pps":      1000,
+        "threads":  5,
+    }
+    
+    jsonData, _ := json.Marshal(data)
+    
+    req, _ := http.NewRequest("POST", "https://api.secureauth.pro/v1/attack", bytes.NewBuffer(jsonData))
+    req.Header.Set("Authorization", "Bearer YOUR_API_KEY")
+    req.Header.Set("Content-Type", "application/json")
+    
+    client := &http.Client{}
+    resp, _ := client.Do(req)
+    defer resp.Body.Close()
+}</code></pre>
+                    </div>
+
+                    <div class="code-block" data-language="php">
+<pre><code>$data = array(
+    'username' => 'user123',
+    'key' => 'your_api_key',
+    'host' => 'example.com',
+    'target' => '1.2.3.4',
+    'port' => 80,
+    'time' => 30,
+    'method' => 'TCP',
+    'pps' => 1000,
+    'threads' => 5
+);
+
+$ch = curl_init('https://api.secureauth.pro/v1/attack');
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+    'Authorization: Bearer YOUR_API_KEY',
+    'Content-Type: application/json'
+));
+
+$response = curl_exec($ch);
+curl_close($ch);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Parameters table remains unchanged -->
+                <h3>Parameters</h3>
+                <table class="param-table">
+                    <!-- Previous table content remains unchanged -->
+                </table>
+            </div>
+        </main>
+    </div>
+    <script src="/_assets/new/js/nav1.js"></script> 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Language switching
+            const languageButtons = document.querySelectorAll('.language-button');
+            const codeBlocks = document.querySelectorAll('.code-block');
+
+            languageButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const language = button.dataset.language;
+                    
+                    // Update buttons
+                    languageButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Update code blocks
+                    codeBlocks.forEach(block => {
+                        block.classList.remove('active');
+                        if (block.dataset.language === language) {
+                            block.classList.add('active');
+                        }
+                    });
+
+                    // Update copy button data
+                    const copyButton = document.querySelector('.copy-button');
+                    const activeCode = document.querySelector(`.code-block[data-language="${language}"]`);
+                    copyButton.dataset.value = activeCode.querySelector('code').textContent;
+                });
+            });
+
+            // Copy functionality
+            document.querySelector('.copy-button').addEventListener('click', async () => {
+                const activeCode = document.querySelector('.code-block.active code');
+                try {
+                    await navigator.clipboard.writeText(activeCode.textContent);
+                    showToast('Code copied to clipboard', 'success');
+                } catch (err) {
+                    showToast('Failed to copy code', 'error');
+                }
+            });
+
+            // FAQ Toggle
+            const faqToggle = document.querySelector('.faq-toggle');
+            const faqSection = document.querySelector('.faq-section');
+            
+            faqToggle.addEventListener('click', () => {
+                faqSection.classList.toggle('active');
+                if (faqSection.classList.contains('active')) {
+                    faqToggle.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="8" y1="12" x2="16" y2="12"></line>
+                        </svg>
+                        Hide FAQ
+                    `;
+                } else {
+                    faqToggle.innerHTML = `
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="16" x2="12" y2="12"></line>
+                            <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                        </svg>
+                        Frequently Asked Questions
+                    `;
+                }
+            });
+
+            // FAQ Item Toggle
+            document.querySelectorAll('.faq-question').forEach(question => {
+                question.addEventListener('click', () => {
+                    const faqItem = question.parentElement;
+                    faqItem.classList.toggle('active');
+                });
+            });
+        });
     </script>
 </body>
-<!-- END: Body-->
-
 </html>

@@ -1,0 +1,390 @@
+:root {
+    --primary: #ff3333;
+    --dark: #1a1a1a;
+    --darker: #111111;
+    --light: #333333;
+    --text: #cccccc;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: var(--darker);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 20px;
+}
+
+.background {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+.cube {
+    position: absolute;
+    top: 80vh;
+    left: 45vw;
+    width: 30px;
+    height: 30px;
+    border: solid 2px var(--primary);
+    transform-origin: top left;
+    transform: scale(0) rotate(0deg) translate(-50%, -50%);
+    animation: cube 8s ease-in forwards infinite;
+    box-shadow: 0 0 20px var(--primary);
+}
+
+.cube:nth-child(2) { 
+    animation-delay: 2s;
+    left: 25vw;
+    border-color: #ff6666;
+}
+.cube:nth-child(3) { 
+    animation-delay: 4s;
+    left: 65vw;
+    border-color: #ff4444;
+}
+.cube:nth-child(4) { 
+    animation-delay: 6s;
+    left: 85vw;
+    border-color: #ff5555;
+}
+.cube:nth-child(5) { 
+    animation-delay: 1s;
+    left: 15vw;
+    border-color: #ff7777;
+}
+
+@keyframes cube {
+    from {
+        transform: scale(0) rotate(0deg) translate(-50%, -50%);
+        opacity: 1;
+    }
+    to {
+        transform: scale(40) rotate(1200deg) translate(-50%, -50%);
+        opacity: 0;
+    }
+}
+
+.card {
+    background: var(--dark);
+    border-radius: 20px;
+    box-shadow: 0 0 50px rgba(255, 51, 51, 0.2);
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 900px;
+    min-height: 600px;
+    z-index: 1;
+    overflow: hidden;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.left-side {
+    width: 100%;
+    background: var(--darker);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px 20px;
+    position: relative;
+    border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.glitch {
+    color: var(--primary);
+    font-size: clamp(2em, 5vw, 3em);
+    position: relative;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 0 10px var(--primary);
+    width: 100%;
+    text-align: center;
+    word-break: break-word;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--darker);
+}
+
+.glitch::before {
+    left: 3px;
+    text-shadow: -2px 0 #ff0000;
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim 3s infinite linear alternate-reverse;
+}
+
+.glitch::after {
+    left: -3px;
+    text-shadow: -2px 0 #0000ff;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim2 2s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(51px, 9999px, 154px, 0) }
+    5% { clip: rect(141px, 9999px, 73px, 0) }
+    10% { clip: rect(124px, 9999px, 79px, 0) }
+    15% { clip: rect(121px, 9999px, 91px, 0) }
+    20% { clip: rect(129px, 9999px, 107px, 0) }
+    25% { clip: rect(86px, 9999px, 128px, 0) }
+    30% { clip: rect(64px, 9999px, 65px, 0) }
+    35% { clip: rect(110px, 9999px, 84px, 0) }
+    40% { clip: rect(126px, 9999px, 63px, 0) }
+    45% { clip: rect(89px, 9999px, 144px, 0) }
+    50% { clip: rect(23px, 9999px, 56px, 0) }
+    55% { clip: rect(106px, 9999px, 89px, 0) }
+    60% { clip: rect(81px, 9999px, 132px, 0) }
+    65% { clip: rect(147px, 9999px, 59px, 0) }
+    70% { clip: rect(95px, 9999px, 112px, 0) }
+    75% { clip: rect(75px, 9999px, 145px, 0) }
+    80% { clip: rect(42px, 9999px, 98px, 0) }
+    85% { clip: rect(133px, 9999px, 76px, 0) }
+    90% { clip: rect(68px, 9999px, 123px, 0) }
+    95% { clip: rect(112px, 9999px, 87px, 0) }
+    100% { clip: rect(93px, 9999px, 134px, 0) }
+}
+
+@keyframes glitch-anim2 {
+    0% { clip: rect(132px, 9999px, 45px, 0) }
+    5% { clip: rect(87px, 9999px, 123px, 0) }
+    10% { clip: rect(34px, 9999px, 89px, 0) }
+    15% { clip: rect(145px, 9999px, 12px, 0) }
+    20% { clip: rect(76px, 9999px, 143px, 0) }
+    25% { clip: rect(123px, 9999px, 54px, 0) }
+    30% { clip: rect(89px, 9999px, 132px, 0) }
+    35% { clip: rect(23px, 9999px, 98px, 0) }
+    40% { clip: rect(132px, 9999px, 43px, 0) }
+    45% { clip: rect(78px, 9999px, 134px, 0) }
+    50% { clip: rect(98px, 9999px, 76px, 0) }
+    55% { clip: rect(123px, 9999px, 32px, 0) }
+    60% { clip: rect(56px, 9999px, 154px, 0) }
+    65% { clip: rect(112px, 9999px, 89px, 0) }
+    70% { clip: rect(45px, 9999px, 123px, 0) }
+    75% { clip: rect(167px, 9999px, 34px, 0) }
+    80% { clip: rect(89px, 9999px, 123px, 0) }
+    85% { clip: rect(134px, 9999px, 45px, 0) }
+    90% { clip: rect(23px, 9999px, 155px, 0) }
+    95% { clip: rect(146px, 9999px, 67px, 0) }
+    100% { clip: rect(89px, 9999px, 132px, 0) }
+}
+
+.subtitle {
+    color: var(--text);
+    margin-top: 20px;
+    font-size: clamp(1em, 3vw, 1.2em);
+    text-shadow: 0 0 5px rgba(255, 51, 51, 0.3);
+    text-align: center;
+}
+
+.right-side {
+    width: 100%;
+    padding: 30px 20px;
+    background: var(--dark);
+    flex: 1;
+}
+
+.tabs {
+    display: flex;
+    margin-bottom: 30px;
+    border-bottom: 2px solid var(--light);
+}
+
+.tab {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    font-size: 1.1em;
+    cursor: pointer;
+    color: var(--text);
+    transition: 0.3s;
+}
+
+.tab.active {
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+    margin-bottom: -2px;
+}
+
+.form {
+    display: none;
+}
+
+.form.active {
+    display: block;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px 0;
+    border: none;
+    border-bottom: 2px solid var(--light);
+    outline: none;
+    font-size: 1em;
+    transition: 0.3s;
+    background: transparent;
+    color: var(--text);
+}
+
+.form-group label {
+    position: absolute;
+    top: 10px;
+    left: 0;
+    color: #666;
+    transition: 0.3s;
+    pointer-events: none;
+}
+
+.form-group input:focus ~ label,
+.form-group input:valid ~ label {
+    top: -20px;
+    font-size: 0.8em;
+    color: var(--primary);
+}
+
+.form-group input:focus {
+    border-bottom-color: var(--primary);
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+.captcha {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+#captchaCanvas {
+    background: var(--light);
+    border-radius: 4px;
+    user-select: none;
+    max-width: 100%;
+}
+
+#captchaInput {
+    flex: 1;
+    min-width: 150px;
+    padding: 8px;
+    border: 1px solid var(--light);
+    border-radius: 4px;
+    background: transparent;
+    color: var(--text);
+}
+
+#refreshCaptcha {
+    padding: 8px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.tos {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    color: var(--text);
+}
+
+#tosButton {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 0;
+    font-size: inherit;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: 0.3s;
+    position: relative;
+    overflow: hidden;
+}
+
+.submit-btn:hover {
+    background: #ff0000;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+}
+
+.submit-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transform: rotate(45deg);
+    animation: button-shine 3s linear infinite;
+}
+
+@keyframes button-shine {
+    from {
+        transform: translateX(-100%) rotate(45deg);
+    }
+    to {
+        transform: translateX(100%) rotate(45deg);
+    }
+}
+
+@media (min-width: 768px) {
+    .card {
+        flex-direction: row;
+    }
+    
+    .left-side {
+        width: 40%;
+        border-right: 1px solid rgba(255, 51, 51, 0.1);
+        border-bottom: none;
+    }
+    
+    .right-side {
+        width: 60%;
+        padding: 40px;
+    }
+}

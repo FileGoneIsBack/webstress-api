@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Name}} | {{.Title}}</title>
+    <link rel="stylesheet" href="/_assets/new/css/dash.css">
+    <link rel="stylesheet" href="/_assets/new/css/chat.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="/_assets/new/imports/toastr1.js"></script>
+    <script src="/_assets/new/js/nav1.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Top Nav -->
+        {{ template "nav.html" . }}
+        <main class="main-content">
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chat-title">
+                        <h1 class="chat-title">API Integration Issue</h1>
+                        <span class="ticket-id">#1234</span>
+                    </div>
+                    <div class="chat-actions">
+                        <button class="status-button open">Open</button>
+                        <button class="close-ticket">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                            Close Ticket
+                        </button>
+                    </div>
+                </div>
+
+                <div class="chat-messages">
+
+
+
+
+                    <div class="day-divider">
+                        <span>Today</span>
+                    </div>
+
+
+                </div>
+
+                <div class="chat-input">
+                    <div class="input-wrapper">
+                        <textarea placeholder="Type your message..." rows="1"></textarea>
+                        <button class="attach-button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <button class="send-button">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+function getAllCookies() {
+    return Object.fromEntries(
+        document.cookie.split('; ').map(cookie => {
+            const [name, value] = cookie.split('=');
+            return [name, decodeURIComponent(value)];
+        })
+    );
+}
+
+function handleErrors(xhr, status, error) {
+    console.log("AJAX Request Failed:", status);
+}
+
+function getCurrentUserID() {
+    return $.get('/api/dashboard/user_id')
+        .then(data => data.user_id)
+        .fail(handleErrors);
+}
+
+function renderMessages(messages) {
+    const messagesContainer = document.querySelector('.chat-messages');
+    getCurrentUserID().then(currentUserID => {
+        messagesContainer.innerHTML = ''; // Clear existing
+
+        messages.forEach(msg => {
+            const messageEl = document.createElement('div');
+            messageEl.classList.add('message');
+            messageEl.classList.add(msg.user_id === currentUserID ? 'user' : 'support');
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = msg.user_id === currentUserID ? 'You' : 'SA';
+
+            const content = document.createElement('div');
+            content.className = 'message-content';
+            content.innerHTML = `
+                <p>${msg.message}</p>
+                <span class="message-time">${new Date(msg.created_at).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})}</span>
+            `;
+
+            if (msg.user_id === currentUserID) {
+                messageEl.appendChild(content);
+                messageEl.appendChild(avatar);
+            } else {
+                messageEl.appendChild(avatar);
+                messageEl.appendChild(content);
+            }
+
+            messagesContainer.appendChild(messageEl);
+        });
+
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    });
+}
+
+function updateTicket() {
+    const cookies = getAllCookies();
+    const ticketId = cookies.ticket_id;
+    const textarea = document.querySelector('.chat-input textarea');
+    const message = textarea.value.trim();
+    if (!message) return;
+    $.ajax({
+        url: '/api/tickets/update',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+    ticketid: parseInt(ticketId),
+    message: message
+}),
+        success: function (response) {
+            const data = $.parseJSON(response);
+            if (data.status === 'success') {
+                textarea.value = "";
+                fetchAndRenderNewMessages(); 
+            } else {
+                console.log(data.message);
+            }
+        },
+        error: handleErrors
+    });
+}
+
+let lastMessageId = null;
+
+function fetchAndRenderNewMessages() {
+    const cookies = getAllCookies();
+    const ticketId = cookies.ticket_id;
+    $.post('/api/tickets/messages', { ticketid: ticketId, lastMessageId })
+        .done(data => {
+            console.log(data)
+            const jsonData = $.parseJSON(data);
+            if (jsonData.messages.length > 0) {
+                lastMessageId = jsonData.messages[jsonData.messages.length - 1].id;
+            }
+            renderMessages(jsonData.messages);
+        })
+        .fail(handleErrors);
+}
+
+function updateMessagesPeriodically() {
+    setInterval(fetchAndRenderNewMessages, 3000); // every 3 sec
+}
+
+// === INIT ===
+document.addEventListener("DOMContentLoaded", () => {
+    const cookies = getAllCookies();
+    console.log(getAllCookies());
+    const ticketName = cookies.ticket_name;
+    const ticketStatus = cookies.ticket_status;
+    const ticketId = cookies.ticket_id;
+
+    // Title
+    const titleEl = document.querySelector('.chat-title h1');
+    if (titleEl && ticketName) {
+        titleEl.textContent = ticketName;
+    }
+
+    // Ticket ID
+    const ticketIdEl = document.querySelector('.chat-title .ticket-id');
+    if (ticketIdEl && ticketId) {
+        ticketIdEl.textContent = `#${ticketId}`;
+    }
+
+    // Status
+    const statusBtn = document.querySelector('.status-button');
+    if (statusBtn && ticketStatus) {
+        statusBtn.textContent = ticketStatus.charAt(0).toUpperCase() + ticketStatus.slice(1);
+        statusBtn.className = `status-button ${ticketStatus.toLowerCase()}`;
+    }
+
+    // Continue as normal
+    fetchAndRenderNewMessages();
+    updateMessagesPeriodically();
+
+    document.querySelector('.send-button').addEventListener('click', e => {
+        e.preventDefault();
+        updateTicket();
+    });
+
+    const textarea = document.querySelector('.chat-input textarea');
+    textarea.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            updateTicket();
+        }
+    });
+});
+
+    </script>
+</body>
+</html>

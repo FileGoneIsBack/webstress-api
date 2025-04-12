@@ -1,0 +1,335 @@
+/* API Page Styles */
+.api-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.api-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 51, 51, 0.1);
+    border-radius: 20px;
+    font-size: 0.9em;
+    color: var(--text);
+}
+
+.api-status.active {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4CAF50;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.5);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.api-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.api-card {
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    transition: all 0.3s ease;
+}
+
+.api-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(255, 51, 51, 0.1);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 51, 51, 0.1);
+    border: none;
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background: rgba(255, 51, 51, 0.2);
+    transform: translateY(-2px);
+}
+
+.credential-group {
+    margin-bottom: 20px;
+}
+
+.credential-group:last-child {
+    margin-bottom: 0;
+}
+
+.credential-group label {
+    display: block;
+    color: var(--text);
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    opacity: 0.7;
+}
+
+.credential-value {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--darker);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.credential-value code {
+    flex: 1;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    color: var(--primary);
+}
+
+.key-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.copy-button,
+.visibility-toggle {
+    background: none;
+    border: none;
+    padding: 8px;
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.copy-button:hover,
+.visibility-toggle:hover {
+    background: rgba(255, 51, 51, 0.1);
+    color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.regenerate-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.regenerate-button:hover {
+    background: #ff0000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 51, 0.3);
+}
+
+/* Usage Stats */
+.usage-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stat-item {
+    padding: 15px;
+    background: var(--darker);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.stat-value {
+    font-size: 1.5em;
+    color: var(--primary);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    color: var(--text);
+    font-size: 0.9em;
+    opacity: 0.7;
+    margin-bottom: 10px;
+}
+
+.stat-chart {
+    height: 4px;
+    background: rgba(255, 51, 51, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.chart-bar {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 2px;
+    transition: width 1s ease-in-out;
+}
+
+/* Code Example */
+.code-example {
+    background: var(--darker);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    overflow: hidden;
+}
+
+.code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    background: rgba(255, 51, 51, 0.1);
+    color: var(--text);
+    font-size: 0.9em;
+}
+
+.code-example pre {
+    margin: 0;
+    padding: 15px;
+    overflow-x: auto;
+}
+
+.code-example code {
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+/* Status Grid */
+.status-grid {
+    display: grid;
+    gap: 15px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: var(--darker);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    transition: all 0.3s ease;
+}
+
+.status-item:hover {
+    transform: translateX(5px);
+    border-color: var(--primary);
+}
+
+.status-icon {
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.status-icon.success {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.status-icon.error {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+}
+
+.status-info {
+    flex: 1;
+}
+
+.status-name {
+    color: var(--text);
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.status-value {
+    font-size: 0.9em;
+}
+
+.status-value.operational {
+    color: #4CAF50;
+}
+
+.status-value.error {
+    color: #f44336;
+}
+
+@media (max-width: 1200px) {
+    .api-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .api-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .credential-value {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .key-actions {
+        justify-content: flex-end;
+    }
+
+    .status-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+}

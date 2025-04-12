@@ -10,13 +10,13 @@ import (
 	"github.com/go-telegram-bot-api/telegram-bot-api"
 )
 
-func Info(bot *tgbotapi.BotAPI, message *tgbotapi.Message, callbackData string, userID int) {
-	user, _ := sessions.GetSession(userID)
+func Info(bot *tgbotapi.BotAPI, message *tgbotapi.Message, callbackData string, userID int64) {
+	user, _ := sessions.GetSession(int(userID))
 
 	infoMessage := "User Info:\n"
 	infoMessage += "ID: " + strconv.Itoa(user.ID) + "\n"
 	infoMessage += "User: " + user.Username + "\n"
-	infoMessage += "TGUser: " + user.Telegram + "\n"
+	infoMessage += "TGUser: " + strconv.FormatInt(user.Telegram, 10) + "\n"
 	infoMessage += "Bal: " + strconv.Itoa(user.Balance) + "\n"
 	infoMessage += "Membership: " + user.Membership + "\n"
 

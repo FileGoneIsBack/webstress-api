@@ -1,11 +1,15 @@
 {
     "bot_token": "7046216198:AAHjyenqJpjhmDI_P6i316poiRRaTOjm5lU",
     "db_path": "database.db",
-    "secure": false,
+    "secure": true,
     "key": "test123",
-    "autobuy":{
-        "key":"284685063:TEST:YzA0MjdiMjcwZWNj",
-        "flat":"USD"
+    "custom": "test",
+    " - comment - ": "custom will make the invite code custom lol",
+    "database":{
+        "username": "FileGone",
+        "password": "130523Rs!",
+        "database": "MyDB",
+        "host": "45.90.162.253"
     }
   }
   

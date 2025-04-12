@@ -19,7 +19,7 @@ func init() {
             Users                   int
             Remotes                 map[string]*servers.Server
             *sessions.Session
-            FlashMessages           []sessions.FlashMessage        
+            FlashMessages           []sessions.FlashMessage     
         }
         ok, user := sessions.IsLoggedIn(w, r)
         if !ok {
@@ -27,8 +27,7 @@ func init() {
             return
         }
         //system noti
-        sessions.SetFlash(w, r, "Your changes have been saved successfully.", "System")
-        
+        //sessions.SetFlash(w, r, "Your changes have been saved successfully.", "System")
         flashMessages := sessions.GetFlash(w, r)
         functions.Render(Page{
             Name:    models.Config.Name,

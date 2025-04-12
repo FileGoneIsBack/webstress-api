@@ -27,17 +27,19 @@ func NewServer(config *Config) *Server {
 		server: &http.Server{
 			Addr:    config.Addr,
 			Handler: nil,
-			WriteTimeout: 30 * time.Second, // Increased from 15 seconds
-			ReadTimeout:  30 * time.Second, // Increased from 15 seconds
+			WriteTimeout: 30 * time.Second,
+			ReadTimeout:  30 * time.Second,
 		},
 		router: mux.NewRouter(),
 		routes: make(map[string]*Route),
 		config: config,
 	}
+ 
 
+	
 	// Configure HTTP/2
 	http2.ConfigureServer(s.server, &http2.Server{
-		MaxConcurrentStreams: 50, // Adjust based on your needs
+		MaxConcurrentStreams: 50, 
 		IdleTimeout:          30 * time.Minute,
 	})
 

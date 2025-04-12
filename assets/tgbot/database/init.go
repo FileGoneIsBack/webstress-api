@@ -3,10 +3,10 @@ package database
 import (
 	"bot/models"
 	"database/sql"
-	"api/core/models/log"
 	"time"
-
-	_ "github.com/mattn/go-sqlite3"
+	"fmt"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/mattn/go-sqlite3" // Import SQLite driver
 )
 
 var (
@@ -23,14 +23,36 @@ type Instance struct {
 
 func New() error {
 	Container.Connected = time.Now()
-	db, err := sql.Open("sqlite3", models.Config.DbPath)
-	if err != nil {
-		return err
+
+	var db *sql.DB
+	var err error
+
+	if models.Config.Secure {
+		// Use MySQL
+		dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s",
+			models.Config.Database.Username,
+			models.Config.Database.Password,
+			models.Config.Database.Host,
+			models.Config.Database.Database,
+		)
+		db, err = sql.Open("mysql", dsn)
+		if err != nil {
+			return fmt.Errorf("could not open MySQL connection: %v", err)
+		}
+	} else {
+		// Use SQLite
+		db, err = sql.Open("sqlite3", models.Config.DbPath)
+		if err != nil {
+			return fmt.Errorf("could not open SQLite connection: %v", err)
+		}
 	}
+
+	// Check database connection
 	if err := db.Ping(); err != nil {
-		return err
+		return fmt.Errorf("could not ping the database: %v", err)
 	}
+
 	Container.conn = db
-	lologgger.Println("New(): succesfully connected to database")
+	fmt.Println("New(): successfully connected to database")
 	return nil
 }

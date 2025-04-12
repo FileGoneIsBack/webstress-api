@@ -18,11 +18,8 @@ var layer7Total = 0
 func init() {
 	Route.NewSub(server.NewRoute("/data", func(w http.ResponseWriter, r *http.Request) {
 		if strings.ToLower(r.Method) == "post" {
-			ok, session := sessions.IsLoggedIn(w, r)
-			if !ok {
-				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
-				return
-			}
+			_, session := sessions.IsLoggedIn(w, r)
+
 
 			type serverStruct struct {
 				ID             int     "json:\"id\""

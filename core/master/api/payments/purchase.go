@@ -31,6 +31,7 @@ func init() {
 				if user.Balance >= plan.Price {
 					database.Container.UpdateUserPlan(user.User, plan)
 					json.NewEncoder(w).Encode(&Status{Status: "success", Message: "succesfully purchased " + fmt.Sprint(planVal) + ""})
+					sessions.SetFlash(w, r,  fmt.Sprintf("succesfully purchased %s", planVal), "")
 					return
 				} else {
 					json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Insufficient Balance!"})

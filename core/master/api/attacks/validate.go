@@ -2,17 +2,38 @@ package attackapi
 
 import (
 	"api/core/database"
-	"api/core/models/floods"
 	"api/core/models/apis"
+	"api/core/models/floods"
 	"api/core/models/servers"
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"net/url"
 	"strconv"
-	"time"
 	"sync"
+	"time"
 )
+
+func isResolvable(target string) bool {
+			// Check if the target is an IPv4 address
+			if net.ParseIP(target) != nil {
+				return true
+			}
+
+			parsedURL, err := url.Parse(target)
+			if err != nil {
+				return false
+			}
+			host := parsedURL.Hostname()
+			if host == "" {
+				host = target
+			}
+
+			// Perform DNS lookup
+			addrs, err := net.LookupHost(host)
+			return err == nil && len(addrs) > 0
+}
 
 
 func ValidateTarget(target string, blacklists []string) error {
@@ -33,13 +54,11 @@ func ValidateTarget(target string, blacklists []string) error {
 	if host == "" {
 		host = target
 	}
-
+	log.Printf("test: %s ", target)
 	// Simple DNS lookup to verify the host.
-	addrs, err := net.LookupHost(host)
-	if err != nil || len(addrs) == 0 {
+	if !isResolvable(host) {
 		return errors.New("target is not resolvable")
 	}
-
 	if inBlacklist(target, blacklists) {
 		return errors.New("target is blacklisted")
 	}

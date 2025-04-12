@@ -1,7 +1,7 @@
 package main
 
 import (
-	"api/core/models/log"
+	"log"
 	"bot/database"
  	 handler "bot/core"
 	"bot/models/bot"
@@ -15,6 +15,7 @@ func main() {
 		log.Println("failed to initialize database", err)
 		return
 	}
+	database.Container.DeleteExpiredInvites()
 
 	bot, err := bot.Init()
 	if err != nil {

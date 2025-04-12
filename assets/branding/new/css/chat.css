@@ -1,0 +1,269 @@
+/* Chat Layout */
+.chat-container {
+    background: var(--dark);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 140px);
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.chat-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.chat-title h1 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.ticket-id {
+    color: var(--primary);
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.chat-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.status-button {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-button.open {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.close-ticket {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-ticket:hover {
+    background: rgba(244, 67, 54, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Messages Area */
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.message {
+    display: flex;
+    gap: 15px;
+    max-width: 80%;
+}
+
+.message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 40px;
+    height: 40px;
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.message.support .message-avatar {
+    background: #2196F3;
+}
+
+.message-content {
+    background: var(--darker);
+    padding: 15px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.message.user .message-content {
+    background: rgba(255, 51, 51, 0.1);
+}
+
+.message-content p {
+    margin: 0;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.message-time {
+    font-size: 0.8em;
+    color: var(--text);
+    opacity: 0.7;
+    margin-top: 5px;
+    display: block;
+}
+
+.day-divider {
+    text-align: center;
+    margin: 20px 0;
+    position: relative;
+}
+
+.day-divider::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: rgba(255, 51, 51, 0.1);
+}
+
+.day-divider span {
+    background: var(--dark);
+    padding: 0 15px;
+    color: var(--text);
+    font-size: 0.9em;
+    position: relative;
+    opacity: 0.7;
+}
+
+/* Chat Input */
+.chat-input {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 51, 51, 0.1);
+    display: flex;
+    gap: 15px;
+}
+
+.input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--darker);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    padding: 10px;
+}
+
+.input-wrapper textarea {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text);
+    resize: none;
+    padding: 0;
+    font-size: 1em;
+    min-height: 24px;
+    max-height: 150px;
+    line-height: 1.5;
+}
+
+.input-wrapper textarea:focus {
+    outline: none;
+}
+
+.attach-button {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.attach-button:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.send-button {
+    background: var(--primary);
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.send-button:hover {
+    background: #ff0000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 51, 0.3);
+}
+
+@media (max-width: 768px) {
+    .chat-container {
+        height: calc(100vh - 100px);
+        margin: -20px;
+        border-radius: 0;
+    }
+
+    .chat-header {
+        padding: 15px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .chat-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    .chat-input {
+        padding: 15px;
+    }
+
+    .input-wrapper {
+        padding: 8px;
+    }
+
+    .send-button {
+        width: 45px;
+        height: 45px;
+    }
+}

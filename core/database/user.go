@@ -4,12 +4,17 @@ import (
 	"api/core/models/log"
 	"api/core/models/plans"
 	"api/core/models/ranks"
+	"api/core/models"
 	"bytes"
 	"database/sql"
 	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"time"
+	"strings"
+	"fmt"
+	"crypto/rand"
+	"math/big"
 )
 
 type FlashMessage struct {
@@ -20,13 +25,13 @@ type FlashMessage struct {
 type Role string
 type User struct {
 	ID                                      int
-	Username                                string
-	Key, Salt                               []byte
+	Username, Api                           string
+	Key, Salt	                            []byte
 	ranks			                        string
 	Membership								string
 	Ranks                                   []*ranks.Rank
 	Concurrents, Servers, Duration, Balance int
-	Expiry                                  int64
+	Expiry, Tele                            int64
 	Flashes  []FlashMessage
 }
 
@@ -40,16 +45,34 @@ func (conn *Instance) NewUser(user *User) (err error) {
 	if user, err := conn.GetUser(user.Username); err == nil && user != nil {
 		return ErrDuplicateUser
 	}
+	user.Api = base64.StdEncoding.EncodeToString([]byte(GenerateUserKey(models.Config.Name)))
 	user.Salt = NewSalt(16)
 	user.Key = NewHash(user.Key, user.Salt)
 	user.ranks = user.NewRoles()
-	stmt, err := conn.conn.Prepare("INSERT INTO `users` (`id`, `username`, `key`, `salt`, `roles`, `expiry`, `concurrents`, `servers`, `duration`, `balance`, `membership`) VALUES (NULL, ?,?,?,?,?,?,?,?,?,?)")
+	stmt, err := conn.conn.Prepare("INSERT INTO `users` (`id`, `username`, `key`, `salt`, `roles`, `expiry`, `concurrents`, `servers`, `duration`, `balance`, `membership`, `api`, `tele`) VALUES (NULL, ?,?,?,?,?,?,?,?,?,?,?,?)")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	if _, err := stmt.Exec(user.Username, user.Key, user.Salt, user.ranks, user.Expiry, user.Concurrents, user.Servers, user.Duration, user.Balance, user.Membership); err != nil {
+	if _, err := stmt.Exec(
+		user.Username,
+		user.Key,
+		user.Salt,
+		user.ranks,
+		user.Expiry,
+		user.Concurrents,
+		user.Servers,
+		user.Duration,
+		user.Balance,
+		user.Membership,
+		user.Api,
+		user.Tele, // ✅ now we have 12 values
+	); err != nil {
 		return err
+	}
+	_, err = conn.conn.Exec(`DELETE FROM tokens WHERE usernames = ?`, user.Tele)
+	if err != nil {
+		return fmt.Errorf("user created, but failed to clean up invite: %w", err)
 	}
 	return
 }
@@ -212,6 +235,7 @@ func (conn *Instance) UpdateUserPlan(user *User, plan *plans.Plan) error {
 func (user *User) GetKey() []byte {
 	return user.Key
 }
+
 func (conn *Instance) scanUser(query Query) (*User, error) {
 	user := new(User)
 	if err := query.Scan(
@@ -252,17 +276,16 @@ func (conn *Instance) Users() (users int) {
 }
 
 func (conn *Instance) UpdateUser(user *User) error {
-	stmt, err := conn.conn.Prepare("UPDATE `users` SET `roles` = ?, `expiry` = ?, `concurrents` = ?, `servers` = ?, `duration` = ?, `balance` = ? WHERE `username` = ?")
+	stmt, err := conn.conn.Prepare("UPDATE `users` SET `roles` = ?, `concurrents` = ?, `servers` = ?, `duration` = ?, `balance` = ? WHERE `username` = ?")
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 	user.ranks = user.NewRoles()
-	// Execute the update query
-	if _, err := stmt.Exec(user.ranks, user.Expiry, user.Concurrents, user.Servers, user.Duration, user.Balance, user.Username); err != nil {
+	// Execute the update query without updating expiry
+	if _, err := stmt.Exec(user.ranks, user.Concurrents, user.Servers, user.Duration, user.Balance, user.Username); err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -312,4 +335,36 @@ func (conn *Instance) UserData(row *sql.Row) (*User, error) {
 		return nil, err
 	}
 	return &u, nil
+}
+
+func (conn *Instance) UpdateUserKey(username string, newKey []byte) error {
+    encodedKey := base64.StdEncoding.EncodeToString(newKey)
+    stmt, err := conn.conn.Prepare("UPDATE `users` SET `api` = ? WHERE `username` = ?")
+    if err != nil {
+        return err
+    }
+    defer stmt.Close()
+
+    _, err = stmt.Exec(encodedKey, username)
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func GenerateUserKey(siteName string) string {
+	siteName = strings.ReplaceAll(siteName, " ", "-")
+	randomString := generateRandomString(6)
+	return fmt.Sprintf("%s-%s", siteName, randomString)
+}
+
+func generateRandomString(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	var result strings.Builder
+	for i := 0; i < length; i++ {
+		randomIndex, _ := rand.Int(rand.Reader, big.NewInt(int64(len(charset))))
+		result.WriteByte(charset[randomIndex.Int64()])
+	}
+	return result.String()
 }

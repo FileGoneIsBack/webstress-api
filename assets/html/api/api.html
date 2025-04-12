@@ -1,560 +1,278 @@
 <!DOCTYPE html>
-<html class="loading dark-layout" lang="en" data-layout="dark-layout" data-textdirection="ltr">
-<!-- BEGIN: Head-->
-
+<html lang="en">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=0,minimal-ui">
-    <meta name="description" content="Vuexy admin is super flexible,
-            powerful, clean &amp; modern responsive bootstrap 4 admin template
-            with unlimited possibilities.">
-    <meta name="keywords" content="admin template, Vuexy admin template,
-            dashboard template, flat admin template, responsive admin template,
-            web app">
-    <meta name="author" content="PIXINVENT">
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"
-                integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA=="
-                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Name}} | {{.Title}}</title>
-    <link rel="apple-touch-icon" href="/_assets/images/ico/apple-icon-120.png">
-    <link rel="shortcut icon" type="image/x-icon" href="/_assets/images/ico/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500;1,600"
-        rel="stylesheet">
-
-    <!-- BEGIN: Vendor CSS-->
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/vendors.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/responsive.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/buttons.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/tables/datatable/rowGroup.bootstrap5.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/pickers/flatpickr/flatpickr.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/extensions/nouislider.min.css">
-    <!-- END: Vendor CSS-->
-
-    <!-- BEGIN: Theme CSS-->
-    <link rel="stylesheet" type="text/css" href="/_assets/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/bootstrap-extended.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/colors.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/components.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/themes/dark-layout.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/themes/bordered-layout.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/themes/semi-dark-layout.css">
-
-    <!-- BEGIN: Page CSS-->
-    <link rel="stylesheet" type="text/css" href="/_assets/css/core/menu/menu-types/vertical-menu.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/plugins/extensions/ext-component-sliders.css">
-    <!-- END: Page CSS-->
-
-    <link rel="stylesheet" type="text/css" href="/_assets/vendors/css/extensions/toastr.min.css">
-    <link rel="stylesheet" type="text/css" href="/_assets/css/plugins/extensions/ext-component-toastr.css">
-
+    <link rel="stylesheet" href="/_assets/new/css/dash.css">
+    <link rel="stylesheet" href="/_assets/new/css/api1.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="/_assets/new/imports/toastr1.js"></script>
+    <script src="/_assets/new/js/nav1.js"></script>
 </head>
-<!-- END: Head-->
- 
-<!-- BEGIN: Body-->
-<body class="vertical-layout vertical-menu-modern content-left-sidebar navbar-floating footer-static" data-open="click" data-menu="vertical-menu-modern" data-col="content-left-sidebar" id="style-3">
-
-<!-- Include Navigation Menu -->
-{{ template "nav.html" . }}
-
-    <!-- BEGIN: Content-->
-    <div class="app-content content ">
-        <div class="content-overlay"></div>
-        <div class="header-navbar-shadow"></div>
-        <div class="content-wrapper container-xxl p-0">
-            <div class="content-header row">
+<body>
+    <div class="dashboard">
+        {{ template "nav.html" . }}
+        <main class="main-content">
+            <div class="api-header">
+                <h1>API Management</h1>
+                <div class="api-status active">
+                    <span class="status-dot"></span>
+                    API Active
+                </div>
             </div>
-            <div class="content-body">
 
-                <!-- users list start -->
-                <section class="app-user-list">
-                    <div class="row">
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.ServersCount}}</h3>
-                                        <span>Servers</span>
-                                    </div>
-                                    <div class="avatar bg-light-success
-                                            p-50">
-                                        <span class="avatar-content">
-                                            <i data-feather="server" class="font-medium-4"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.Ongoing}}</h3>
-                                        <span>{{if eq .Ongoing 1 }}Running attack{{ else }}Running attacks{{ end
-                                            }}</span>
-                                    </div>
-                                    <div class="avatar bg-light-primary
-                                            p-50">
-                                        <span class="avatar-content">
-                                            <i data-feather="wifi-off" class="font-medium-4"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.Slots}}</h3>
-                                        <span>{{if eq .Slots 1 }}Slot{{ else }}Slots{{ end }}</span>
-                                    </div>
-                                    <div class="avatar bg-light-warning
-                                            p-50">
-                                        <span class="avatar-content">
-                                            <i data-feather="command" class="font-medium-4"></i>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-3 col-sm-6">
-                            <div class="card">
-                                <div class="card-body d-flex
-                                        align-items-center
-                                        justify-content-between">
-                                    <div>
-                                        <h3 class="fw-bolder mb-75">{{.Users}}</h3>
-                                        <span>{{if eq .Users 1 }}User{{ else }}Users{{ end }}</span>
-                                    </div>
-                                    <div class="avatar bg-light-danger
-                                            p-50">
-                                        <span class="avatar-content">
-                                            {{if eq .Users 1}}<i data-feather='user'
-                                                class="font-medium-4"></i>{{else}}<i data-feather='users'
-                                                class="font-medium-4"></i>{{end}}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <div class="row">
-                    <div class="card">
-                        <div class="nav-tabs-shadow nav-align-left">
-                            <div class="ps-0 ps-sm-2 d-flex flex-column mb-2 mb-sm-0t">
-                                <ul class="nav nav-tabs" role="tablist">
-                                    <li class="nav-item">
-                                        <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab"
-                                            data-bs-target="#apiLink">API</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
-                                            data-bs-target="#apiKey">Key</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
-                                            data-bs-target="#docs">Docs</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
-                                            data-bs-target="#whitelist">Whitelist</button>
-                                    </li>
-                                    <li class="nav-item">
-                                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
-                                            data-bs-target="#methods">Methods</button>
-                                    </li>
-                                </ul>
-                                <div class="tab-content">
-                                    <!--API Link-->
-                                    <div class="tab-pane fade show active" id="apiLink">
-                                        <span class="card-header-title me-">Api Link</span>
-                                        <div class="card-body">
-                                            <input class="form-control" id="clipboard-example" type="text"
-                                                value="{{.Domain}}api/start?user={{.Username}}&key=password&target=1.1.1.1&port=53&time=30&method=UDP-DNS" readonly>
-                                        </div>
-                                    </div>
-                                    <!--API key-->
-                                    <div class="tab-pane fade" id="apiKey">
-                                        <span class="card-header-title me-2">Api Key</span>
-                                        <div class="card-body">
-                                            <input class="form-control" id="clipboard-example" type="text"
-                                                value="The key to the api is ur site password!" readonly>
-                                        </div>
-                                    </div>
-                                    <!--Docs-->
-                                    <div class="tab-pane fade" id="docs">
-                                        <span class="card-header-title me-2">Docs</span>
-                                        <div class="accordion" id="accordionExample">
-                                            <div class="card accordion-item active">
-                                                <h2 class="accordion-header" id="headingOne">
-                                                    <button type="button" class="accordion-button"
-                                                        data-bs-toggle="collapse" data-bs-target="#accordionOne"
-                                                        aria-expanded="true" aria-controls="accordionOne"
-                                                        role="tabpanel">
-                                                        How to use
-                                                    </button>
-                                                </h2>
-
-                                                <div id="accordionOne" class="accordion-collapse collapse show"
-                                                    data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        to start an attack navigate to the panel/api url with ur designated target, port, method & attack duration<br>
-                                                        example: {{.Domain}}api/start?user={{.Username}}&key=password&target=70.70.70.7&port=53&time=30&method=UDP-DNS
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card accordion-item">
-                                                <h2 class="accordion-header" id="headingTwo">
-                                                    <button type="button" class="accordion-button collapsed"
-                                                        data-bs-toggle="collapse" data-bs-target="#accordionTwo"
-                                                        aria-expanded="false" aria-controls="accordionTwo"
-                                                        role="tabpanel">
-                                                        Response
-                                                    </button>
-                                                </h2>
-                                                <div id="accordionTwo" class="accordion-collapse collapse"
-                                                    aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        Json body data<br>
-                                                        example: <br>
-                                                        - {"status":"success","message":"attack succesfully started", "attack_ids":[1241,1242,1243]}<br>
-                                                        the attack ids can be parsed & used to stop attacks
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="card accordion-item">
-                                                <h2 class="accordion-header" id="headingThree">
-                                                    <button type="button" class="accordion-button collapsed"
-                                                        data-bs-toggle="collapse" data-bs-target="#accordionThree"
-                                                        aria-expanded="false" aria-controls="accordionThree"
-                                                        role="tabpanel">
-                                                        optional parameters
-                                                    </button>
-                                                </h2>
-                                                <div id="accordionThree" class="accordion-collapse collapse"
-                                                    aria-labelledby="headingThree" data-bs-parent="#accordionExample">
-                                                    <div class="accordion-body">
-                                                        threads - &threads=4 - threads can be used to increase the output of each attack the same as concurrents<br>
-                                                        concurrents - &concurrents=3 - concurrents can be used to send multiple attacks at once to output more power<br>
-                                                        pps - &pps=1000000 - pps is the packets per second limit on each attack it can be used to output more pps<br>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!--Whitelist-->
-                                    <div class="tab-pane fade" id="whitelist">
-                                        <span class="card-header-title me-2">Whitelist</span>
-                                        <div class="card-body" class="mb-1 col-md-6">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="floatingInput"
-                                                    aria-describedby="floatingInputHelp" placeholder="This does not currently work! sharing will be banned."/>
-                                                <label for="floatingInput">Whitelist</label>
-                                                <div id="floatingInputHelp" class="form-text">IP you want to whitelist.
-                                                </div>
-                                                <br>
-                                            </div>
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="floatingInput2"
-                                                    placeholder="Name" aria-describedby="floatingInputHelp2" />
-                                                <label for="floatingInput2">Name</label>
-                                                <div id="floatingInputHelp2" class="form-text">Server name.
-                                                </div>
-                                                <br>
-                                                <div col-md-6>
-                                                    <button id="startatk" class="btn btn-primary btn-icon" type="submit"
-                                                        onclick="addWhilelist()">Add Whitelist</button>
-                                                </div>
-                                                <br>
-                                            </div>
-
-                                            <div class="table-responsive">
-                                                <table class="table">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>IP</th>
-                                                            <th>NAME</th>
-                                                            <th>DATE</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody class="table-border-bottom-0">
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>1.2.2.1</td>
-                                                            <td>Main Server</td>
-                                                            <td>2-2-2024</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td>1</td>
-                                                            <td>1.1.1.1</td>
-                                                            <td>Backup Server</td>
-                                                            <td>2-2-2024</td>
-                                                        </tr>
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="methods">
-                                        <span class="card-header-title me-2">Whitelist</span>
-                                        <div class="card-body" class="mb-1 col-md-6">
-<div id="grid4" style="height: 600px; width: 100%;" class="ag-theme-alpine"></div>
-<br>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </table>
+            <div class="api-grid">
+                <!-- API Credentials -->
+                <div class="api-card">
+                    <div class="card-header">
+                        <h2>API Credentials</h2>
+                        <div class="header-actions">
+                            <button class="action-button" id="copyAll">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                </svg>
+                                Copy All
+                            </button>
                         </div>
                     </div>
 
-<script src="https://cdn.jsdelivr.net/npm/ag-grid-community/dist/ag-grid-community.min.js"></script>
-<script>
-    // Function to load methods from the API and populate AG-Grid
-    function test() {
-        var gridDiv = document.getElementById("grid4");
+                    <div class="credential-group">
+                        <label>API Endpoint</label>
+                        <div class="credential-value">
+                            <code>{{ .Domain }}api/start?user={{.Username}}&key=___&host=1.1.1.1&port=53&time=30&method=UDP-DNS</code>
+                            <button class="copy-button" data-value="{{ .Domain }}api/start?user={{.Username}}&key=___&host=1.1.1.1&port=53&time=30&method=UDP-DNS">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
 
-        $.post('/api/attacks/methods', function (response) {
-            var json = $.parseJSON(response);
+                    <div class="credential-group">
+                        <label>API Key</label>
+                        <div class="credential-value">
+                            <code class="api-key-field">••••••••••••••••••••••••••••••</code>
+                            <div class="key-actions">
+                                <button class="visibility-toggle">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                                <button class="copy-button" data-value="...">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                        <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button class="regenerate-button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.3"/>
+                            </svg>
+                            Regenerate API Key
+                        </button>
+                    </div>
+                </div>
 
-            if (json.status == "success") {
-                console.log(json.methods);
+                <!-- API Usage -->
+                <div class="api-card">
+                    <div class="card-header">
+                        <h2>API Usage</h2>
+                        <div class="header-actions">
+                            <button class="action-button">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="3" y1="9" x2="21" y2="9"></line>
+                                    <line x1="9" y1="21" x2="9" y2="9"></line>
+                                </svg>
+                                View Details
+                            </button>
+                        </div>
+                    </div>
+                    <div class="usage-stats">
+                        <div class="stat-item">
+                            <div class="stat-value">{{ .Reqs }}</div>
+                            <div class="stat-label">Total Requests</div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="width: {{ .Reqs }}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value">{{ .SuccessRate }}%</div>
+                            <div class="stat-label">Success Rate</div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" style="width: {{ .SuccessRate }}%"></div>
+                            </div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="avg-time">-- ms</div>
+                            <div class="stat-label">Avg. Response Time</div>
+                            <div class="stat-chart">
+                                <div class="chart-bar" id="avg-bar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                // Create an array to hold all the methods
-                let methods = [];
+                <!-- Quick Start -->
+                <div class="api-card">
+                    <div class="card-header">
+                        <h2>Quick Start</h2>
+                        <div class="header-actions">
+                            <button class="action-button">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                                    <polyline points="14 2 14 8 20 8"></polyline>
+                                    <line x1="16" y1="13" x2="8" y2="13"></line>
+                                    <line x1="16" y1="17" x2="8" y2="17"></line>
+                                    <polyline points="10 9 9 9 8 9"></polyline>
+                                </svg>
+                                View Docs
+                            </button>
+                        </div>
+                    </div>
+                    <div class="code-example">
+                        <div class="code-header">
+                            <span>Example Request</span>
+                            <button class="copy-button" data-value="curl -X POST {{ .Domain }}api/start \
+-H 'Content-Type: application/json' \
+-d '{
+    &quot;target&quot;: &quot;example.com&quot;,
+    &quot;port&quot;: 80,
+    &quot;method&quot;: &quot;TCP&quot;,
+    &quot;duration&quot;: 30
+}'">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
+                                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
+                                </svg>
+                            </button>
+                        </div>
+<pre><code>curl -X POST {{ .Domain }}api/start \
+-H 'Content-Type: application/json' \
+-d '{
+    "target": "example.com",
+    "port": 80,
+    "method": "TCP",
+    "duration": 30
+}'</code></pre>
+                    </div>
+                </div>
 
-                // Loop through each method and group them by subnet
-                for (var i = 0; i < json.methods.length; i++) {
-                    var method = json.methods[i];
-
-                    // Create method objects for AG-Grid
-                    methods.push({
-                        subnet: method.subnet,
-                        method: method.method,
-                        panel_method: method.panel_method
-                    });
-                }
-
-                const myTheme = agGrid.themeQuartz.withParams({
-                    backgroundColor: "rgb(249, 245, 227)",
-                    foregroundColor: "rgb(126, 46, 132)",
-                    headerTextColor: "rgb(204, 245, 172)",
-                    headerBackgroundColor: "rgb(209, 64, 129)",
-                    oddRowBackgroundColor: "rgb(0, 0, 0, 0.03)",
-                    headerColumnResizeHandleColor: "rgb(126, 46, 132)",
-                });
-
-                // Grid column definitions
-                const columnDefs = [
-                    { 
-                        headerName: "Subnet", 
-                        field: "subnet", 
-                        rowGroup: true,  // Group by subnet
-                        rowSpan: function(params) {
-                            // Only apply rowSpan to rows with the same subnet value
-                            const startIndex = params.node.rowIndex;
-                            let count = 1;
-
-                            // Count the number of rows with the same subnet value
-                            while (params.api.getDisplayedRowAtIndex(startIndex + count) &&
-                                   params.api.getDisplayedRowAtIndex(startIndex + count).data.subnet === params.data.subnet) {
-                                count++;
-                            }
-                            return count; // Set the rowSpan based on how many rows are in the group
-                        }
-                    },
-                    { headerName: "Method", field: "method" },
-                    { headerName: "Panel Method", field: "panel_method" }
-                ];
-
-                // Grid options
-                const gridOptions = {
-                    columnDefs: columnDefs,
-                    theme: myTheme,
-                    rowData: methods,  // Set row data with grouped methods
-                    groupUseEntireRow: true,  // Ensure the entire row is used for grouping
-                    domLayout: 'autoHeight', // Automatically adjust height to fit rows
-                    animateRows: true, // Optional: for row animations
-                    sortingOrder: ['asc', 'desc']  // Allow sorting by method or panel_method
-                };
-
-                // Initialize AG-Grid with the given options
-                document.addEventListener("DOMContentLoaded", function () {
-                    // Get the container where the grid will be placed
-                    const gridDiv = document.getElementById("grid4");
-
-                    // Create the AG-Grid instance
-                    agGrid.createGrid(gridDiv, gridOptions);  // Use agGrid.createGrid() instead of new agGrid.Grid()
-                });
-            } else if (json.status == "error") {
-                toastr['warning'](response.message, 'Attacks', { "toastClass": "toast-dark" });
-            }
-        });
-    }
-
-    // Call the test function to load data and initialize the grid
-    test();
-</script>
-
-        <!-- END: Content-->
-
-        <div class="sidenav-overlay"></div>
-        <div class="drag-target"></div>
-        <h4 class="py-3 mb-4">
-            <span class="text-muted fw-light">Dashboard / Client Panel /</span> API
-        </h4>
+                <!-- API Status -->
+                <div class="api-card">
+                    <div class="card-header">
+                        <h2>API Status</h2>
+                        <div class="header-actions">
+                            <button class="action-button">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                                </svg>
+                                Check Status
+                            </button>
+                        </div>
+                    </div>
+                    <div class="status-grid">
+                        <div class="status-item">
+                            <div class="status-icon success">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-name">API v1</div>
+                                <div class="status-value operational">Operational</div>
+                            </div>
+                        </div>
+                        {{if .Session.HasPermission "api" }}
+                        <div class="status-item">
+                            <div class="status-icon success">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                                </svg>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-name">API Access</div>
+                                <div class="status-value operational">Valid until: {{ .Session.Expiry.Format "2006-01-02" }}</div>
+                            </div>
+                        </div>
+                        {{ else }}
+                        <div class="status-item">
+                            <div class="status-icon error">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-name">API Access</div>
+                                <div class="status-value error">Please buy a plan</div>
+                            </div>
+                        </div> 
+                        {{ end }}
+                        {{ if (eq .Ongoing .Slots) }}
+                        <div class="status-item">
+                            <div class="status-icon error">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                </svg>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-name">No Slots Available</div>
+                                <div class="status-value error">Please buy a plan</div>
+                            </div>
+                        </div> 
+                        {{ else }}
+                        <div class="status-item">
+                            <div class="status-icon success">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                                    <line x1="8" y1="21" x2="16" y2="21"></line>
+                                    <line x1="12" y1="17" x2="12" y2="21"></line>
+                                </svg>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-name">Servers up and running!</div>
+                                <div class="status-value operational">{{.Ongoing}} / {{ .Slots }}</div>
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-    <!-- BEGIN: Footer-->
-    <footer class="footer footer-static footer-light">
-        <p class="clearfix mb-0"><span class="float-md-start d-block
-                        d-md-inline-block mt-25">Copyright &copy; 2024<a class="ms-25" href="https://nasa-federation.co.uk"
-                    target="_blank">Twilight</a><span class="d-none
-                            d-sm-inline-block">, All rights Reserved</span></span><span
-                class="float-md-end d-none d-md-block">Vers: {{.Vers}} \\ Hand-crafted &
-                Made with
-                <a href="https://discord.gg/9PuvcEsMVA"> <i data-feather="heart"></i> </a>
-            </span>
-        </p>
-    </footer>
-    <button class="btn btn-primary btn-icon scroll-top" type="button"><i data-feather="arrow-up"></i></button>
-    <!-- END: Footer-->
-
-
-        <!-- BEGIN: Vendor JS-->
-        <script src="/_assets/vendors/js/vendors.min.js"></script>
-        <!-- BEGIN Vendor JS-->
-
-        <!-- BEGIN: Page Vendor JS-->
-    <script src="/_assets/vendors/js/tables/datatable/jquery.dataTables.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/dataTables.bootstrap5.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/dataTables.responsive.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/responsive.bootstrap5.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/datatables.checkboxes.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/datatables.buttons.min.js"></script>
-    <script src="/_assets/vendors/js/charts/apexcharts.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/jszip.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/pdfmake.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/vfs_fonts.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/buttons.html5.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/buttons.print.min.js"></script>
-    <script src="/_assets/vendors/js/tables/datatable/dataTables.rowGroup.min.js"></script>
-    <script src="/_assets/vendors/js/pickers/flatpickr/flatpickr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <script>
+        function fakeAvgResponse() {
+            const min = 20;
+            const max = 120;
+            const ms = Math.floor(Math.random() * (max - min + 1)) + min;
+            const width = 100 - Math.floor(ms / 1.5); // arbitrary formula to scale bar
     
-
-        <script src="/_assets/vendors/js/extensions/wNumb.min.js"></script>
-        <script src="/_assets/vendors/js/extensions/nouislider.min.js"></script>
-        <!-- BEGIN: Page JS-->
-        <script src="/_assets/js/scripts/extensions/ext-component-toastr.js"></script>
-        <!-- END: Page JS-->
-
-        <!-- BEGIN: Page Vendor JS-->
-        <script src="/_assets/vendors/js/extensions/toastr.min.js"></script>
-        <script src="/_assets/vendor/libs/chartjs/chartjs.js"></script>
-        <!-- END: Page Vendor JS-->
-        <!-- END: Page Vendor JS-->
-
-        <!-- BEGIN: Theme JS-->
-    <script src="/_assets/js/core/app-menu.js"></script>
-    <script src="/_assets/js/core/app.js"></script>
-        <!-- END: Theme JS-->
-
-
-        <!--START: Scrollbar-->
-        <style>
-            ::-webkit-scrollbar-track {
-                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-                background-color: #161D31;
-            }
-
-            ::-webkit-scrollbar {
-                width: 6px;
-                background-color: #1e1f26;
-            }
-
-            ::-webkit-scrollbar-thumb {
-                background-color: #283046;
-            }
-        </style>
-        <!--START: Scrollbar-->
-        <script>
-            function startAttack() {
-                var host = $("#target").val();
-                var port = $("#port").val();
-                var duration = $("#duration").val();
-                var method = $("#method").val();
-
-                var concurrentslider = document.getElementById("concurrentSlider");
-                var concurrents = concurrentslider.noUiSlider.get();
-                console.log(concurrents);
-                document.getElementById("startatk").disabled = true;
-
-                $.post('/api/start', {
-                    host,
-                    port,
-                    duration,
-                    method,
-                    concurrents
-                }, function (response) {
-                    console.log(response.error)
-                    var json = $.parseJSON(response);
-                    console.log(json)
-                    if (json.status == "success") {
-                        toastr['success']('Attack sent succesfully', 'Attacks', { "toastClass": "toast-dark" });
-                        document.getElementById("startatk").disabled = false;
-                    } else if (json.status == "error") {
-                        toastr['warning'](json.message, 'Attacks', { "toastClass": "toast-dark" });
-                        document.getElementById("startatk").disabled = false;
-                    }
-                    document.getElementById("startatk").disabled = false;
-                })
-            };
-            $(window).on('load', function () {
-                size = document.getElementById('concurrentSlider');
-                if (typeof size !== undefined && size !== null) {
-                    // Range
-                    noUiSlider.create(size, {
-                        start: 1,
-                        step: 1,
-                        range: {
-                            min: 1,
-                            max: 10
-                        },
-                        tooltips: false,
-                        pips: {
-                            mode: 'steps',
-                            stepped: true,
-                            density: 5
-                        }
-                    });
-                }
-            });
-        </script>
-
-
-        <script>
-            $(window).on('load', function () {
-                test();
-                if (feather) {
-                    feather.replace({
-                        width: 14,
-                        height: 14
-                    });
-                }
-            })
-        </script>
+            document.getElementById('avg-time').textContent = ms + "ms";
+            document.getElementById('avg-bar').style.width = width + "%";
+        }
+    
+        // Initial run
+        fakeAvgResponse();
+    
+        // Update every 3 seconds
+        setInterval(fakeAvgResponse, 3000);
+    </script>
+    <script src="/_assets/new/js/user/api1.js"></script>
 </body>
-<!-- END: Body-->
-
 </html>

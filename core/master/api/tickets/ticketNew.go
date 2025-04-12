@@ -46,7 +46,7 @@ func init() {
 				return
 			}
 			// Save the ticket information in the database
-			err = database.Container.NewTicket(user.ID, newTicket.Title, newTicket.Message)
+			err = database.Container.NewTicket(user.ID, newTicket.Title, newTicket.Message, user.Username)
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error()})
 				return

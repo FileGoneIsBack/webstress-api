@@ -14,7 +14,7 @@ import (
 func init() {
 	Route.NewSub(server.NewRoute("/faq", func(w http.ResponseWriter, r *http.Request) {
 		type Page struct {
-			Name, Title, Vers            string
+			Name, Title, Vers, Domain    string
 			ServersCount, Ongoing, Slots int
 			Users                        int
 			Remotes                      map[string]*servers.Server
@@ -36,6 +36,7 @@ func init() {
 			Users:        database.Container.Users() + models.Config.Fake.Users,
 			Remotes:      servers.Servers,
 			Session:      user,
+			Domain:		  models.Config.Domain,
 		}, w, r, "user", "faq.html")
 	}))
 }

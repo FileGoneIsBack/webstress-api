@@ -3,51 +3,61 @@ package database
 import (
 	"database/sql"
 	"fmt"
+	"log"
 )
 
 type User struct {
 	ID         int
 	Username   string
-	Telegram   string
+	Api        []byte
+	Roles      string
+	Expiry     int
 	Membership string
-	Balance    int
+	Concurrents int
+	Servers     int
+	Duration    int
+	Balance     int
+	ApiReqs     int
+	ApiFails    int
+	Tele        int64
 }
 
 // GetUser by username
-func (conn *Instance) GetUser(username string) (*User, error) {
-	stmt, err := conn.conn.Prepare("SELECT id, username, membership, balance, telegram FROM users WHERE telegram = ?")
+func (conn *Instance) GetUser(tele int64) (*User, error) {
+	log.Printf("\n\n %d\n\n", tele)
+
+	stmt, err := conn.conn.Prepare(`
+	SELECT id, username, api, roles, expiry, membership, concurrents, servers, duration, balance, apiReqs, apiFails, tele
+	FROM users
+	WHERE tele = ?`)
 	if err != nil {
-		return nil, fmt.Errorf("error preparing query: %v", err)
+		return nil, fmt.Errorf("\n\nerror preparing query: %v", err)
 	}
 	defer stmt.Close()
 
 	var user User
-	err = stmt.QueryRow(username).Scan(&user.ID, &user.Username, &user.Membership, &user.Balance, &user.Telegram)
+	err = stmt.QueryRow(tele).Scan(
+		&user.ID,
+		&user.Username,
+		&user.Api,
+		&user.Roles,
+		&user.Expiry,
+		&user.Membership,
+		&user.Concurrents,
+		&user.Servers,
+		&user.Duration,
+		&user.Balance,
+		&user.ApiReqs,
+		&user.ApiFails,
+		&user.Tele,
+	)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, nil
 		}
-		return nil, fmt.Errorf("error executing query: %v", err)
+		return nil, fmt.Errorf("\n\nerror executing query: %v", err)
 	}
 
 	return &user, nil
 }
 
-// AddUser
-func (conn *Instance) AddUser(user *User) error {
-	stmt, err := conn.conn.Prepare(`
-		INSERT OR REPLACE INTO users (username, telegram, membership, balance)
-		VALUES (?, ?, ?, ?)
-	`)
-	if err != nil {
-		return fmt.Errorf("error preparing insert statement: %v", err)
-	}
-	defer stmt.Close()
-
-	_, err = stmt.Exec(user.Username, user.Telegram, user.Membership, user.Balance)
-	if err != nil {
-		return fmt.Errorf("error inserting or replacing user into database: %v", err)
-	}
-
-	return nil
-}

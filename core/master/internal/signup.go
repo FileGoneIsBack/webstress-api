@@ -6,17 +6,14 @@ import (
 	"api/core/models"
 	"api/core/models/antiflood"
 	"api/core/models/ranks"
-	"api/core/models/functions"
 	"errors"
 	"fmt"
 	"html/template"
 	"io"
-	"math/rand"
 	"regexp"
 	"net/url"
 	"net"
 	"net/http"
-	"strconv"
 	"strings"
 	"time"
 
@@ -34,42 +31,11 @@ var (
 		120*time.Minute,
 		antiflood.WithKeyByRealIP(),
 	)
-	captchas map[string]string = make(map[string]string)
 )
 
 func GetBodyData(data string) string {
 	fmt.Println(data)
 	return strings.Split(data, "=")[1]
-}
-
-func NewCaptcha(r *http.Request, answer string) {
-	ip := KeyByRealIP(r)
-	captchas[ip] = answer
-}
-
-func generateCaptcha() (string, string) {
-	rand.Seed(time.Now().UnixNano())
-
-	// Generate two random numbers between 0 and 9
-	num1 := rand.Intn(10)
-	num2 := rand.Intn(10)
-	var answer int
-
-	operator := []string{"+", "-", "*"}[rand.Intn(3)]
-
-	expression := fmt.Sprintf("%d %s %d", num1, operator, num2)
-
-	// Calculate the answer
-	switch operator {
-	case "+":
-		answer = num1 + num2
-	case "-":
-		answer = num1 - num2
-	case "*":
-		answer = num1 * num2
-	}
-
-	return expression, strconv.Itoa(answer)
 }
 
 func KeyByRealIP(r *http.Request) string {
@@ -99,14 +65,12 @@ func KeyByRealIP(r *http.Request) string {
 }
 
 func Signup(w http.ResponseWriter, r *http.Request) {
-
-	ip := KeyByRealIP(r)
 	body, _ := io.ReadAll(r.Body)
 	data := strings.Split(string(body), "&")
 	fmt.Println(data)
 
-	if len(data) < 6 {
-		renderErrorPage(w, r, "Please fill out all fields!")
+	if len(data) < 5 {
+		renderErrorPage(w, r, "Please fill out all fields!", "error")
 		return
 	}
 
@@ -117,46 +81,31 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("Decoded password:", password)
 	cpassword, _ := url.QueryUnescape(GetBodyData(data[2]))
-	auth	 := GetBodyData(data[4])
-	captcha := GetBodyData(data[5])
-	tos := GetBodyData(data[6])
+	auth	 := GetBodyData(data[3])
+	tos := GetBodyData(data[4])
 
 	// Validate form data
 	if err := validateSignupData(username, password, cpassword, tos); err != nil {
-		renderErrorPage(w, r, err.Error())
+		renderErrorPage(w, r, err.Error(), "error")
 		return
 	}
 
-	// Check captcha
-	if answer, ok := captchas[ip]; !ok || captcha != answer {
-		renderErrorPage(w, r, "Invalid captcha provided.")
-		return
-	}
-	delete(captchas, ip)
-
+	//check if key is valid
 	// Check if user already exists
-_, exp, err := database.Container.GetInvite(auth, username)
-if err != nil {
-    // Convert the error to a string using err.Error()
-    renderErrorPage(w, r, err.Error())
-    return
-}
 	user, err := database.Container.GetUser(username)
 	if err != nil && !errors.Is(err, database.ErrUserNotFound) {
 		renderDatabaseErrorPage(w, r, "Error retrieving user from database.")
 		return
 	}
-	if time.Now().After(exp) {
-		renderErrorPage(w, r, "token expired")
-		return
-	}
-
-
 	if user != nil {
-		renderErrorPage(w, r, "User already exists.")
+		renderErrorPage(w, r, "User already exists.", "error")
 		return
 	}
-
+	tele, err := database.Container.CheckInvite(auth)
+	if err != nil {
+		renderErrorPage(w, r, err.Error(), "error")
+		return
+	}
 	// Create new user
 	user = &database.User{
 		Username:    username,
@@ -165,6 +114,7 @@ if err != nil {
 		Ranks: []*ranks.Rank{
 			ranks.GetRole("member", true),
 		},
+		Tele: tele,
 	}
 	if models.Config.FreeUser.Enabled1 {
 		user.Concurrents = 1
@@ -194,29 +144,16 @@ if err != nil {
 	http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 }
 
-func renderErrorPage(w http.ResponseWriter, r *http.Request, errorMessage string) {
-	exp, ans := generateCaptcha()
-	functions.Render(Page{
-		Name:  models.Config.Name,
-		Title: "Register",
-		Script: template.HTML(functions.Toast(functions.Toastr{
-			Icon:  "error",
-			Title: "Error!",
-			Text:  errorMessage,
-		}) + `<script>
-		$(window).on('load', function() {
-			console.log('` + exp + `')
-			const captcha = document.getElementById('signup-captcha');
-			captcha.placeholder = '` + exp + `';
-		});
-		</script>`),
-	}, w, r, "login", "signup.html")
-	delete(captchas, KeyByRealIP(r))
-	NewCaptcha(r, ans)
+func renderErrorPage(w http.ResponseWriter, r *http.Request, errorMessage string, errortype string) {
+	// URL encode the error message to pass it in the query string
+	encodedMessage := url.QueryEscape(errorMessage + errortype)
+
+	// Redirect the user back to the form with the error message
+	http.Redirect(w, r, "/login?error=" + encodedMessage, http.StatusFound)
 }
 
 func renderDatabaseErrorPage(w http.ResponseWriter, r *http.Request, errorMessage string) {
-	renderErrorPage(w, r, "Database error occurred: "+errorMessage)
+	renderErrorPage(w, r, "Database error occurred: "+errorMessage, "error")
 }
 
 
@@ -229,7 +166,7 @@ func validateSignupData(username, password, cpassword, tos string) error {
 		return fmt.Errorf("username can only contain letters & numbers")
 	}
 	if len(password) < 8 {
-		return errors.New("password must be at least 8 characters")
+		return errors.New("password must be at least 6 characters")
 	}
 	passwordRe := regexp.MustCompile(`^[a-zA-Z0-9!@#$_-]+$`)
 	if !passwordRe.MatchString(password) {

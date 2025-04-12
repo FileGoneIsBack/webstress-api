@@ -2,7 +2,7 @@ package dashboardapi
 
 import (
 	"api/core/database"
-	"api/core/master/sessions"
+
 	"api/core/models/server"
 	"encoding/json"
 	"net/http"
@@ -13,11 +13,7 @@ import (
 func init() {
 	Route.NewSub(server.NewRoute("/running-attacks", func(w http.ResponseWriter, r *http.Request) {
 		if strings.ToLower(r.Method) == "post" {
-			ok, _ := sessions.IsLoggedIn(w, r)
-			if !ok {
-				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
-				return
-			}
+
 			type attacks struct {
 				Layer4 []int `json:"Layer4"`
 				Layer7 []int `json:"Layer7"`

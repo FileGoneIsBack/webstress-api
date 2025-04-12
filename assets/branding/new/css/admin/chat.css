@@ -1,0 +1,436 @@
+/* Admin Chat Layout */
+.admin-chat-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    height: calc(100vh - 140px);
+    overflow: hidden;
+}
+
+/* User Info Panel */
+.user-info-panel {
+    background: var(--dark);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.user-details h2 {
+    margin: 0;
+    font-size: 1.2em;
+    color: var(--text);
+}
+
+.user-email {
+    color: var(--text);
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+.user-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background: var(--darker);
+    border-radius: 8px;
+}
+
+.stat-label {
+    color: var(--text);
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+.stat-value {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.stat-value.active {
+    color: #4CAF50;
+}
+
+.ticket-details {
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.ticket-details h3 {
+    margin: 0 0 15px 0;
+    font-size: 1.1em;
+    color: var(--text);
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 12px;
+}
+
+.detail-label {
+    color: var(--text);
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+.detail-value {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.ticket-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.status-selector,
+.priority-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-selector label,
+.priority-selector label {
+    color: var(--text);
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+
+.status-select,
+.priority-select {
+    padding: 10px;
+    background: var(--darker);
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 0.95em;
+}
+
+.close-ticket-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.95em;
+    transition: all 0.3s ease;
+}
+
+.close-ticket-button:hover {
+    background: rgba(244, 67, 54, 0.2);
+    transform: translateY(-2px);
+}
+
+/* Chat Section */
+.chat-section {
+    background: var(--dark);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.chat-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.chat-title h2 {
+    margin: 0;
+    font-size: 1.3em;
+}
+
+.ticket-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+}
+
+.ticket-status.open {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.chat-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--darker);
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    border-radius: 8px;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background: rgba(255, 51, 51, 0.1);
+    transform: translateY(-2px);
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.message {
+    display: flex;
+    gap: 15px;
+    max-width: 80%;
+}
+
+.message.user {
+    align-self: flex-end;
+    flex-direction: row-reverse;
+}
+
+.message-content {
+    background: var(--darker);
+    padding: 15px;
+    border-radius: 12px;
+    position: relative;
+}
+
+.message.user .message-content {
+    background: rgba(255, 51, 51, 0.1);
+}
+
+.message-content p {
+    margin: 0;
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.message-time {
+    font-size: 0.8em;
+    color: var(--text);
+    opacity: 0.7;
+    margin-top: 5px;
+    display: block;
+}
+
+.chat-input {
+    padding: 20px;
+    border-top: 1px solid rgba(255, 51, 51, 0.1);
+    display: flex;
+    gap: 15px;
+}
+
+.input-wrapper {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    background: var(--darker);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    padding: 10px;
+}
+
+.input-wrapper textarea {
+    flex: 1;
+    background: none;
+    border: none;
+    color: var(--text);
+    resize: none;
+    padding: 0;
+    font-size: 1em;
+    min-height: 24px;
+    max-height: 150px;
+    line-height: 1.5;
+}
+
+.input-wrapper textarea:focus {
+    outline: none;
+}
+
+.attach-button {
+    background: none;
+    border: none;
+    color: var(--text);
+    cursor: pointer;
+    padding: 5px;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.attach-button:hover {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.send-button {
+    background: var(--primary);
+    border: none;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.send-button:hover {
+    background: #ff0000;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 51, 51, 0.3);
+}
+
+@media (max-width: 1200px) {
+    .admin-chat-container {
+        grid-template-columns: 250px 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .admin-chat-container {
+        display: flex;
+        flex-direction: column;
+        height: auto;
+    }
+
+    .user-info-panel {
+        order: 1;
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        box-sizing: border-box;
+        border-radius: 0;
+        border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+    }
+
+    .chat-section {
+        order: 2;
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+        border: none;
+        flex-grow: 1;
+    }
+
+    .chat-messages {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .chat-header {
+        padding: 15px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .chat-title h2 {
+        font-size: 1.1em;
+    }
+
+    .chat-messages {
+        padding: 15px;
+        gap: 15px;
+    }
+
+    .chat-input {
+        padding: 15px 10px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .input-wrapper {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+    }
+
+    .input-wrapper textarea {
+        min-height: 40px;
+        font-size: 0.95em;
+    }
+
+    .send-button {
+        width: 100%;
+        height: 44px;
+        font-size: 1em;
+    }
+
+    .attach-button {
+        align-self: flex-end;
+    }
+
+    .message {
+        max-width: 100%;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .message.user {
+        align-self: flex-end;
+        align-items: flex-end;
+    }
+
+    .message-content {
+        padding: 12px;
+        border-radius: 10px;
+        font-size: 0.95em;
+    }
+
+    .ticket-status {
+        font-size: 0.8em;
+        padding: 4px 10px;
+    }
+
+    .chat-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .action-button {
+        width: 100%;
+        justify-content: center;
+    }
+}

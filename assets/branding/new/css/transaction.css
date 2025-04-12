@@ -1,0 +1,257 @@
+/* Transaction Layout */
+.transaction-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 20px;
+}
+
+.transaction-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.print-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.print-button:hover {
+    background: #ff0000;
+    transform: translateY(-2px);
+}
+
+.transaction-card {
+    background: var(--dark);
+    border-radius: 12px;
+    padding: 30px;
+    border: 1px solid rgba(255, 51, 51, 0.1);
+    height: 100%;
+}
+
+.qr-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.qr-code {
+    width: 200px;
+    height: 200px;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.qr-label {
+    color: var(--text);
+    font-size: 0.9em;
+    opacity: 0.7;
+}
+
+.transaction-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.status-badge {
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.status-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.status-badge.waiting {
+    background: rgba(255, 193, 7, 0.1);
+    color: #FFC107;
+}
+
+.status-badge.waiting::before {
+    background: #FFC107;
+    animation: pulse 2s infinite;
+}
+
+.status-badge.confirming {
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196F3;
+}
+
+.status-badge.confirming::before {
+    background: #2196F3;
+    animation: pulse 1s infinite;
+}
+
+.status-badge.finished {
+    background: rgba(76, 175, 80, 0.1);
+    color: #4CAF50;
+}
+
+.status-badge.finished::before {
+    background: #4CAF50;
+}
+
+.status-badge.expired {
+    background: rgba(244, 67, 54, 0.1);
+    color: #f44336;
+}
+
+.status-badge.expired::before {
+    background: #f44336;
+}
+
+.status-badge.partially_paid {
+    background: rgba(156, 39, 176, 0.1);
+    color: #9C27B0;
+}
+
+.status-badge.partially_paid::before {
+    background: #9C27B0;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.5;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.transaction-details {
+    margin-bottom: 30px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: var(--text);
+    opacity: 0.7;
+}
+
+.detail-value {
+    color: var(--text);
+    font-weight: 500;
+}
+
+.detail-value.highlight {
+    color: var(--primary);
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.detail-value.address {
+    font-family: monospace;
+    background: rgba(255, 51, 51, 0.1);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.detail-value.address:hover {
+    background: rgba(255, 51, 51, 0.2);
+}
+
+.detail-value.address::after {
+    content: 'Click to copy';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    margin-bottom: 5px;
+}
+
+.detail-value.address:hover::after {
+    opacity: 1;
+}
+
+.expire-countdown {
+    color: var(--primary);
+    font-size: 0.9em;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .transaction-container {
+        grid-template-columns: 1fr;
+    }
+
+    .transaction-header {
+        flex-direction: column;
+        gap: 15px;
+        align-items: flex-start;
+    }
+
+    .transaction-card {
+        padding: 20px;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .detail-value {
+        font-size: 1.1em;
+    }
+
+    .qr-code {
+        width: 180px;
+        height: 180px;
+    }
+}

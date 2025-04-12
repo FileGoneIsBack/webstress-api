@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"math"
 
-	//"net/http"
+	"net/http"
 	"api/core/models/log"
 	"strings"
 	"time"
@@ -82,7 +82,7 @@ func Send(a *floods.Attack) error {
 		"$threads", fmt.Sprint(a.Threads),
 	)
 	for _, api := range Apis {
-		//c := http.DefaultClient
+		c := http.DefaultClient
 		method, ok := api.Methods[a.Method.Sname]
 		if !ok {
 			return fmt.Errorf("skipping APIs trying servers...")
@@ -90,11 +90,16 @@ func Send(a *floods.Attack) error {
 		url := terms.Replace(api.URL)
 		url = strings.ReplaceAll(url, "$method", method)
 		fmt.Println(url, a.Method.Sname)
-		//resp, err := c.Get(url)
-		//if err != nil {
-		//	return fmt.Errorf("error sending attack via API %s: %v", api.Name, err)
-		//}
-		/*if resp.StatusCode == 200 {
+		resp, err := c.Get(url)
+		if err != nil {
+			return fmt.Errorf("error sending attack via API %s: %v", api.Name, err)
+		}
+		if resp.StatusCode == 200 {
+			log.Println("successfully sent attack using " + api.Name)
+			api.running++
+			go trackAttack(api, a)
+			continue
+		} else if resp.StatusCode == 404 {
 			log.Println("successfully sent attack using " + api.Name)
 			api.running++
 			go trackAttack(api, a)
@@ -102,7 +107,7 @@ func Send(a *floods.Attack) error {
 		} else {
 			return fmt.Errorf("error occurred while sending attack using %s: StatusCode %d", api.Name, resp.StatusCode)
 		}
-		*/
+		
 	}
 	return nil
 }

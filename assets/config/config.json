@@ -2,14 +2,14 @@
     "name": "House API",
     "domain": "https://ieatpackets.lol/",
     "secure": false,
-    "version": "3.5.0",
+    "version": "4.1.0",
     "cert": "",
     "key": "",
     "database":{
-        "username": "FileTest",
-        "password": "130523Rs",
-        "database": "testDB",
-        "host": "2604:2dc0:100:1c66::660"
+        "username": "FileGone",
+        "password": "",
+        "database": "MyDB",
+        "host": ""
     },
     "autobuy":{
         "key":"0P2Y90Q-MN2MDMP-M1CNBG0-TEVEWZP",
