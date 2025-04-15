@@ -34,10 +34,7 @@ func NewServer(config *Config) *Server {
 		routes: make(map[string]*Route),
 		config: config,
 	}
- 
 
-	
-	// Configure HTTP/2
 	http2.ConfigureServer(s.server, &http2.Server{
 		MaxConcurrentStreams: 50, 
 		IdleTimeout:          30 * time.Minute,
@@ -56,7 +53,13 @@ func (s *Server) ListenAndServe() error {
 		if cert == "" || key == "" {
 			return errors.New("certificate or key is empty")
 		}
-		s.server.Addr = strings.Split(s.config.Addr, ":")[0] + ":80"
+		s.server.Addr = strings.Split(s.config.Addr, ":")[0] + ":443"
+		go func() {
+			log.Println("Redirecting HTTP to HTTPS")
+			_ = http.ListenAndServe(":80", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				http.Redirect(w, r, "https://"+r.Host+r.URL.String(), http.StatusMovedPermanently)
+			}))
+		}()
 		log.Println("Server is running on HTTPS on " + s.server.Addr)
 		return s.server.ListenAndServeTLS(cert, key)
 	} else {

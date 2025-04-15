@@ -7,9 +7,9 @@
     " - comment - ": "custom will make the invite code custom lol",
     "database":{
         "username": "FileGone",
-        "password": "130523Rs!",
+        "password": "",
         "database": "MyDB",
-        "host": "45.90.162.253"
+        "host": ""
     }
   }
   

@@ -8,7 +8,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/mattn/go-sqlite3" 
+	_ "github.com/mattn/go-sqlite3" // Import SQLite driver
 )
 
 func New() error {
@@ -17,7 +17,7 @@ func New() error {
 	var db *sql.DB
 	var err error
 
-	if models.Config.Secure {
+	if !models.Config.Secure {
 		// Use MySQL
 		dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s",
 			models.Config.Database.Username,
@@ -37,6 +37,7 @@ func New() error {
 		}
 	}
 
+	// Check database connection
 	if err := db.Ping(); err != nil {
 		return fmt.Errorf("could not ping the database: %v", err)
 	}

@@ -7,20 +7,18 @@ import (
 	"api/core/models/functions"
 	"api/core/models/server"
 	"api/core/models/servers"
-	"fmt"
 	"math/rand"
 	"net/http"
 	"strings"
 )
-
-var layer7Total = 0
-
 func init() {
 	Route.NewSub(server.NewRoute("/data", func(w http.ResponseWriter, r *http.Request) {
 		if strings.ToLower(r.Method) == "post" {
-			_, session := sessions.IsLoggedIn(w, r)
-
-
+			ok, session := sessions.IsLoggedIn(w, r)
+			if !ok {
+				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+				return
+			}
 			type serverStruct struct {
 				ID             int     "json:\"id\""
 				Name           string  "json:\"name\""
@@ -73,7 +71,6 @@ func init() {
 				ID:       session.ID,
 				Username: session.Username,
 				Membership: func() int {
-					fmt.Println(session.Ranks)
 					if session.HasPermission("admin") {
 						return 5
 					}
