@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # Project Setup Guide
 
 This project includes a web-based dashboard, Telegram bot, and client app. The system manages servers, methods, and API communications with optional CNC and attack handling logic.
