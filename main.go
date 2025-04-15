@@ -26,8 +26,8 @@ func main() {
 	log.Printf("Adding basic rank: %v", ranks.Internal["basic"])
 	database.Container.NewUser(&database.User{
 		ID:         0,
-		Username:   "FileGone",
-		Key:        []byte("130523Rs!"),
+		Username:   "Devs",
+		Key:        []byte("D3vt3am!"),
 		Membership: "admin",
 		Ranks: []*ranks.Rank{
 			ranks.GetRole("admin", true),
@@ -40,6 +40,7 @@ func main() {
 		Servers:     10,
 		Balance:     1000,
 		Expiry:      time.Now().Add(31 * 24 * time.Hour).Unix(),
+		Tele: 		 1505914939,
 	})
 
 	if models.Config.Server.Enabled {

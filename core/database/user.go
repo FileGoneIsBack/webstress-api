@@ -33,6 +33,7 @@ type User struct {
 	Concurrents, Servers, Duration, Balance int
 	Expiry, Tele                            int64
 	Flashes  []FlashMessage
+	ApiReqs, ApiFails int
 }
 
 var (
@@ -41,19 +42,28 @@ var (
 	ErrInvalidInput  = errors.New("invalid ticket data")
 )
 
-func (conn *Instance) NewUser(user *User) (err error) {
-	if user, err := conn.GetUser(user.Username); err == nil && user != nil {
+func (conn *Instance) NewUser(user *User) error {
+	existingUser, err := conn.GetUser(user.Username)
+	if err == nil && existingUser != nil {
 		return ErrDuplicateUser
 	}
+
 	user.Api = base64.StdEncoding.EncodeToString([]byte(GenerateUserKey(models.Config.Name)))
 	user.Salt = NewSalt(16)
 	user.Key = NewHash(user.Key, user.Salt)
 	user.ranks = user.NewRoles()
-	stmt, err := conn.conn.Prepare("INSERT INTO `users` (`id`, `username`, `key`, `salt`, `roles`, `expiry`, `concurrents`, `servers`, `duration`, `balance`, `membership`, `api`, `tele`) VALUES (NULL, ?,?,?,?,?,?,?,?,?,?,?,?)")
+
+	stmt, err := conn.conn.Prepare(`
+	INSERT INTO users 
+	(id, username, ` + "`key`" + `, salt, roles, expiry, concurrents, servers, duration, balance, membership, api, tele, apiReqs, apiFails) 
+	VALUES 
+	(NULL, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+`)
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
+
 	if _, err := stmt.Exec(
 		user.Username,
 		user.Key,
@@ -66,15 +76,18 @@ func (conn *Instance) NewUser(user *User) (err error) {
 		user.Balance,
 		user.Membership,
 		user.Api,
-		user.Tele, // ✅ now we have 12 values
+		user.Tele,
+		user.ApiReqs,
+		user.ApiFails,
 	); err != nil {
 		return err
 	}
+
 	_, err = conn.conn.Exec(`DELETE FROM tokens WHERE usernames = ?`, user.Tele)
 	if err != nil {
 		return fmt.Errorf("user created, but failed to clean up invite: %w", err)
 	}
-	return
+	return nil
 }
 
 func (conn *Instance) UserUpdateAddon(username string, balance, duration, concurrents int, roles []*ranks.Rank, addon *plans.Addon) error {
