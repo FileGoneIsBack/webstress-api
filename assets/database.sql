@@ -66,18 +66,18 @@ CREATE TABLE `tokens` (
 
 CREATE TABLE `users` (
     `id` INTEGER PRIMARY KEY AUTO_INCREMENT,
-    `username` TEXT NOT NULL,
+    `username` VARCHAR(100) NOT NULL,
     `key` BLOB NOT NULL,
     `salt` BLOB NOT NULL,
     `api` BLOB NOT NULL,
-    `roles` TEXT NOT NULL,
+    `roles` VARCHAR(100) NOT NULL,
     `expiry` INTEGER NOT NULL,
-    `membership` TEXT NOT NULL DEFAULT 'free',
+    `membership` VARCHAR(50) NOT NULL DEFAULT 'free',
     `concurrents` INTEGER DEFAULT 1,
     `servers` INTEGER DEFAULT 1,
     `duration` INTEGER DEFAULT 60,
     `balance` INTEGER DEFAULT 0,
     `apiReqs` INTEGER DEFAULT 1,
     `apiFails` INTEGER DEFAULT 1,
-    `tele` TEXT NOT NULL
+    `tele` VARCHAR(100) NOT NULL
 );
