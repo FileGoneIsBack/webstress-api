@@ -1,116 +1,189 @@
-# Simple Go HTTPS Handler
+<<<<<<< HEAD
+=======
+# Project Setup Guide
 
-## Overview
+This project includes a web-based dashboard, Telegram bot, and client app. The system manages servers, methods, and API communications with optional CNC and attack handling logic.
 
-This is a simple webstresser in golang using my https handle and serve (https://github.com/FileGoneIsBack/Golang-HTTPS-Handler)
-this uses api and raw server connections 
+---
 
+## Requirements
+
+- **Go** 1.22+
+- **MySQL** or **MariaDB**
+- **SQLite3** (for Windows or development use)
+- A **VPS server** (e.g., from [OVH](https://ovh.com))
+- A **Domain name** (configured with [Cloudflare](https://cloudflare.com))
+
+### Recommended VSCode Extensions
+
+| Extension                                                                                         | Description            |
+| ------------------------------------------------------------------------------------------------- | ---------------------- |
+| [Remote SSH](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-ssh)     | SSH access to server   |
+| [DB Client JDBC](https://marketplace.visualstudio.com/items?itemName=cweijan.dbclient-jdbc)       | Manage MySQL/MariaDB   |
+| [SQLite Editor](https://marketplace.visualstudio.com/items?itemName=yy0931.vscode-sqlite3-editor) | Edit SQLite3 databases |
+
+---
 
 ## Installation
 
-### 1. Install Go
+```bash
+# Install Go
+sudo snap install go --classic   # or use https://go.dev/dl/
 
-To install Go, follow the instructions for your operating system:
+# Install MySQL/MariaDB (Ubuntu/Debian)
+sudo apt update
+sudo apt install mysql-server    # or mariadb-server
 
-- **Windows**: [Download Go Installer](https://golang.org/dl/) and follow the installation instructions.
-- **macOS**: You can use Homebrew:
-```
-brew install go
-```
-- **Linux**
-```
-sudo apt install snap
+# (Optional for Windows)
+# Install SQLite3 and use with VSCode extension
 ```
 
-```
-sudo snap install go --channel=1.21/stable --classic
-```
+### Configuration
 
-### 2. Install GCC
-- **Windows**: Install MinGW or MSYS2.
-- **macOS**: Install Xcode Command Line Tools:
-```
-xcode-select --install
-```
-- **Linux**: Install GCC using your package manager:
-```
-sudo apt-get install build-essential
-```
-### 3. Obtain Domain Certificates and Keys
-- Log in to Cloudflare: Access your Cloudflare account or sign up if you don’t have one.
-- Add Your Domain: Follow Cloudflare’s instructions to add your domain.
-- Obtain Certificates: Navigate to the SSL/TLS section and get the domain certificate and key. Download them to your local machine.
+- Enable `cgo` for the web handler.
+- Update `config.json`:
+  - Set `"secure": true` to enable HTTPS (MySQL).
+- Start the app:
 
-### 4. Clone the repo
-```
-git clone https://github.com/FileGoneIsBack/webstress-api
-cd webstress-api
-```
-
-### 5. Edit Files
-edit the config.json and the cert/key files in the assets folder!
-
-### 6. build the src
-```
+```bash
 go run .
 ```
-- sometimes you might need to enable cgo 
+
+---
+
+## Creating an SSL Certificate
+
+1. **Buy a domain** from Namecheap, Cloudflare, or OVH.
+2. **Create a Cloudflare account.**
+3. **Update your domain's nameservers** to point to Cloudflare.
+4. **Update the DNS record**:
+   - Add an `A` record pointing the domain to your VPS IP.
+5. **Set the SSL/TLS encryption mode to Full**.
+6. In Cloudflare, go to **SSL/TLS > Origin Server**:
+   - Click **Create Certificate**.
+   - Save the generated certificate and key as:
+     - `assets/cert.pem`
+     - `assets/key.pem`
+7. Set `"secure": true` in `config.json`.
+
+Your site is now using HTTPS.
+
+---
+
+## Telegram Bot Setup
+
+- Run the bot on another server or outside the main project directory.
+- Configure the bot using `config.json`.
+- Use a live MySQL server (requires `"secure": true`).
+- Start the bot normally.
+
+---
+
+## Client App Setup
+
+1. Edit `server.json` in the website project:
+   - Add server IPs under the `"allowed"` list.
+   - Set the `"key"` for authentication.
+2. Edit the client `config.json`:
+   - Ensure the `key` matches the server.
+   - Set the correct `master` IP and port.
+3. Modify method command entries as needed.
+4. Build the client:
+
+```bash
+go build .
 ```
-export CGO_ENABLED=1
+
+5. Move the compiled binary to the method directory and run it.
+
+---
+
+## JSON Configuration Overview
+
+This system communicates between the web server and client servers using structured JSON files.
+
+### Website Configuration
+
+#### `config.json`
+
+| Key        | Description                               |
+| ---------- | ----------------------------------------- |
+| `secure`   | Enables HTTPS on port 443 or HTTP on 8080 |
+| `domain`   | Used for CNC attack handling              |
+| `cert/key` | SSL certificate and key from Cloudflare   |
+| `autobuy`  | Sellix key/email for purchases            |
+| `fake`     | Fake users or attack display              |
+| `cnc`      | CNC port group configuration              |
+| `methods`  | Method group and behavior definitions     |
+
+#### `methods.json`
+
+```json
+"HOLD": {
+  "type": 1,
+  "name": "HOLD (Amplification)",
+  "description": "",
+  "subnet": 1,
+  "mtype": 1,
+  "vip": false
+}
 ```
-- compile it fully 
+
+- `type`: Numeric identifier
+- `subnet`: Group reference from `config.json`
+- `mtype`: `1` for Layer 4, `2` for Layer 7
+- `vip`: true/false flag
+
+#### `server.json`
+
+```json
+{
+  "listner": 1234,
+  "allowed": ["1.2.3.4"],
+  "key": "secretKeyHere"
+}
 ```
-go build api
-./api
+
+### Client Configuration
+
+#### `config.json`
+
+```json
+{
+  "name": "L4-Server-01",
+  "slots": 100,
+  "type": 1,
+  "key": "secretKeyHere",
+  "master": "your.server.ip:1234",
+  "maxthreads": 75
+}
 ```
 
-# connecting a server (updateV3.1)
+#### `methods.json`
 
-1. download client files from assets/client
-2. install client files to server
-3. install golang to server (follow parts of tut before...)
-4. go build . 
-
-5a. Client setup
-- make sure key matches website server.json key value
-- make sure methods are correct w the site 
-
-5b. Website setup
-- make sure key is secure password 
-- white list servers to connect in servers.json
-
-6. ./client and they should connect, the server should send the methdos to the website to confirm matching funnel
-
-
-scroll for latest!
-
-
-====
-i cannot give a date VERS 3.2
-also added more admin options, fixed panel, updated error logs/sending notis, and much more ;)
-
-Note: I've never used this source; this is something I made in my free time. I don't partake in these shitty activities, but use at your own risk and legally on your own networks.
-
-
-change logs simpler then git logs
-====
-4/1/25 vers 3.5
--fix auto pay changed to https://nowpayments.io simply make an account go to settings and get api key and add cryptos
---while adding cryptos since ive only added like 2 your going to need to replace 
+```json
+"HOLD": "./dns $target/32 $port lists/dns.list $threads $pps $time"
 ```
-	var coinNameMap = map[string]string{
-		"btc": "bitcoin",
-		"eth": "ethereum",
-	}
-``` 
-in core/master/api/payments/transaction.go
 
--also added notis used with
---sessions.SetFlash(w, r, "message", "from")
+- All files and methods must be in the same directory.
+- If you see `exit status 1`, the method did not screen properly, but the client will remain connected.
 
-to come...
+---
 
--im looking to fix auth tokens and tg bot to log messages by users and log who uses what token to keep the site secure!
--finish admin panel
--fix L7 chart
-i been lazy and update this every few months its already passed a year old might make a new src but also been working on other shit.
+## Additional Tips
+
+- Keep method names in uppercase in all JSON files.
+- Ensure that the client and server `key` values match.
+- Avoid nesting folders in the methods directory.
+- Use a reverse proxy like NGINX for added control.
+
+---
+
+## Final Notes
+
+You are now ready to deploy and manage your CNC-style setup. Keep your configuration files consistent, your client/server keys secure, and maintain good organization for your methods and commands.
+
+---
+
+> Built with Go, SQL, and secure networking in mind.
+
