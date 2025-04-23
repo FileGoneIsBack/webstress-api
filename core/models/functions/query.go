@@ -1,7 +1,9 @@
 package functions
 
 import (
-	"api/core/database"
+    "api/core/database"
+	"api/core/database/users"
+    "api/core/database/site"
 	"encoding/json"
 	"net/http"
 )
@@ -26,12 +28,12 @@ func GetKey(w http.ResponseWriter, r *http.Request) (*database.User, bool) {
     }
     
     // Get user from database
-    skey, err := database.Container.GetUser(user)
+    skey, err := users.Container.GetUser(user)
     if err != nil {
         json.NewEncoder(w).Encode(map[string]any{"error": true, "message": err.Error()})
         // Ensure we only call SaveReqs if skey is not nil
         if skey != nil {
-            database.Container.SaveReqs(skey.Username, false)
+            site.Container.SaveReqs(skey.Username, false)
         }
         return nil, false
     }
@@ -43,9 +45,9 @@ func GetKey(w http.ResponseWriter, r *http.Request) (*database.User, bool) {
     }
 
     // Check if API key matches
-    if !database.Container.IsApiKey(key, skey) {
+    if !site.Container.IsApiKey(key, skey) {
         json.NewEncoder(w).Encode(map[string]any{"error": true, "message": "invalid key provided!"})
-		database.Container.SaveReqs(skey.Username, false)
+		site.Container.SaveReqs(skey.Username, false)
         return nil, false
     }
 

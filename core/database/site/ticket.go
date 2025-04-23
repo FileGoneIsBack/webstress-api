@@ -1,31 +1,33 @@
-package database
+package site
 
 import (
 	"api/core/models/log"
-	"time"
-	"fmt"
+	"api/core/database"
+	"api/core/database/users"
 	"database/sql"
+	"fmt"
+	"time"
 )
 
 // ticket stuct
 type Ticket struct {
-	ID        int64     `json:"id"`
-	UserID    int       `json:"user_id"`
-	Title     string    `json:"title"`
-	Message   string    `json:"message"`
-	Response  string    `json:"response"`
-	Status    string    `json:"status"`
-	Date      int64     `json:"date"`
-	Username  string    `json:"username"`
+	ID        int64  `json:"id"`
+	UserID    int    `json:"user_id"`
+	Title     string `json:"title"`
+	Message   string `json:"message"`
+	Response  string `json:"response"`
+	Status    string `json:"status"`
+	Date      int64  `json:"date"`
+	Username  string `json:"username"`
 	CreatedAt string `json:"created_at"`
 }
 
 // message stuct
 type Message struct {
-	ID        int64     `json:"id"`
-	TicketID  int64     `json:"ticket_id"`
-	UserID    int64     `json:"user_id"`
-	Message   string    `json:"message"`
+	ID        int64  `json:"id"`
+	TicketID  int64  `json:"ticket_id"`
+	UserID    int64  `json:"user_id"`
+	Message   string `json:"message"`
 	CreatedAt string `json:"created_at"`
 }
 
@@ -71,7 +73,7 @@ func (conn *Instance) NewTicket(userID int, title, message, username string) err
 }
 
 // get tickets for users
-func (conn *Instance) GetTickets(user *User) ([]*Ticket, error) {
+func (conn *Instance) GetTickets(user *database.User) ([]*Ticket, error) {
 	var tickets []*Ticket
 
 	stmt, err := conn.conn.Prepare("SELECT `id`, `title`, `status`, `created_at` FROM `tickets` WHERE `user_id` = ?")
@@ -272,7 +274,7 @@ func (conn *Instance) GetMessagesByTicketID(ticketID int64) ([]*Message, error) 
 	return messages, nil
 }
 
-func (conn *Instance) GetUserForTicket(ticketID int) (*User, error) {
+func (conn *Instance) GetUserForTicket(ticketID int) (*database.User, error) {
 	// Step 1: Prepare statement to fetch username from ticket
 	stmt, err := conn.conn.Prepare(`SELECT username FROM tickets WHERE id = ?`)
 	if err != nil {
@@ -290,7 +292,7 @@ func (conn *Instance) GetUserForTicket(ticketID int) (*User, error) {
 	}
 
 	// Step 2: Reuse existing user lookup
-	user, err := conn.GetUser(username)
+	user, err := users.Container.GetUser(username)
 	if err != nil {
 		return nil, fmt.Errorf("error fetching user '%s': %w", username, err)
 	}

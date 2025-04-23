@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.4.0
 	github.com/cespare/xxhash/v2 v2.3.0
 	github.com/gliderlabs/ssh v0.3.8
+	github.com/go-sql-driver/mysql v1.9.0
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/mux v1.8.1
 	github.com/matthewhartstonge/argon2 v1.1.1
@@ -14,7 +15,6 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	golang.org/x/crypto v0.35.0
 	golang.org/x/net v0.36.0
-	rsc.io/qr v0.2.0
 )
 
 require (
@@ -22,7 +22,6 @@ require (
 	github.com/anmitsu/go-shlex v0.0.0-20200514113438-38f4b401e2be // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
 	github.com/go-ole/go-ole v1.2.6 // indirect
-	github.com/go-sql-driver/mysql v1.9.0 // indirect
 	github.com/gorilla/css v1.0.1 // indirect
 	github.com/stretchr/testify v1.10.0 // indirect
 	github.com/tklauser/go-sysconf v0.3.14 // indirect

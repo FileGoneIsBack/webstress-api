@@ -1,7 +1,8 @@
 package adminapi
 
 import (
-	"api/core/database"
+		"api/core/database/site"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/log"
 	"api/core/models/server"
@@ -18,7 +19,7 @@ func init() {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
-			if !session.HasPermission("admin") {
+			if !users.HasPermission(session.User, "admin") {
 				http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 				return
 			}
@@ -35,7 +36,7 @@ func init() {
 			}
 
 			// Update the ticket status in the database
-			if err := database.Container.UpdateTicket(request.TicketID, request.Status); err != nil {
+			if err := site.Container.UpdateTicket(request.TicketID, request.Status); err != nil {
 				log.Println("Error updating ticket status in the database:", err)
 				http.Error(w, "Failed to update ticket status", http.StatusInternalServerError)
 				return

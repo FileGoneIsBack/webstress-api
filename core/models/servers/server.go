@@ -61,14 +61,14 @@ func SelectHandler(atk *floods.Attack) (*Server, error) {
 		if server.running == server.Slots {
 			continue
 		}
-		if contains(server.Methods, atk.Sname) {
+		if contains(server.Methods, atk.DisplayName) {
 			load = append(load, server.running)
 		}
 	}
 
 	// If no servers can handle the method, return an error
 	if len(load) == 0 {
-		return nil, fmt.Errorf("no servers available with method %s", atk.Sname)
+		return nil, fmt.Errorf("no servers available with method %s", atk.DisplayName)
 	}
 
 	min := slices.Min(load)
@@ -78,12 +78,12 @@ func SelectHandler(atk *floods.Attack) (*Server, error) {
 		if server.running == server.Slots {
 			continue
 		}
-		if server.running == min && contains(server.Methods, atk.Sname) {
+		if server.running == min && contains(server.Methods, atk.DisplayName) {
 			return server, nil
 		}
 	}
 
-	return nil, fmt.Errorf("no suitable server found for method %s", atk.Sname)
+	return nil, fmt.Errorf("no suitable server found for method %s", atk.DisplayName)
 }
 
 func (s *Server) KeepAlive() {
@@ -125,22 +125,29 @@ func (s *Server) KeepAlive() {
 }
 
 // added err check
-func Distribute(atk *floods.Attack) error {
-	fmt.Println("distributing attack across all servers!")
-	handler, err := SelectHandler(atk)
-	if err != nil {
-		return err
-	}
-	if handler != nil {
-		handler.Queue <- atk
-	} else {
-		for _, server := range Servers {
-			if server.running < server.Slots && contains(server.Methods, atk.Sname) {
-				server.Queue <- atk
-			}
-		}
-	}
-	return nil
+func DistributeServers(atk *floods.Attack, maxConns int) (int, error) {
+    queued := 0
+    var lastErr error
+
+    for i := 0; i < maxConns; i++ {
+        srv, err := SelectHandler(atk)
+        if err != nil {
+            lastErr = err
+            break
+        }
+        srv.Queue <- atk
+        srv.running++
+        queued++
+    }
+
+    if queued == 0 {
+        if lastErr != nil {
+            return 0, lastErr
+        }
+        return 0, fmt.Errorf("no servers available for method %q", atk.DisplayName)
+    }
+
+    return queued, nil
 }
 
 func contains(methods []string, method string) bool {
@@ -171,14 +178,16 @@ func Stop(id int) {
 }
 
 func Slots() map[int]int {
-	var i map[int]int = make(map[int]int)
-	for _, server := range Servers {
-		i[server.Type] += server.Slots
-		i[0] += server.Slots
-	}
-	i[0] += apis.Slots()
-	log.Println(i)
-	return i
+    slots := make(map[int]int)
+    for _, srv := range Servers {
+        if srv == nil {
+            continue
+        }
+        slots[srv.Type] += srv.Slots
+        slots[0]           += srv.Slots
+    }
+    slots[0] += apis.Slots()
+    return slots
 }
 
 func (s *Server) Ongoing() {

@@ -12,18 +12,27 @@ type Attack struct {
 	Created                    int64
 }
 
+
 func New(method string) *Attack {
-	if ok := Get(method); ok != nil {
-		return &Attack{
-			Target:   "",
-			Duration: 0,
-			Port:     0,
-			Threads:  3,
-			PPS:      250000,
-			Method:   ok,
-			Created:  time.Now().Unix(),
-			Parent:   0,
-		}
-	}
-	return nil
+    m := Get(method)
+    if m == nil {
+        return nil
+    }
+
+    // bump usage counters
+    mu.Lock()
+    m.UsageCount++
+    TotalUsage++
+    mu.Unlock()
+
+    return &Attack{
+        Target:   "",
+        Duration: 0,
+        Port:     0,
+        Threads:  3,
+        PPS:      250000,
+        Method:   m,
+        Created:  time.Now().Unix(),
+        Parent:   0,
+    }
 }

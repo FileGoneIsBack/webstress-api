@@ -1,7 +1,8 @@
 package Managerapi
 
 import (
-	"api/core/database"
+	"api/core/database/users"
+	"api/core/database/site"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"api/core/models"
@@ -22,8 +23,8 @@ func init() {
 
 		switch strings.ToLower(r.Method) {
 		case "post":
-			newKey := database.GenerateUserKey(models.Config.Name)
-			err := database.Container.UpdateUserKey(session.User.Username, []byte(newKey))
+			newKey := users.GenerateUserKey(models.Config.Name)
+			err := users.Container.UpdateUserKey(session.User.Username, []byte(newKey))
 			if err != nil {
 				http.Error(w, "Failed to update user key", http.StatusInternalServerError)
 				return
@@ -39,8 +40,8 @@ func init() {
 				http.Error(w, "Failed to encode response", http.StatusInternalServerError)
 			}
 		case "get":
-			user, _ := database.Container.GetUser(session.User.Username)
-			key, err := database.Container.GetApiKey(user.Username)
+			user, _ := users.Container.GetUser(session.User.Username)
+			key, err := site.Container.GetApiKey(user.Username)
 			if err != nil {
 				fmt.Println("Error decoding base64:", err)
 				return

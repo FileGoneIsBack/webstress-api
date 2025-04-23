@@ -4,11 +4,11 @@ import (
 	"api/core/models"
 	"api/core/models/apis"
 	"api/core/models/floods"
+	"api/core/models/log"
 	"api/core/models/plans"
 	"api/core/models/servers"
 	"api/modules/goconfig"
 	"encoding/json"
-	"api/core/models/log"
 	"path/filepath"
 )
 
@@ -32,7 +32,7 @@ func Initialize() {
 			floods.Methods = make(map[string]*floods.Method)
 			json.Unmarshal(content, &floods.Methods)
 			for name, method := range floods.Methods {
-				method.Sname = name
+				method.DisplayName = name
 			}
 			return nil
 		case filepath.Join("assets/config", "plans.json"):

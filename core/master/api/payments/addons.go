@@ -1,7 +1,7 @@
 package paymentsapi
 
 import (
-    "api/core/database"
+    "api/core/database/users"
     "api/core/master/sessions"
     "api/core/models/server"
     "api/core/models/ranks"
@@ -36,7 +36,7 @@ func init() {
                 addon = plans.Addons["time"]
                 if user.Balance >= addon.Price {
                     user.Duration += addon.Value
-                    if err := database.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
+                    if err := users.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
                         json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Failed to add time."})
                         return
                     }
@@ -50,7 +50,7 @@ func init() {
                 addon = plans.Addons["concurrents"]
                 if user.Balance >= addon.Price {
                     user.Concurrents += addon.Value
-                    if err := database.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
+                    if err := users.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
                         json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Failed to add concurrent connections."})
                         return
                     }
@@ -61,7 +61,7 @@ func init() {
                 }
             
             } else {
-                // Handling other addons (roles)
+                // Handling other adons (roles)
                 addonRanks = []*ranks.Rank{
                     ranks.GetRole(addonVal, true), // Get the role based on addon name
                 }
@@ -69,7 +69,7 @@ func init() {
                 addon = plans.Addons[addonVal] // Assuming you have other roles in the `Addons` map
             
                 if user.Balance >= addon.Price {
-                    if err := database.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
+                    if err := users.Container.UserUpdateAddon(user.Username, user.Balance, user.Duration, user.Concurrents, addonRanks, addon); err != nil {
                         json.NewEncoder(w).Encode(&Status{Status: "error", Message: "Error updating rank."})
                         return
                     }

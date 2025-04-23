@@ -43,8 +43,8 @@
                     <div class="credential-group">
                         <label>API Endpoint</label>
                         <div class="credential-value">
-                            <code>{{ .Domain }}api/start?user={{.Username}}&key=___&host=1.1.1.1&port=53&time=30&method=UDP-DNS</code>
-                            <button class="copy-button" data-value="{{ .Domain }}api/start?user={{.Username}}&key=___&host=1.1.1.1&port=53&time=30&method=UDP-DNS">
+                            <code>{{ .Domain }}api/start?user={{.User.Username}}&key=___&host=1.1.1.1&port=53&time=30&method=UDP-DNS</code>
+                            <button class="copy-button" data-value="{{ .Domain }}api/start?user={{.User.Username}}&key=___&host=1.1.1.1&port=53&time=30&method=UDP-DNS">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                     <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path>
                                     <rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect>
@@ -194,7 +194,7 @@
                                 <div class="status-value operational">Operational</div>
                             </div>
                         </div>
-                        {{if .Session.HasPermission "api" }}
+                        {{if .User.HasPermission "api" }}
                         <div class="status-item">
                             <div class="status-icon success">
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -257,7 +257,7 @@
         </main>
     </div>
     <script>
-        function fakeAvgResponse() {
+        function AvgResponse() {
             const min = 20;
             const max = 120;
             const ms = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -266,12 +266,8 @@
             document.getElementById('avg-time').textContent = ms + "ms";
             document.getElementById('avg-bar').style.width = width + "%";
         }
-    
-        // Initial run
-        fakeAvgResponse();
-    
-        // Update every 3 seconds
-        setInterval(fakeAvgResponse, 3000);
+        AvgResponse();
+        setInterval(AvgResponse, 3000);
     </script>
     <script src="/_assets/new/js/user/api1.js"></script>
 </body>

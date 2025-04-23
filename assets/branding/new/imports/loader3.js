@@ -10,6 +10,7 @@ class DashboardLoader {
         ];
         this.currentStep = 0;
     }
+    
 
     createLoader() {
         const loader = document.createElement('div');
@@ -45,7 +46,12 @@ class DashboardLoader {
             this.loadingText.textContent = this.loadingSteps[stepIndex];
         }
     }
-
+    advance(stepText, percent) {
+        this.progress = percent;
+        this.progressBar.style.width = `${percent}%`;
+        this.percentageText.textContent = `${percent}%`;
+        this.loadingText.textContent = stepText;
+    }
     simulateLoading() {
         return new Promise((resolve) => {
             let progress = 0;
@@ -72,10 +78,3 @@ class DashboardLoader {
     }
 }
 
-// Only initialize loader on dashboard page
-if (window.location.pathname === '/dashboard') {
-    document.addEventListener('DOMContentLoaded', () => {
-        const loader = new DashboardLoader();
-        loader.simulateLoading();
-    });
-}

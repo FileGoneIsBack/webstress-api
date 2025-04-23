@@ -1,7 +1,9 @@
 package adminapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
+	"api/core/database/atks"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/functions"
 	"api/core/models/plans"
@@ -19,7 +21,7 @@ func init() {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
-			if !session.HasPermission("admin") {
+			if !users.HasPermission(session.User, "admin") {
 				http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 				return
 			}
@@ -44,12 +46,12 @@ func init() {
 				Servers            []serverInfo   `json:"servers"`  // New field for methods per server
 			}
 			d := new(Data)
-			d.UserCount = database.Container.Users()
-			d.AttackCount = database.Container.DailyAttacks()
-			d.RunningAttackCount = database.Container.GlobalRunning()
-			d.ProfitCount = database.Container.Sales()
+			d.UserCount = users.Container.Users()
+			d.AttackCount = atks.Container.DailyAttacks()
+			d.RunningAttackCount = atks.Container.GlobalRunning()
+			d.ProfitCount = site.Container.Sales()
 			d.Users = func() []*user {
-				users, err := database.Container.GetUsers()
+				users, err := users.Container.GetUsers()
 				if err != nil {
 					return nil
 				}

@@ -1,7 +1,9 @@
 package admin
 
 import (
-	"api/core/database"
+	"api/core/database/site"
+	"api/core/database/users"
+	"api/core/database/atks"
 	"api/core/master/sessions"
 	"api/core/models"
 	"api/core/models/apis"
@@ -25,7 +27,7 @@ func init() {
 			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return
 		}
-		if !user.HasPermission("admin") {
+		if !users.HasPermission(user.User, "admin") {
 			http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 			return
 		}
@@ -34,9 +36,9 @@ func init() {
 			Title:        "Tickets",
 			Vers:         models.Config.Vers,
 			ServersCount: len(servers.Servers) + len(apis.Apis),
-			Ongoing:      database.Container.GlobalRunning(),
+			Ongoing:      atks.Container.GlobalRunning(),
 			Slots:        servers.Slots()[0],
-			Users:        database.Container.Users(),
+			Users:         users.Container.Users() + site.Site.FakeUsers,
 			Remotes:      servers.Servers,
 			Session:      user,
 		}, w, r, "admin", "chat.html")

@@ -7,12 +7,12 @@ import (
 )
 
 type User struct {
-	ID         int
-	Username   string
-	Api        []byte
-	Roles      string
-	Expiry     int
-	Membership string
+	ID          int
+	Username    string
+	Api         []byte
+	Roles       string
+	Expiry      int
+	Membership  string
 	Concurrents int
 	Servers     int
 	Duration    int
@@ -26,7 +26,7 @@ type User struct {
 func (conn *Instance) GetUser(tele int64) (*User, error) {
 	log.Printf("\n\n %d\n\n", tele)
 
-	stmt, err := conn.conn.Prepare(`
+	stmt, err := conn.Conn.Prepare(`
 	SELECT id, username, api, roles, expiry, membership, concurrents, servers, duration, balance, apiReqs, apiFails, tele
 	FROM users
 	WHERE tele = ?`)
@@ -60,4 +60,3 @@ func (conn *Instance) GetUser(tele int64) (*User, error) {
 
 	return &user, nil
 }
-

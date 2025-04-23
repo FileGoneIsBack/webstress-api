@@ -8,7 +8,7 @@ import (
 )
 
 var (
-	Manager = NewClient(models.Config.Autobuy.Key)
+	Manager = NewClient(models.Config.AutobuyKey)
 )
 
 type Client struct {
@@ -34,6 +34,6 @@ func (c *Client) CreateRequest(method, data, endpoint string) (*http.Request, er
 		return nil, err
 	}
 	r.Header.Add("Content-Type", "application/json")
-	r.Header.Add("x-api-key", models.Config.Autobuy.Key)
+	r.Header.Add("x-api-key", models.Config.AutobuyKey)
 	return r, nil
 }

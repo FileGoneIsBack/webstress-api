@@ -1,7 +1,7 @@
 package paymentsapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"encoding/json"
@@ -30,7 +30,7 @@ func init() {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
-			payments, err := database.Container.GetUserHistory(user.User)
+			payments, err := site.Container.GetUserHistory(user.User)
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), Sales: []*Payment{}})
 				return

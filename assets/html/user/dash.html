@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+body, html {
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto;
+}
+
+.dashboard {
+    display: grid;
+    grid-template-areas:
+        "topnav topnav"
+        "sidenav main";
+    grid-template-columns: 250px 1fr;
+    grid-template-rows: 60px 1fr;
+    min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{.Name}} | {{.Title}}</title>
-    <link rel="stylesheet" href="/_assets/new/css/charts.css">
+    <link rel="stylesheet" href="/_assets/new/css/charts1.css">
     <link rel="stylesheet" href="/_assets/new/css/dash.css">
     <link rel="stylesheet" href="/_assets/new/css/loader.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
@@ -13,7 +33,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="/_assets/new/imports/toastr1.js"></script>
-    <script src="/_assets/new/imports/loader2.js"></script>
+    <script src="/_assets/new/imports/loader3.js"></script>
 </head>
 <body>
     <div class="dashboard">
@@ -179,7 +199,35 @@
         </main>
     </div>
     <script src="/_assets/new/js/nav1.js"></script>
-    <script src="/_assets/new/js/user/dash11.js"></script>
-    <script src="/_assets/new/imports/charts1.js"></script>
+    <script src="/_assets/new/js/user/dash12.js"></script>
+    <script src="/_assets/new/imports/charts2.js"></script>
+    <script>
+    // Handle server list toggles
+    const toggles = document.querySelectorAll('.server-list-toggle');
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            const serverList = toggle.nextElementSibling;
+            const isActive = toggle.classList.contains('active');
+
+            // Close all other open lists
+            document.querySelectorAll('.server-list-toggle.active').forEach(otherToggle => {
+                if (otherToggle !== toggle) {
+                    otherToggle.classList.remove('active');
+                    otherToggle.nextElementSibling.classList.remove('active');
+                }
+            });
+
+            // Toggle current list
+            toggle.classList.toggle('active');
+            serverList.classList.toggle('active');
+
+            // If opening this list, initialize server items
+            if (!isActive) {
+                const serverItems = serverList.querySelectorAll('.server-item');
+                initializeServerItems(serverItems);
+            }
+        });
+    });
+    </script>
 </body>
 </html>

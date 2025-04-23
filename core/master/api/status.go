@@ -1,7 +1,7 @@
 package api
 
 import (
-	"api/core/database"
+	"api/core/database/atks"
 	"api/core/models/functions"
 	"api/core/models/server"
 	"api/core/master/sessions"
@@ -38,7 +38,7 @@ func init() {
 		if !ok {
 			return
 		}
-		ongoing, err := database.Container.GetRunning(key)
+		ongoing, err := atks.Container.GetRunning(key)
 		if err != nil {
 			json.NewEncoder(w).Encode(map[string]any{"error": true, "message": "failed to fetch running attacks!"})
 			return

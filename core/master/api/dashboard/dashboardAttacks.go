@@ -1,7 +1,7 @@
 package dashboardapi
 
 import (
-	"api/core/database"
+	"api/core/database/atks"
 
 	"api/core/models/server"
 	"encoding/json"
@@ -28,11 +28,11 @@ func init() {
 			}
 			var a attacks
 			for start, end := range times {
-				attacks := database.Container.GetFromTo(start, end, 1)
+				attacks := atks.Container.GetFromTo(start, end, 1)
 				a.Layer4 = append(a.Layer4, attacks)
 			}
 			for start, end := range times {
-				attacks := database.Container.GetFromTo(start, end, 2)
+				attacks := atks.Container.GetFromTo(start, end, 2)
 				a.Layer7 = append(a.Layer7, attacks)
 			}
 			json.NewEncoder(w).Encode(a)

@@ -2,7 +2,7 @@ package commands
 
 import (
 	"api/core/net/sessions"
-	"api/core/models"
+	"api/core/database/site"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -58,12 +58,12 @@ func attack(session *sessions.Session, args []string) {
 	if err != nil {
 		return
 	}
-	url, _ := url.Parse(models.Config.Domain + "api/start")
+	url, _ := url.Parse(site.Site.Domain + "api/start")
 	jar.SetCookies(url, []*http.Cookie{session.Cookie()})
 	c := &http.Client{
 		Jar: jar,
 	}
-	resp, err := c.PostForm(models.Config.Domain + "api/start", values)
+	resp, err := c.PostForm(site.Site.Domain + "api/start", values)
 	if err != nil {
 		return
 	}

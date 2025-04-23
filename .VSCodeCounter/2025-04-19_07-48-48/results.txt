@@ -1,0 +1,360 @@
+Date : 2025-04-19 07:48:48
+Directory : y:\github\webstress-api
+Total : 247 files,  26871 codes, 859 comments, 3159 blanks, all 30889 lines
+
+Languages
++-------------------------+------------+------------+------------+------------+------------+
+| language                | files      | code       | comment    | blank      | total      |
++-------------------------+------------+------------+------------+------------+------------+
+| Go                      |        172 |      8,973 |        480 |      1,268 |     10,721 |
+| sqlite3-editor-database |          2 |      5,494 |          0 |        297 |      5,791 |
+| CSS                     |         17 |      5,350 |         78 |        852 |      6,280 |
+| HTML                    |         25 |      4,326 |        122 |        347 |      4,795 |
+| JavaScript              |         15 |      2,044 |        179 |        315 |      2,538 |
+| JSON                    |          8 |        332 |          0 |          5 |        337 |
+| Markdown                |          1 |        135 |          0 |         53 |        188 |
+| MS SQL                  |          1 |        108 |          0 |          9 |        117 |
+| Go Checksum File        |          2 |         67 |          0 |          2 |         69 |
+| Go Module File          |          3 |         42 |          0 |         10 |         52 |
+| Python                  |          1 |          0 |          0 |          1 |          1 |
++-------------------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                    | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                       |        247 |     26,871 |        859 |      3,159 |     30,889 |
+| . (Files)                                                               |          4 |        286 |          1 |         64 |        351 |
+| assets                                                                  |         92 |     18,473 |        482 |      1,982 |     20,937 |
+| assets (Files)                                                          |          3 |      2,876 |          0 |        158 |      3,034 |
+| assets\branding                                                         |         32 |      7,394 |        257 |      1,167 |      8,818 |
+| assets\branding\new                                                     |         32 |      7,394 |        257 |      1,167 |      8,818 |
+| assets\branding\new\css                                                 |         17 |      5,350 |         78 |        852 |      6,280 |
+| assets\branding\new\css (Files)                                         |         12 |      3,507 |         47 |        556 |      4,110 |
+| assets\branding\new\css\admin                                           |          5 |      1,843 |         31 |        296 |      2,170 |
+| assets\branding\new\imports                                             |          3 |        454 |         23 |         58 |        535 |
+| assets\branding\new\js                                                  |         12 |      1,590 |        156 |        257 |      2,003 |
+| assets\branding\new\js (Files)                                          |          3 |        331 |         33 |         55 |        419 |
+| assets\branding\new\js\admin                                            |          3 |        575 |         63 |         80 |        718 |
+| assets\branding\new\js\user                                             |          6 |        684 |         60 |        122 |        866 |
+| assets\branding\new\js\user (Files)                                     |          3 |        340 |         36 |         57 |        433 |
+| assets\branding\new\js\user\shop                                        |          3 |        344 |         24 |         65 |        433 |
+| assets\client                                                           |          8 |        358 |         15 |         51 |        424 |
+| assets\config                                                           |          6 |        301 |          0 |          4 |        305 |
+| assets\html                                                             |         23 |      4,291 |        118 |        345 |      4,754 |
+| assets\html (Files)                                                     |          3 |        215 |          3 |          8 |        226 |
+| assets\html\admin                                                       |          7 |      1,727 |         64 |        132 |      1,923 |
+| assets\html\api                                                         |          1 |        265 |          4 |          9 |        278 |
+| assets\html\attack                                                      |          1 |         90 |          3 |          6 |         99 |
+| assets\html\dstat                                                       |          1 |        115 |          0 |         16 |        131 |
+| assets\html\landing                                                     |          1 |        168 |          9 |         19 |        196 |
+| assets\html\login                                                       |          1 |         92 |          0 |          5 |         97 |
+| assets\html\user                                                        |          8 |      1,619 |         35 |        150 |      1,804 |
+| assets\tgbot                                                            |         20 |      3,253 |         92 |        257 |      3,602 |
+| assets\tgbot (Files)                                                    |          5 |      2,805 |          0 |        157 |      2,962 |
+| assets\tgbot\core                                                       |          7 |        174 |         82 |         39 |        295 |
+| assets\tgbot\core (Files)                                               |          2 |         64 |         25 |         12 |        101 |
+| assets\tgbot\core\api                                                   |          2 |         26 |         54 |          7 |         87 |
+| assets\tgbot\core\commands                                              |          3 |         84 |          3 |         20 |        107 |
+| assets\tgbot\database                                                   |          3 |        139 |          4 |         27 |        170 |
+| assets\tgbot\models                                                     |          5 |        135 |          6 |         34 |        175 |
+| assets\tgbot\models (Files)                                             |          1 |         45 |          2 |          9 |         56 |
+| assets\tgbot\models\bot                                                 |          2 |         47 |          3 |         14 |         64 |
+| assets\tgbot\models\server                                              |          1 |         13 |          0 |          3 |         16 |
+| assets\tgbot\models\sessions                                            |          1 |         30 |          1 |          8 |         39 |
+| core                                                                    |        145 |      7,926 |        241 |      1,050 |      9,217 |
+| core (Files)                                                            |          2 |         79 |          4 |          8 |         91 |
+| core\database                                                           |         12 |      1,283 |         32 |        205 |      1,520 |
+| core\master                                                             |         77 |      3,831 |        110 |        401 |      4,342 |
+| core\master (Files)                                                     |          2 |         41 |          1 |          8 |         50 |
+| core\master\admin                                                       |          9 |        317 |          0 |         27 |        344 |
+| core\master\api                                                         |         43 |      2,571 |         94 |        250 |      2,915 |
+| core\master\api (Files)                                                 |          2 |        101 |          0 |         10 |        111 |
+| core\master\api\account                                                 |          1 |          7 |          0 |          3 |         10 |
+| core\master\api\admin                                                   |         10 |        566 |         30 |         62 |        658 |
+| core\master\api\attacks                                                 |          5 |        439 |         31 |         47 |        517 |
+| core\master\api\dashboard                                               |          6 |        353 |          2 |         24 |        379 |
+| core\master\api\manager                                                 |          3 |         64 |          1 |         15 |         80 |
+| core\master\api\panel                                                   |          3 |        143 |          0 |         10 |        153 |
+| core\master\api\payments                                                |          7 |        634 |          9 |         41 |        684 |
+| core\master\api\tickets                                                 |          6 |        264 |         21 |         38 |        323 |
+| core\master\authentication                                              |          4 |         83 |          0 |         18 |        101 |
+| core\master\dashboard                                                   |         12 |        435 |          2 |         40 |        477 |
+| core\master\internal                                                    |          2 |        228 |          7 |         30 |        265 |
+| core\master\landing                                                     |          2 |         34 |          0 |          6 |         40 |
+| core\master\sessions                                                    |          3 |        122 |          6 |         22 |        150 |
+| core\models                                                             |         37 |      1,677 |         49 |        284 |      2,010 |
+| core\models (Files)                                                     |          1 |         54 |          0 |          3 |         57 |
+| core\models\antiflood                                                   |          3 |        301 |          8 |         69 |        378 |
+| core\models\apis                                                        |          2 |        126 |          6 |         16 |        148 |
+| core\models\floods                                                      |          3 |         49 |          0 |         10 |         59 |
+| core\models\functions                                                   |          5 |        210 |         16 |         37 |        263 |
+| core\models\log                                                         |          1 |         74 |          2 |         10 |         86 |
+| core\models\plans                                                       |          5 |         41 |          0 |         10 |         51 |
+| core\models\ranks                                                       |          3 |         42 |          0 |          8 |         50 |
+| core\models\sellix                                                      |          5 |        146 |          0 |         30 |        176 |
+| core\models\server                                                      |          5 |        198 |          0 |         36 |        234 |
+| core\models\servers                                                     |          4 |        436 |         17 |         55 |        508 |
+| core\net                                                                |         17 |      1,056 |         46 |        152 |      1,254 |
+| core\net (Files)                                                        |          3 |        277 |         12 |         42 |        331 |
+| core\net\commands                                                       |          8 |        556 |         18 |         67 |        641 |
+| core\net\sessions                                                       |          1 |         60 |          0 |         11 |         71 |
+| core\net\term                                                           |          2 |        109 |         12 |         19 |        140 |
+| core\net\utils                                                          |          3 |         54 |          4 |         13 |         71 |
+| modules                                                                 |          6 |        186 |        135 |         63 |        384 |
+| modules\goconfig                                                        |          6 |        186 |        135 |         63 |        384 |
++-------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+
+| filename                                                                | language                | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+
+| y:\github\webstress-api\README.md                                       | Markdown                |        135 |          0 |         53 |        188 |
+| y:\github\webstress-api\assets\branding\new\css\admin\chat.css          | CSS                     |        372 |          3 |         61 |        436 |
+| y:\github\webstress-api\assets\branding\new\css\admin\dash.css          | CSS                     |        317 |          2 |         57 |        376 |
+| y:\github\webstress-api\assets\branding\new\css\admin\forms.css         | CSS                     |        385 |         13 |         51 |        449 |
+| y:\github\webstress-api\assets\branding\new\css\admin\settings1.css     | CSS                     |        505 |          9 |         77 |        591 |
+| y:\github\webstress-api\assets\branding\new\css\admin\tickets.css       | CSS                     |        264 |          4 |         50 |        318 |
+| y:\github\webstress-api\assets\branding\new\css\animations.css          | CSS                     |        100 |          3 |         15 |        118 |
+| y:\github\webstress-api\assets\branding\new\css\api1.css                | CSS                     |        284 |          4 |         47 |        335 |
+| y:\github\webstress-api\assets\branding\new\css\charts1.css             | CSS                     |        241 |          2 |         40 |        283 |
+| y:\github\webstress-api\assets\branding\new\css\chat.css                | CSS                     |        230 |          3 |         36 |        269 |
+| y:\github\webstress-api\assets\branding\new\css\dash1.css               | CSS                     |        690 |          7 |        119 |        816 |
+| y:\github\webstress-api\assets\branding\new\css\forms1.css              | CSS                     |        278 |          8 |         42 |        328 |
+| y:\github\webstress-api\assets\branding\new\css\loader.css              | CSS                     |        122 |          6 |         13 |        141 |
+| y:\github\webstress-api\assets\branding\new\css\login.css               | CSS                     |        350 |          0 |         40 |        390 |
+| y:\github\webstress-api\assets\branding\new\css\shop.css                | CSS                     |        172 |          1 |         24 |        197 |
+| y:\github\webstress-api\assets\branding\new\css\style.css               | CSS                     |        566 |          9 |         98 |        673 |
+| y:\github\webstress-api\assets\branding\new\css\ticket.css              | CSS                     |        256 |          3 |         44 |        303 |
+| y:\github\webstress-api\assets\branding\new\css\transaction.css         | CSS                     |        218 |          1 |         38 |        257 |
+| y:\github\webstress-api\assets\branding\new\imports\charts2.js          | JavaScript              |        199 |         22 |         32 |        253 |
+| y:\github\webstress-api\assets\branding\new\imports\loader3.js          | JavaScript              |         72 |          1 |          8 |         81 |
+| y:\github\webstress-api\assets\branding\new\imports\toastr1.js          | JavaScript              |        183 |          0 |         18 |        201 |
+| y:\github\webstress-api\assets\branding\new\js\admin\chats.js           | JavaScript              |        155 |          3 |         25 |        183 |
+| y:\github\webstress-api\assets\branding\new\js\admin\dash2.js           | JavaScript              |        222 |         36 |         23 |        281 |
+| y:\github\webstress-api\assets\branding\new\js\admin\edituser.js        | JavaScript              |        198 |         24 |         32 |        254 |
+| y:\github\webstress-api\assets\branding\new\js\login3.js                | JavaScript              |         93 |         10 |         26 |        129 |
+| y:\github\webstress-api\assets\branding\new\js\main.js                  | JavaScript              |        134 |          7 |          9 |        150 |
+| y:\github\webstress-api\assets\branding\new\js\nav1.js                  | JavaScript              |        104 |         16 |         20 |        140 |
+| y:\github\webstress-api\assets\branding\new\js\user\api1.js             | JavaScript              |        165 |         16 |         23 |        204 |
+| y:\github\webstress-api\assets\branding\new\js\user\dash12.js           | JavaScript              |         39 |          1 |          7 |         47 |
+| y:\github\webstress-api\assets\branding\new\js\user\panel3.js           | JavaScript              |        136 |         19 |         27 |        182 |
+| y:\github\webstress-api\assets\branding\new\js\user\shop\deposit2.js    | JavaScript              |         93 |          5 |         26 |        124 |
+| y:\github\webstress-api\assets\branding\new\js\user\shop\shop5.js       | JavaScript              |        166 |         11 |         24 |        201 |
+| y:\github\webstress-api\assets\branding\new\js\user\shop\transaction.js | JavaScript              |         85 |          8 |         15 |        108 |
+| y:\github\webstress-api\assets\client\attack.go                         | Go                      |         83 |          6 |         12 |        101 |
+| y:\github\webstress-api\assets\client\client.go                         | Go                      |         95 |          4 |         11 |        110 |
+| y:\github\webstress-api\assets\client\config.go                         | Go                      |         25 |          0 |          5 |         30 |
+| y:\github\webstress-api\assets\client\config.json                       | JSON                    |          8 |          0 |          1 |          9 |
+| y:\github\webstress-api\assets\client\go.mod                            | Go Module File          |          2 |          0 |          2 |          4 |
+| y:\github\webstress-api\assets\client\message.go                        | Go                      |        119 |          5 |         16 |        140 |
+| y:\github\webstress-api\assets\client\methods.go                        | Go                      |         17 |          0 |          4 |         21 |
+| y:\github\webstress-api\assets\client\methods.json                      | JSON                    |          9 |          0 |          0 |          9 |
+| y:\github\webstress-api\assets\config\apis.json                         | JSON                    |         39 |          0 |          1 |         40 |
+| y:\github\webstress-api\assets\config\bot.py                            | Python                  |          0 |          0 |          1 |          1 |
+| y:\github\webstress-api\assets\config\config.json                       | JSON                    |         14 |          0 |          0 |         14 |
+| y:\github\webstress-api\assets\config\methods.json                      | JSON                    |        122 |          0 |          1 |        123 |
+| y:\github\webstress-api\assets\config\plans.json                        | JSON                    |        121 |          0 |          0 |        121 |
+| y:\github\webstress-api\assets\config\servers.json                      | JSON                    |          5 |          0 |          1 |          6 |
+| y:\github\webstress-api\assets\database.db                              | sqlite3-editor-database |      2,745 |          0 |        149 |      2,894 |
+| y:\github\webstress-api\assets\database.sql                             | MS SQL                  |        108 |          0 |          9 |        117 |
+| y:\github\webstress-api\assets\html\404.html                            | HTML                    |          1 |          0 |          0 |          1 |
+| y:\github\webstress-api\assets\html\admin\chat.html                     | HTML                    |        122 |          2 |          8 |        132 |
+| y:\github\webstress-api\assets\html\admin\dashV2.html                   | HTML                    |         79 |          3 |          7 |         89 |
+| y:\github\webstress-api\assets\html\admin\editUser.html                 | HTML                    |        102 |          3 |          8 |        113 |
+| y:\github\webstress-api\assets\html\admin\servers.html                  | HTML                    |        489 |         26 |         28 |        543 |
+| y:\github\webstress-api\assets\html\admin\settings.html                 | HTML                    |        390 |          5 |         33 |        428 |
+| y:\github\webstress-api\assets\html\admin\tickets.html                  | HTML                    |        190 |          0 |         17 |        207 |
+| y:\github\webstress-api\assets\html\admin\ul.html                       | HTML                    |        355 |         25 |         31 |        411 |
+| y:\github\webstress-api\assets\html\api\api.html                        | HTML                    |        265 |          4 |          9 |        278 |
+| y:\github\webstress-api\assets\html\attack\attack.html                  | HTML                    |         90 |          3 |          6 |         99 |
+| y:\github\webstress-api\assets\html\construction.html                   | HTML                    |         27 |          1 |          2 |         30 |
+| y:\github\webstress-api\assets\html\dstat\index.html                    | HTML                    |        115 |          0 |         16 |        131 |
+| y:\github\webstress-api\assets\html\landing\index.html                  | HTML                    |        168 |          9 |         19 |        196 |
+| y:\github\webstress-api\assets\html\login\login.html                    | HTML                    |         92 |          0 |          5 |         97 |
+| y:\github\webstress-api\assets\html\nav.html                            | HTML                    |        187 |          2 |          6 |        195 |
+| y:\github\webstress-api\assets\html\user\account.html                   | HTML                    |        434 |         24 |         27 |        485 |
+| y:\github\webstress-api\assets\html\user\chats.html                     | HTML                    |        190 |          1 |         30 |        221 |
+| y:\github\webstress-api\assets\html\user\dash.html                      | HTML                    |        219 |          2 |         12 |        233 |
+| y:\github\webstress-api\assets\html\user\deposit.html                   | HTML                    |         50 |          2 |          6 |         58 |
+| y:\github\webstress-api\assets\html\user\faq.html                       | HTML                    |        421 |          2 |         57 |        480 |
+| y:\github\webstress-api\assets\html\user\newTicket.html                 | HTML                    |        205 |          2 |         13 |        220 |
+| y:\github\webstress-api\assets\html\user\transaction.html               | HTML                    |         73 |          0 |          4 |         77 |
+| y:\github\webstress-api\assets\html\user\upgrade.html                   | HTML                    |         27 |          2 |          1 |         30 |
+| y:\github\webstress-api\assets\servers.static.html                      | HTML                    |         23 |          0 |          0 |         23 |
+| y:\github\webstress-api\assets\tgbot\config.json                        | JSON                    |         14 |          0 |          1 |         15 |
+| y:\github\webstress-api\assets\tgbot\core\api\api.go                    | Go                      |         14 |         54 |          4 |         72 |
+| y:\github\webstress-api\assets\tgbot\core\api\index.go                  | Go                      |         12 |          0 |          3 |         15 |
+| y:\github\webstress-api\assets\tgbot\core\commands\auth.go              | Go                      |         27 |          2 |          8 |         37 |
+| y:\github\webstress-api\assets\tgbot\core\commands\info.go              | Go                      |         19 |          1 |          7 |         27 |
+| y:\github\webstress-api\assets\tgbot\core\commands\start.go             | Go                      |         38 |          0 |          5 |         43 |
+| y:\github\webstress-api\assets\tgbot\core\handler.go                    | Go                      |         49 |         25 |         10 |         84 |
+| y:\github\webstress-api\assets\tgbot\core\route.go                      | Go                      |         15 |          0 |          2 |         17 |
+| y:\github\webstress-api\assets\tgbot\database.db                        | sqlite3-editor-database |      2,749 |          0 |        148 |      2,897 |
+| y:\github\webstress-api\assets\tgbot\database\init.go                   | Go                      |         45 |          3 |         11 |         59 |
+| y:\github\webstress-api\assets\tgbot\database\tokens.go                 | Go                      |         39 |          0 |          8 |         47 |
+| y:\github\webstress-api\assets\tgbot\database\users.go                  | Go                      |         55 |          1 |          8 |         64 |
+| y:\github\webstress-api\assets\tgbot\go.mod                             | Go Module File          |          9 |          0 |          4 |         13 |
+| y:\github\webstress-api\assets\tgbot\go.sum                             | Go Checksum File        |         10 |          0 |          1 |         11 |
+| y:\github\webstress-api\assets\tgbot\main.go                            | Go                      |         23 |          0 |          3 |         26 |
+| y:\github\webstress-api\assets\tgbot\models\bot\send.go                 | Go                      |         31 |          3 |         10 |         44 |
+| y:\github\webstress-api\assets\tgbot\models\bot\start.go                | Go                      |         16 |          0 |          4 |         20 |
+| y:\github\webstress-api\assets\tgbot\models\config.go                   | Go                      |         45 |          2 |          9 |         56 |
+| y:\github\webstress-api\assets\tgbot\models\server\server.go            | Go                      |         13 |          0 |          3 |         16 |
+| y:\github\webstress-api\assets\tgbot\models\sessions\session.go         | Go                      |         30 |          1 |          8 |         39 |
+| y:\github\webstress-api\core\database\api.go                            | Go                      |         78 |          3 |         13 |         94 |
+| y:\github\webstress-api\core\database\attacks.go                        | Go                      |        185 |          0 |         23 |        208 |
+| y:\github\webstress-api\core\database\db.go                             | Go                      |         13 |          0 |          6 |         19 |
+| y:\github\webstress-api\core\database\hash.go                           | Go                      |         18 |          1 |          7 |         26 |
+| y:\github\webstress-api\core\database\init.go                           | Go                      |         38 |          1 |          8 |         47 |
+| y:\github\webstress-api\core\database\invites.go                        | Go                      |         26 |          0 |          5 |         31 |
+| y:\github\webstress-api\core\database\news.go                           | Go                      |         51 |          0 |          8 |         59 |
+| y:\github\webstress-api\core\database\ranks.go                          | Go                      |         90 |          3 |         10 |        103 |
+| y:\github\webstress-api\core\database\sales.go                          | Go                      |        110 |          0 |         14 |        124 |
+| y:\github\webstress-api\core\database\site.go                           | Go                      |         90 |          0 |         14 |        104 |
+| y:\github\webstress-api\core\database\ticket.go                         | Go                      |        257 |         12 |         53 |        322 |
+| y:\github\webstress-api\core\database\user.go                           | Go                      |        327 |         12 |         44 |        383 |
+| y:\github\webstress-api\core\footer.html                                | HTML                    |         12 |          4 |          2 |         18 |
+| y:\github\webstress-api\core\init.go                                    | Go                      |         67 |          0 |          6 |         73 |
+| y:\github\webstress-api\core\master\admin\UserList.go                   | Go                      |         42 |          0 |          3 |         45 |
+| y:\github\webstress-api\core\master\admin\dashV2.go                     | Go                      |         42 |          0 |          3 |         45 |
+| y:\github\webstress-api\core\master\admin\edit.go                       | Go                      |         42 |          0 |          3 |         45 |
+| y:\github\webstress-api\core\master\admin\middleware.go                 | Go                      |          6 |          0 |          3 |          9 |
+| y:\github\webstress-api\core\master\admin\route.go                      | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\admin\servers.go                    | Go                      |         42 |          0 |          3 |         45 |
+| y:\github\webstress-api\core\master\admin\settings.go                   | Go                      |         54 |          0 |          3 |         57 |
+| y:\github\webstress-api\core\master\admin\ticket.go                     | Go                      |         42 |          0 |          3 |         45 |
+| y:\github\webstress-api\core\master\admin\tickets.go                    | Go                      |         42 |          0 |          3 |         45 |
+| y:\github\webstress-api\core\master\api\account\route.go                | Go                      |          7 |          0 |          3 |         10 |
+| y:\github\webstress-api\core\master\api\admin\adminData.go              | Go                      |         83 |          1 |          5 |         89 |
+| y:\github\webstress-api\core\master\api\admin\adminGetUser.go           | Go                      |         49 |          0 |          6 |         55 |
+| y:\github\webstress-api\core\master\api\admin\adminRemoveBlacklist.go   | Go                      |         48 |         11 |          7 |         66 |
+| y:\github\webstress-api\core\master\api\admin\adminSettings.go          | Go                      |         88 |          9 |         14 |        111 |
+| y:\github\webstress-api\core\master\api\admin\adminTickets.go           | Go                      |         58 |          1 |          4 |         63 |
+| y:\github\webstress-api\core\master\api\admin\adminUpdateNews.go        | Go                      |         42 |          0 |          4 |         46 |
+| y:\github\webstress-api\core\master\api\admin\adminUpdateTIcket.go      | Go                      |         44 |          3 |          6 |         53 |
+| y:\github\webstress-api\core\master\api\admin\adminUpdateUser.go        | Go                      |         81 |          5 |          9 |         95 |
+| y:\github\webstress-api\core\master\api\admin\adminUserList.go          | Go                      |         68 |          0 |          4 |         72 |
+| y:\github\webstress-api\core\master\api\admin\route.go                  | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\api\attacks\route.go                | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\api\attacks\start.go                | Go                      |        213 |         21 |         12 |        246 |
+| y:\github\webstress-api\core\master\api\attacks\stop.go                 | Go                      |         64 |          0 |          9 |         73 |
+| y:\github\webstress-api\core\master\api\attacks\stopAll.go              | Go                      |         16 |          0 |          3 |         19 |
+| y:\github\webstress-api\core\master\api\attacks\validate.go             | Go                      |        141 |         10 |         20 |        171 |
+| y:\github\webstress-api\core\master\api\dashboard\dashboardAddons.go    | Go                      |         40 |          0 |          5 |         45 |
+| y:\github\webstress-api\core\master\api\dashboard\dashboardAttacks.go   | Go                      |         40 |          0 |          5 |         45 |
+| y:\github\webstress-api\core\master\api\dashboard\dashboardData.go      | Go                      |        193 |          0 |          2 |        195 |
+| y:\github\webstress-api\core\master\api\dashboard\dashboardPlans.go     | Go                      |         50 |          0 |          5 |         55 |
+| y:\github\webstress-api\core\master\api\dashboard\route.go              | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\api\dashboard\userInfo.go           | Go                      |         25 |          2 |          4 |         31 |
+| y:\github\webstress-api\core\master\api\manager\api.go                  | Go                      |         51 |          1 |          9 |         61 |
+| y:\github\webstress-api\core\master\api\manager\route.go                | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\api\manager\whitelist.go            | Go                      |          8 |          0 |          3 |         11 |
+| y:\github\webstress-api\core\master\api\panel\attackMethods.go          | Go                      |         76 |          0 |          3 |         79 |
+| y:\github\webstress-api\core\master\api\panel\attackRunning.go          | Go                      |         62 |          0 |          4 |         66 |
+| y:\github\webstress-api\core\master\api\panel\route.go                  | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\api\payments\addons.go              | Go                      |         74 |          1 |         12 |         87 |
+| y:\github\webstress-api\core\master\api\payments\create.go              | Go                      |         57 |          3 |          7 |         67 |
+| y:\github\webstress-api\core\master\api\payments\get.go                 | Go                      |         49 |          0 |          3 |         52 |
+| y:\github\webstress-api\core\master\api\payments\purchase.go            | Go                      |         43 |          0 |          4 |         47 |
+| y:\github\webstress-api\core\master\api\payments\route.go               | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\api\payments\transaction.go         | Go                      |         69 |          4 |          6 |         79 |
+| y:\github\webstress-api\core\master\api\payments\webhook.go             | Go                      |        337 |          1 |          6 |        344 |
+| y:\github\webstress-api\core\master\api\route.go                        | Go                      |         27 |          0 |          5 |         32 |
+| y:\github\webstress-api\core\master\api\status.go                       | Go                      |         74 |          0 |          5 |         79 |
+| y:\github\webstress-api\core\master\api\tickets\getMessages.go          | Go                      |         64 |          4 |         10 |         78 |
+| y:\github\webstress-api\core\master\api\tickets\getTicket.go            | Go                      |         48 |          3 |          2 |         53 |
+| y:\github\webstress-api\core\master\api\tickets\route.go                | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\api\tickets\ticket.go               | Go                      |         48 |          6 |          6 |         60 |
+| y:\github\webstress-api\core\master\api\tickets\ticketNew.go            | Go                      |         48 |          4 |          7 |         59 |
+| y:\github\webstress-api\core\master\api\tickets\updateTIcket.go         | Go                      |         51 |          4 |         10 |         65 |
+| y:\github\webstress-api\core\master\authentication\login.go             | Go                      |         32 |          0 |          4 |         36 |
+| y:\github\webstress-api\core\master\authentication\logout.go            | Go                      |         30 |          0 |          6 |         36 |
+| y:\github\webstress-api\core\master\authentication\route.go             | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\authentication\signup.go            | Go                      |         16 |          0 |          5 |         21 |
+| y:\github\webstress-api\core\master\dashboard\account.go                | Go                      |         38 |          0 |          3 |         41 |
+| y:\github\webstress-api\core\master\dashboard\addons.go                 | Go                      |         38 |          0 |          3 |         41 |
+| y:\github\webstress-api\core\master\dashboard\api.go                    | Go                      |         48 |          0 |          3 |         51 |
+| y:\github\webstress-api\core\master\dashboard\attack.go                 | Go                      |         36 |          0 |          3 |         39 |
+| y:\github\webstress-api\core\master\dashboard\deposit.go                | Go                      |         38 |          0 |          4 |         42 |
+| y:\github\webstress-api\core\master\dashboard\faq.go                    | Go                      |         39 |          0 |          4 |         43 |
+| y:\github\webstress-api\core\master\dashboard\route.go                  | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\dashboard\ticket.go                 | Go                      |         38 |          0 |          3 |         41 |
+| y:\github\webstress-api\core\master\dashboard\tickets.go                | Go                      |         38 |          0 |          3 |         41 |
+| y:\github\webstress-api\core\master\dashboard\transaction.go            | Go                      |         38 |          0 |          4 |         42 |
+| y:\github\webstress-api\core\master\dashboard\upgrade.go                | Go                      |         38 |          0 |          4 |         42 |
+| y:\github\webstress-api\core\master\dashboard\user.go                   | Go                      |         41 |          2 |          3 |         46 |
+| y:\github\webstress-api\core\master\error.go                            | Go                      |          7 |          1 |          3 |         11 |
+| y:\github\webstress-api\core\master\internal\login.go                   | Go                      |         72 |          0 |         11 |         83 |
+| y:\github\webstress-api\core\master\internal\signup.go                  | Go                      |        156 |          7 |         19 |        182 |
+| y:\github\webstress-api\core\master\landing\landing.go                  | Go                      |         29 |          0 |          3 |         32 |
+| y:\github\webstress-api\core\master\landing\route.go                    | Go                      |          5 |          0 |          3 |          8 |
+| y:\github\webstress-api\core\master\newV2.go                            | Go                      |         34 |          0 |          5 |         39 |
+| y:\github\webstress-api\core\master\sessions\check.go                   | Go                      |         33 |          0 |          5 |         38 |
+| y:\github\webstress-api\core\master\sessions\flash.go                   | Go                      |         70 |          4 |         11 |         85 |
+| y:\github\webstress-api\core\master\sessions\session.go                 | Go                      |         19 |          2 |          6 |         27 |
+| y:\github\webstress-api\core\models\antiflood\context.go                | Go                      |         12 |          0 |          5 |         17 |
+| y:\github\webstress-api\core\models\antiflood\limiter.go                | Go                      |        175 |          0 |         42 |        217 |
+| y:\github\webstress-api\core\models\antiflood\new.go                    | Go                      |        114 |          8 |         22 |        144 |
+| y:\github\webstress-api\core\models\apis\api.go                         | Go                      |        122 |          6 |         14 |        142 |
+| y:\github\webstress-api\core\models\apis\method.go                      | Go                      |          4 |          0 |          2 |          6 |
+| y:\github\webstress-api\core\models\config.go                           | Go                      |         54 |          0 |          3 |         57 |
+| y:\github\webstress-api\core\models\floods\attack.go                    | Go                      |         26 |          0 |          4 |         30 |
+| y:\github\webstress-api\core\models\floods\launch.go                    | Go                      |          4 |          0 |          2 |          6 |
+| y:\github\webstress-api\core\models\floods\method.go                    | Go                      |         19 |          0 |          4 |         23 |
+| y:\github\webstress-api\core\models\functions\query.go                  | Go                      |         55 |          4 |          9 |         68 |
+| y:\github\webstress-api\core\models\functions\render.go                 | Go                      |         77 |          4 |         12 |         93 |
+| y:\github\webstress-api\core\models\functions\term.go                   | Go                      |         55 |          8 |          9 |         72 |
+| y:\github\webstress-api\core\models\functions\toastr.go                 | Go                      |         10 |          0 |          4 |         14 |
+| y:\github\webstress-api\core\models\functions\writer.go                 | Go                      |         13 |          0 |          3 |         16 |
+| y:\github\webstress-api\core\models\log\log.go                          | Go                      |         74 |          2 |         10 |         86 |
+| y:\github\webstress-api\core\models\plans\addons.go                     | Go                      |         10 |          0 |          2 |         12 |
+| y:\github\webstress-api\core\models\plans\general.go                    | Go                      |          6 |          0 |          2 |          8 |
+| y:\github\webstress-api\core\models\plans\limits.go                     | Go                      |          8 |          0 |          2 |         10 |
+| y:\github\webstress-api\core\models\plans\plan.go                       | Go                      |         10 |          0 |          2 |         12 |
+| y:\github\webstress-api\core\models\plans\vars.go                       | Go                      |          7 |          0 |          2 |          9 |
+| y:\github\webstress-api\core\models\ranks\func.go                       | Go                      |          9 |          0 |          4 |         13 |
+| y:\github\webstress-api\core\models\ranks\internal.go                   | Go                      |         27 |          0 |          2 |         29 |
+| y:\github\webstress-api\core\models\ranks\rank.go                       | Go                      |          6 |          0 |          2 |          8 |
+| y:\github\webstress-api\core\models\sellix\client.go                    | Go                      |         34 |          0 |          6 |         40 |
+| y:\github\webstress-api\core\models\sellix\const.go                     | Go                      |          6 |          0 |          1 |          7 |
+| y:\github\webstress-api\core\models\sellix\coupons.go                   | Go                      |         11 |          0 |          2 |         13 |
+| y:\github\webstress-api\core\models\sellix\orders.go                    | Go                      |         30 |          0 |          6 |         36 |
+| y:\github\webstress-api\core\models\sellix\payment.go                   | Go                      |         65 |          0 |         15 |         80 |
+| y:\github\webstress-api\core\models\server\config.go                    | Go                      |          6 |          0 |          2 |          8 |
+| y:\github\webstress-api\core\models\server\handler.go                   | Go                      |         15 |          0 |          5 |         20 |
+| y:\github\webstress-api\core\models\server\route.go                     | Go                      |         33 |          0 |          8 |         41 |
+| y:\github\webstress-api\core\models\server\routes.go                    | Go                      |         66 |          0 |          7 |         73 |
+| y:\github\webstress-api\core\models\server\server.go                    | Go                      |         78 |          0 |         14 |         92 |
+| y:\github\webstress-api\core\models\servers\listener.go                 | Go                      |         98 |          9 |         16 |        123 |
+| y:\github\webstress-api\core\models\servers\message.go                  | Go                      |        151 |          3 |         11 |        165 |
+| y:\github\webstress-api\core\models\servers\server.go                   | Go                      |        177 |          5 |         25 |        207 |
+| y:\github\webstress-api\core\models\servers\serverConfig.go             | Go                      |         10 |          0 |          3 |         13 |
+| y:\github\webstress-api\core\net\commands\attack.go                     | Go                      |         73 |          1 |          5 |         79 |
+| y:\github\webstress-api\core\net\commands\cmd.go                        | Go                      |        147 |          2 |         17 |        166 |
+| y:\github\webstress-api\core\net\commands\functions.go                  | Go                      |         23 |          0 |          2 |         25 |
+| y:\github\webstress-api\core\net\commands\methods.go                    | Go                      |         12 |          0 |          3 |         15 |
+| y:\github\webstress-api\core\net\commands\ongoing.go                    | Go                      |         26 |          0 |          5 |         31 |
+| y:\github\webstress-api\core\net\commands\reload.go                     | Go                      |         15 |          0 |          5 |         20 |
+| y:\github\webstress-api\core\net\commands\render.go                     | Go                      |        135 |         12 |         14 |        161 |
+| y:\github\webstress-api\core\net\commands\users.go                      | Go                      |        125 |          3 |         16 |        144 |
+| y:\github\webstress-api\core\net\handleSSH.go                           | Go                      |         89 |          3 |         12 |        104 |
+| y:\github\webstress-api\core\net\handler.go                             | Go                      |        103 |          3 |         16 |        122 |
+| y:\github\webstress-api\core\net\server.go                              | Go                      |         85 |          6 |         14 |        105 |
+| y:\github\webstress-api\core\net\sessions\sessions.go                   | Go                      |         60 |          0 |         11 |         71 |
+| y:\github\webstress-api\core\net\term\sshterm.go                        | Go                      |         39 |         12 |         12 |         63 |
+| y:\github\webstress-api\core\net\term\term.go                           | Go                      |         70 |          0 |          7 |         77 |
+| y:\github\webstress-api\core\net\utils\goIP.go                          | Go                      |         23 |          2 |          5 |         30 |
+| y:\github\webstress-api\core\net\utils\spinner.go                       | Go                      |         23 |          2 |          5 |         30 |
+| y:\github\webstress-api\core\net\utils\utils.go                         | Go                      |          8 |          0 |          3 |         11 |
+| y:\github\webstress-api\go.mod                                          | Go Module File          |         31 |          0 |          4 |         35 |
+| y:\github\webstress-api\go.sum                                          | Go Checksum File        |         57 |          0 |          1 |         58 |
+| y:\github\webstress-api\main.go                                         | Go                      |         63 |          1 |          6 |         70 |
+| y:\github\webstress-api\modules\goconfig\GoConfig.go                    | Go                      |         24 |         27 |          9 |         60 |
+| y:\github\webstress-api\modules\goconfig\GoConfigDefaults.go            | Go                      |         54 |          3 |         14 |         71 |
+| y:\github\webstress-api\modules\goconfig\GoConfigIncluder.go            | Go                      |         18 |         28 |          9 |         55 |
+| y:\github\webstress-api\modules\goconfig\GoConfigMaps.go                | Go                      |         22 |         26 |          8 |         56 |
+| y:\github\webstress-api\modules\goconfig\GoConfigOptions.go             | Go                      |         45 |         26 |         16 |         87 |
+| y:\github\webstress-api\modules\goconfig\GoConfigReader.go              | Go                      |         23 |         25 |          7 |         55 |
+| Total                                                                   |                         |     26,871 |        859 |      3,159 |     30,889 |
++-------------------------------------------------------------------------+-------------------------+------------+------------+------------+------------+

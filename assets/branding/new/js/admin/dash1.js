@@ -86,21 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     let servers = [];
-    const populateData = (data) => {
-        const allServers = [...data.serversLayer4, ...data.serversLayer7];
-    
-        servers = allServers.map(server => {
-            const isAPI = server.Responsetime === -1;
-            return {
-                name: server.name,
-                type: isAPI ? 'attack' : 'api', // differentiate by responsetime
-                load: server.load ?? 0,
-                status: server.load > 90 ? 'error' : server.load > 75 ? 'warning' : 'operational',
-                slots: server.slots,
-                connections: server.runningAttacks ?? 0,
-                method: server.responsetime
-            };
-        });
+    function populateData(data) {
+        const all = [...data.serversLayer4, ...data.serversLayer7];
+        servers = all.map(s => ({
+          name: s.name,
+          type: s.Responsetime === -1 ? 'api' : 'attack',
+          load: s.load || 0,
+          status: s.load > 90 ? 'error' : s.load > 75 ? 'warning' : 'operational',
+          slots: s.slots,
+          connections: s.runningAttacks || 0,
+          method: s.responsetime
+        }));
     
         displayServers(document.querySelector('.toggle-btn.active')?.dataset.type || 'all');
     };

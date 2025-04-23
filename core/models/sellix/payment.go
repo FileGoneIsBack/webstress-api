@@ -5,7 +5,7 @@ import (
 	"errors"
 	"io"
 	"log"
-	"api/core/models"
+	"api/core/database/site"
 )
 
 type PaymentReq struct {
@@ -29,7 +29,7 @@ func (c *Client) CreatePayment(amount float64, fiat, crypto, orderID string) (*P
 		PriceCurrency: fiat,
 		PayCurrency:   crypto,
 		OrderID:       orderID,
-		IPNCallback:   models.Config.Domain + "api/payments/webhook",
+		IPNCallback:   site.Site.Domain + "api/payments/webhook",
 	}
 
 	body, err := json.Marshal(payment)

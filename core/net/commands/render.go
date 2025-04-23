@@ -1,7 +1,8 @@
 package commands
 
 import (
-	"api/core/database"
+	"api/core/database/users"
+	"api/core/database/atks"
 	"api/core/models"
 	"api/core/models/servers"
 	"api/core/net/sessions"
@@ -87,7 +88,7 @@ func renderLine(session *sessions.Session, line string, adminrole bool, apirole 
 		"<<sitename>>", 		models.Config.Name,
 		"<<slots>>", 			strconv.Itoa(servers.Slots()[0]),
 		"<<vers>>",				models.Config.Vers,
-		"<<running>>", 			strconv.Itoa(database.Container.GlobalRunning()),
+		"<<running>>", 			strconv.Itoa(atks.Container.GlobalRunning()),
 		"<<online>>",			strconv.Itoa(sessions.Count() + sess.Count()),
 		//fun stuff
 		"<<spinner>>", 			utils.SpinnerChars[i%len(SpinnerChars)],
@@ -128,7 +129,7 @@ func processLines(session *sessions.Session, lines []string, details *CommandDet
         fmt.Println("Error:", err)
         return
     }
-    attacks, err := database.Container.GetRunning(session.User)
+    attacks, err := atks.Container.GetRunning(session.User)
     if err != nil {
         fmt.Fprintf(session.Conn, "Error: %v\n\r", err)
         return
@@ -136,16 +137,16 @@ func processLines(session *sessions.Session, lines []string, details *CommandDet
     
     // Define variables to store role permissions
     var adminrole, apirole, cncrole, viprole bool
-    if session.User.HasPermission("admin") {
+    if users.HasPermission(session.User, "admin") {
         adminrole = true
     }
-    if session.User.HasPermission("api") {
+    if users.HasPermission(session.User, "api") {
         apirole = true
     }
-    if session.User.HasPermission("cnc") {
+    if users.HasPermission(session.User, "cnc") {
         cncrole = true
     }
-    if session.User.HasPermission("vip") {
+    if users.HasPermission(session.User, "vip") {
         viprole = true
     }
     

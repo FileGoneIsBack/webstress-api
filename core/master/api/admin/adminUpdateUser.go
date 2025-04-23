@@ -2,6 +2,7 @@ package adminapi
 
 import (
 	"api/core/database"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/log"
 	"api/core/models/server"
@@ -18,7 +19,7 @@ func init() {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
-			if !session.HasPermission("admin") {
+			if !users.HasPermission(session.User, "admin") {
 				http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 				return
 			}
@@ -30,7 +31,7 @@ func init() {
 			}
 
 			// Update the user in the database
-			if err := database.Container.UpdateUser(&updatedUser); err != nil {
+			if err := users.Container.UpdateUser(&updatedUser); err != nil {
 				log.Println("Error updating user in the database:", err)
 				http.Error(w, "Failed to update user", http.StatusInternalServerError)
 				return
@@ -54,7 +55,7 @@ func init() {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
-			if !session.HasPermission("admin") {
+			if !users.HasPermission(session.User, "admin") {
 				http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 				return
 			}
@@ -68,7 +69,7 @@ func init() {
 			}
 
 			// Fetch the user ID
-			userID, err := database.Container.GetUserID(deleteUserReq.Username)
+			userID, err := users.Container.GetUserID(deleteUserReq.Username)
 			if err != nil {
 				log.Println("Error fetching user ID from the database:", err)
 				http.Error(w, "Failed to delete user", http.StatusInternalServerError)
@@ -77,7 +78,7 @@ func init() {
 			}
 
 			// Delete the user
-			if err := database.Container.DeleteUser(deleteUserReq.Username, userID); err != nil {
+			if err := users.Container.DeleteUser(deleteUserReq.Username, userID); err != nil {
 				log.Println("Error deleting user from the database:", err)
 				http.Error(w, "Failed to delete user", http.StatusInternalServerError)
 				return

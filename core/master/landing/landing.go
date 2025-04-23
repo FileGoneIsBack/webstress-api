@@ -1,7 +1,8 @@
 package landing
 
 import (
-	"api/core/database"
+	"api/core/database/users"
+	"api/core/database/site"
 	"api/core/master/sessions"
 	"api/core/models"
 	"api/core/models/apis"
@@ -25,7 +26,7 @@ func init() {
 			Title:        "Welcome!",
 			Vers:         models.Config.Vers,
 			ServersCount: len(servers.Servers) + len(apis.Apis),
-			Users:        database.Container.Users(),
+			Users:         users.Container.Users() + site.Site.FakeUsers,
 		}, w, r, "landing", "index.html")
 	}))
 }

@@ -1,7 +1,7 @@
 package paymentsapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"encoding/json"
@@ -43,7 +43,7 @@ func init() {
 				return
 			}
 			id, _ := strconv.Atoi(r.PostFormValue("payment_id"))
-			payment, err := database.Container.GetSale(id)
+			payment, err := site.Container.GetSale(id)
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), Payment: &Payment{}})
 				return

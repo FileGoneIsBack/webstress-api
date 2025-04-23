@@ -566,6 +566,7 @@ body {
     overflow-x: hidden;
     width: 100%;
     box-sizing: border-box;
+    margin-bottom: 15px;
 }
 
 .dashboard-grid {

@@ -14,40 +14,18 @@ var (
 
 type Conf struct {
 	Name    		string `json:"name"`
-	Domain  		string `json:"domain"`
-	Secure  		bool   `json:"secure"`
+	Secure			bool   `json:"secure"`
 	Cert    		string `json:"cert"`
 	Vers    		string `json:"version"`
 	Key     		string `json:"key"`
+	AutobuyKey     	string `json:"autobuy_key"`
 	Database struct {
 		Host 			string `json:"host"`
 		Database 		string `json:"database"`
 		Username 	    string `json:"username"`
 		Password 		string `json:"password"`
 	} `json:"database"`
-	Autobuy struct {
-		Key 		string `json:"key"`
-		Flat 		string `json:"flat"`
-	} `json:"autobuy"`
-    FreeUser struct {
-        Enabled1    bool   `json:"enabled"`
-        Concurrents string `json:"concurrents"`
-        Duration   string `json:"duration"`
-    } `json:"freeuser"`
-	Fake struct {
-		Users 	   	int    `json:"users"`
-		Attacks    	int    `json:"attacks"`
-	} `json:"fake"`
-	Server struct {
-		Enabled 	bool   `json:"enabled"`
-		SSH    		string `json:"ssh"`
-		Telnet 		string `json:"telnet"`
-	} `json:"cnc"`
-	Bot struct {
-		Auth 	string   `json:"key"`
-		URL		string	 `json:"url"`
-	} `json:"bot"`
-	Methods map[string]string `json:"methods"`
+	//Methods map[string]string `json:"methods"`
 }
 
 func ReloadConfigs() error {
@@ -75,5 +53,5 @@ func reloadConfigFile(filePath string, target interface{}) error {
 		return err
 	}
 	log.Printf("Successfully reloaded %s", filePath)
-	return nil
+	return nil 
 }

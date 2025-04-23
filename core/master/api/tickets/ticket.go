@@ -1,7 +1,7 @@
 package ticketapi
 
 import (
-    "api/core/database"
+    "api/core/database/site"
     "api/core/master/sessions"
     "api/core/models/server"
     "encoding/json"
@@ -38,7 +38,7 @@ func init() {
             }
 
             // Retrieve ticket information from the database
-            ticket, err := database.Container.GetTicketByID(ticketID)
+            ticket, err := site.Container.GetTicketByID(ticketID)
             if err != nil {
                 // Respond with error if ticket retrieval fails
                 json.NewEncoder(w).Encode(&Response{Status: "error", Message: err.Error()})

@@ -1,9 +1,8 @@
 package paymentsapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
 	"api/core/master/sessions"
-	"api/core/models"
 	"api/core/models/sellix"
 	"api/core/models/server"
 	"encoding/json"
@@ -38,14 +37,14 @@ func init() {
 			}
 	
 			// NowPayments CreatePayment call
-			response, err := sellix.Manager.CreatePayment(Amount, models.Config.Autobuy.Flat, Currency, strconv.Itoa(user.ID))
+			response, err := sellix.Manager.CreatePayment(Amount, site.Site.AutobuyFlat, Currency, strconv.Itoa(user.ID))
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), ID: 0})
 				return
 			}
 	
 			// Updated response handling
-			id, err := database.Container.NewSale(&database.Sale{
+			id, err := site.Container.NewSale(&site.Sale{
 				UniqID:       response.PaymentID,
 				Amount:       int(Amount),
 				Parent:       user.ID,

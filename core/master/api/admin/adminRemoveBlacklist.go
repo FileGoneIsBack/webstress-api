@@ -2,6 +2,7 @@ package adminapi
 
 import (
 	//"api/core/database"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"encoding/json"
@@ -17,7 +18,7 @@ func init() {
 			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return
 		}
-		if !session.HasPermission("admin") {
+		if !users.HasPermission(session.User, "admin") {
 			http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 			return
 		}

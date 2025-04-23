@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"api/core/database/users"
 	"api/core/database"
 	"api/core/master/sessions"
 	"net/http"
@@ -27,7 +28,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := database.Container.GetUser(r.Form["login-username"][0])
+	user, err := users.Container.GetUser(r.Form["login-username"][0])
 	if err != nil {
 		renderErrorPage(w, r, "Invalid username or password", "error")
 		return
@@ -37,7 +38,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 		renderErrorPage(w, r, "Invalid username or password", "error")
 		return
 	}
-	if !user.IsKey([]byte(r.Form["login-password"][0])) {
+	if !users.IsKey(user, []byte(r.Form["login-password"][0])) {
 		renderErrorPage(w, r, "Invalid username or password", "error")
 		return
 	}
@@ -54,7 +55,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			ranks.GetRole("member", true),
 		},
 		}
-		err := database.Container.UpdateUser(user)
+		err := users.Container.UpdateUser(user)
 		if err != nil {
 			renderErrorPage(w, r, "Error updating account! contact staff or try again", "error")
 			return

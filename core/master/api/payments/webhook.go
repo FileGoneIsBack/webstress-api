@@ -1,7 +1,8 @@
 package paymentsapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
+ 	"api/core/database/users"
 	//"api/core/models/sellix"
 	"api/core/master/sessions"
 	"api/core/models/server"
@@ -291,53 +292,53 @@ func init() {
 		case "order:created":
 			switch data.Data.Status {
 			case "PARTIAL":
-				sale, err := database.Container.GetSaleByUniq(data.Data.Uniqid)
+				sale, err := site.Container.GetSaleByUniq(data.Data.Uniqid)
 				if err != nil {
 					return
 				}
 				sale.Status = "partially_paid"
 				sale.Recieved = data.Data.CryptoReceived
-				user, err := database.Container.GetUserByID(sale.Parent)
+				user, err := users.Container.GetUserByID(sale.Parent)
 				if err != nil {
 					return
 				}
 				user.Balance += int(data.Data.CryptoReceived * data.Data.CryptoExchangeRate)
-				database.Container.UpdateUser(user)
-				database.Container.UpdateSale(sale)
+				users.Container.UpdateUser(user)
+				site.Container.UpdateSale(sale)
 			}
 		case "order:paid":
-			sale, err := database.Container.GetSaleByUniq(data.Data.Uniqid)
+			sale, err := site.Container.GetSaleByUniq(data.Data.Uniqid)
 			if err != nil {
 				return
 			}
 			sale.Status = "finished"
 			sale.Recieved = data.Data.CryptoReceived
-			user, err := database.Container.GetUserByID(sale.Parent)
+			user, err := users.Container.GetUserByID(sale.Parent)
 			if err != nil {
 				return
 			}
 			user.Balance += sale.Amount
 			sessions.SetFlash(w, r, fmt.Sprintf("Balance updated! New Balance: %d", user.Balance), "System")
-			database.Container.UpdateUser(user)
-			database.Container.UpdateSale(sale)
+			users.Container.UpdateUser(user)
+			site.Container.UpdateSale(sale)
 		case "order:partial":
-			sale, err := database.Container.GetSaleByUniq(data.Data.Uniqid)
+			sale, err := site.Container.GetSaleByUniq(data.Data.Uniqid)
 			if err != nil {
 				return
 			}
 			sale.Status = "partially_paid"
 			sale.Recieved = data.Data.CryptoReceived
-			if err := database.Container.UpdateSale(sale); err != nil {
+			if err := site.Container.UpdateSale(sale); err != nil {
 				fmt.Println(err)
 			}
 		case "order:cancelled":
-			sale, err := database.Container.GetSaleByUniq(data.Data.Uniqid)
+			sale, err := site.Container.GetSaleByUniq(data.Data.Uniqid)
 			if err != nil {
 				return
 			}
 			sale.Status = "expired"
 			sale.Recieved = data.Data.CryptoReceived
-			database.Container.UpdateSale(sale)
+			site.Container.UpdateSale(sale)
 		}
 	}))
 }

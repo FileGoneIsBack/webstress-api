@@ -8,7 +8,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
-	_ "github.com/mattn/go-sqlite3" // Import SQLite driver
+	_ "github.com/mattn/go-sqlite3"
 )
 
 func New() error {
@@ -17,8 +17,7 @@ func New() error {
 	var db *sql.DB
 	var err error
 
-	if !models.Config.Secure {
-		// Use MySQL
+	if models.Config.Secure {
 		dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s",
 			models.Config.Database.Username,
 			models.Config.Database.Password,
@@ -30,7 +29,6 @@ func New() error {
 			return fmt.Errorf("could not open MySQL connection: %v", err)
 		}
 	} else {
-		// Use SQLite
 		db, err = sql.Open("sqlite3", "assets/database.db")
 		if err != nil {
 			return fmt.Errorf("could not open SQLite connection: %v", err)
@@ -42,7 +40,7 @@ func New() error {
 		return fmt.Errorf("could not ping the database: %v", err)
 	}
 
-	Container.conn = db
+	Container.Conn = db
 	log.Println("New(): successfully connected to database")
 	return nil
 }

@@ -2,8 +2,9 @@ package internal
 
 import (
 	"api/core/database"
+	"api/core/database/users"
+	"api/core/database/site"
 	"api/core/master/sessions"
-	"api/core/models"
 	"api/core/models/antiflood"
 	"api/core/models/ranks"
 	"errors"
@@ -92,8 +93,8 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 
 	//check if key is valid
 	// Check if user already exists
-	user, err := database.Container.GetUser(username)
-	if err != nil && !errors.Is(err, database.ErrUserNotFound) {
+	user, err := users.Container.GetUser(username)
+	if err != nil && !errors.Is(err, users.ErrUserNotFound) {
 		renderDatabaseErrorPage(w, r, "Error retrieving user from database.")
 		return
 	}
@@ -101,7 +102,7 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		renderErrorPage(w, r, "User already exists.", "error")
 		return
 	}
-	tele, err := database.Container.CheckInvite(auth)
+	tele, err := users.Container.CheckInvite(auth)
 	if err != nil {
 		renderErrorPage(w, r, err.Error(), "error")
 		return
@@ -116,20 +117,20 @@ func Signup(w http.ResponseWriter, r *http.Request) {
 		},
 		Tele: tele,
 	}
-	if models.Config.FreeUser.Enabled1 {
-		user.Concurrents = 1
+	if site.Site.FreeUser {
+		user.Concurrents = site.Site.FreeUserCons
 		user.Servers = 0
-		user.Duration = 120
-		user.Expiry = -1
+		user.Duration = site.Site.FreeUserTime
+		user.Expiry = time.Now().Add(31 * 24 * time.Hour).Unix()
 	}
-	err = database.Container.NewUser(user)
+	err = users.Container.NewUser(user)
 	if err != nil {
 		renderDatabaseErrorPage(w, r, "Error creating new user in database.")
 		return
 	}
 
 	// Set session and redirect to dashboard
-	user, _ = database.Container.GetUser(username)
+	user, _ = users.Container.GetUser(username)
 	sessionToken := uuid.NewString()
 	expiresAt := time.Now().Add(30 * time.Minute)
 	sessions.Sessions[sessionToken] = sessions.Session{

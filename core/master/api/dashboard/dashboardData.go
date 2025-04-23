@@ -1,7 +1,9 @@
 package dashboardapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
+	"api/core/database/atks"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/apis"
 	"api/core/models/functions"
@@ -40,7 +42,7 @@ func init() {
 					Maxboot          int    `json:"maxboot"`
 					Balance          int    `json:"balance"`
 				} `json:"userInfo"`
-				News               []*database.News
+				News               []*site.News
 				ServersLayer4      []serverStruct `json:"serversLayer4"`
 				ServersLayer7      []serverStruct `json:"serversLayer7"`
 				UserCount          int            `json:"userCount"`
@@ -55,7 +57,7 @@ func init() {
 				} `json:"networkInfo"`
 			}
 			d := new(Data)
-			news, err := database.Container.GetNews()
+			news, err := site.Container.GetNews()
 			if err != nil {
 				return
 			}
@@ -71,7 +73,7 @@ func init() {
 				ID:       session.ID,
 				Username: session.Username,
 				Membership: func() int {
-					if session.HasPermission("admin") {
+					if users.HasPermission(session.User, "admin") {
 						return 5
 					}
 					switch session.Servers {
@@ -93,9 +95,9 @@ func init() {
 				Balance:          session.Balance,
 			}
 			d.News = news
-			d.UserCount = database.Container.Users()
-			d.AttackCount = database.Container.Attacks()
-			d.RunningAttackCount = database.Container.GlobalRunning()
+			d.UserCount = users.Container.Users()
+			d.AttackCount = atks.Container.Attacks()
+			d.RunningAttackCount = atks.Container.GlobalRunning()
 			d.OnlineUserCount = rand.Intn(20-3) + 3
 			d.NetworkInfo = struct {
 				Layer4      int "json:\"Layer4\""
@@ -103,8 +105,8 @@ func init() {
 				Layer4Total int "json:\"Layer4Total\""
 				Layer7Total int "json:\"Layer7Total\""
 			}{
-				Layer4:      database.Container.GlobalRunningType(1),
-				Layer7:      database.Container.GlobalRunningType(2),
+				Layer4:      atks.Container.GlobalRunningType(1),
+				Layer7:      atks.Container.GlobalRunningType(2),
 				Layer4Total: servers.Slots()[1] + apis.Slots4(),
 				Layer7Total: servers.Slots()[2] + apis.Slots7(),
 			}

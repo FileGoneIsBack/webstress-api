@@ -5,7 +5,7 @@
         "slots": 5,
         "url": "http://10.0.0.111:8080/api/start?user=FileGone&key=House-API-4JAWkQ$host&port=$port&time=$time&method=$method",
         "methods": {
-            "TLS": "tls",
+            "TLS": "TLS",
             "KILL": "http",
             "CF": "bypass"
         }

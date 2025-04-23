@@ -11,7 +11,7 @@ var (
 
 // Session is used to store the user & expiry
 type Session struct {
-	*database.User
+     *database.User
 	Expiry time.Time
 	Flashes []interface{}
 }

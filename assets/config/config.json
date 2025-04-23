@@ -1,49 +1,14 @@
 {
     "name": "House API",
-    "domain": "https://ieatpackets.lol/",
+    "version": "4.1.4",
     "secure": false,
-    "version": "4.1.0",
     "cert": "",
     "key": "",
+    "autobuy_key": "",
     "database":{
-        "username": "FileGone",
+        "username": "filegone",
         "password": "",
         "database": "",
         "host": ""
-    },
-    "autobuy":{
-        "key":"0P2Y90Q-MN2MDMP-M1CNBG0-TEVEWZP",
-        "flat":"USD",
-        " - comment - ":"https://dashboard.sellix.io/settings/security API Key. must add btc addy at least before work"
-    },
-    "freeuser": {
-        "enabled": false,
-        "concurrents": "10",
-        "duration": "30m"
-      },
-    "fake":{
-        "users": 2,
-        "attacks": 28
-    },
-    "cnc":{
-        "enabled": false,
-        "ssh": "1337",
-        "telnet": "1447"
-    },
-    "methods":{
-        "subnet1":"UDP",
-        "subnet2":"TCP",
-        "subnet3":"BYPASS",
-        "subnet4":"GAME",
-        "subnet5":"LAYER7",
-        "subnet6":"RAW",
-        "subnet7":"SPOOFED",
-        "subnet8":"",
-        "subnet9":"",
-        " - comment - ":"each subnet is a group name inside the panel and how we sort methods `subnet`:`1` would be subnet1 in methods config"
-    },
-    "bot":{
-        "key":"test123",
-        "url":"http://[2604:2dc0:100:1c66::660]:8080/api"
     }
 }

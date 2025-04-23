@@ -1,6 +1,7 @@
 package ticketapi
 
 import (
+	"api/core/database/site"
 	"api/core/database"
 	"api/core/master/sessions"
 	"api/core/models/server"
@@ -46,7 +47,7 @@ func init() {
 				return
 			}
 			// Save the ticket information in the database
-			err = database.Container.NewTicket(user.ID, newTicket.Title, newTicket.Message, user.Username)
+			err = site.Container.NewTicket(user.ID, newTicket.Title, newTicket.Message, user.Username)
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error()})
 				return

@@ -2,7 +2,7 @@ package commands
 
 import (
 	"fmt"
-	"api/core/database"
+	"api/core/database/users"
 	"api/core/net/sessions"
 	"time"
 	"bufio"
@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-func users(session *sessions.Session, args []string) {
-	users, err := database.Container.GetUsers()
+func User(session *sessions.Session, args []string) {
+	users, err := users.Container.GetUsers()
 	if err != nil {
 		fmt.Fprintf(session.Conn, "Error: %v\n\r", err)
 		return
@@ -41,7 +41,7 @@ func user(session *sessions.Session, args []string) {
     }
     username = strings.TrimSpace(username)
 
-    user, err := database.Container.GetUser(username)
+    user, err := users.Container.GetUser(username)
     if err != nil {
         fmt.Fprintf(session.Conn, "Error fetching user: %v\n\r", err)
         return
@@ -70,7 +70,7 @@ func editUser(session *sessions.Session, args []string) {
     }
     username = strings.TrimSpace(username)
 
-    user, err := database.Container.GetUser(username)
+    user, err := users.Container.GetUser(username)
     if err != nil {
         fmt.Fprintf(session.Conn, "Error fetching user: %v\n\r", err)
         return
@@ -133,11 +133,11 @@ func editUser(session *sessions.Session, args []string) {
 	user.Balance = Balance
 
     // Call the method to update the user in the database
-    err = database.Container.UpdateUser(user)
+    err = users.Container.UpdateUser(user)
     if err != nil {
         fmt.Fprintf(session.Conn, "Error updating user: %v\n\r", err)
         return
     }
-
+ 
     fmt.Fprintf(session.Conn, "User updated successfully\n\r")
 }

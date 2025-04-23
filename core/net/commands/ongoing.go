@@ -2,12 +2,12 @@ package commands
 
 import (
     "fmt"
-    "api/core/database"
     "api/core/net/sessions"
+	"api/core/database/atks"
 )
 
 func ongoing(session *sessions.Session, args []string) {
-    attacks, err := database.Container.GetRunning(session.User)
+    attacks, err := atks.Container.GetRunning(session.User)
     if err != nil {
         fmt.Fprintf(session.Conn, "Error: %v\n\r", err)
         return

@@ -23,7 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const port = document.querySelector('input[placeholder="Enter port"]').value;
         const duration = document.querySelector('input[placeholder="Attack duration"]').value;
         const method = document.querySelector('.form-select').value;
-        const threads = document.querySelector('.slider.threads').value;
+        const threads = document.querySelector('input[placeholder="Enter threads"]').value;
+        const concurrents = document.querySelector('input[placeholder="Enter conncurent attaks"]').value;
+        //const threads = document.querySelector('.slider.threads').value;
         const pps = document.querySelector('.slider:not(.threads)').value;
 
         // Disable button while sending request
@@ -40,7 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     duration: duration,
                     method: method,
                     threads:threads,
-                    pps: pps
+                    pps: pps,
+                    concurrents: concurrents
                   })
             });
 

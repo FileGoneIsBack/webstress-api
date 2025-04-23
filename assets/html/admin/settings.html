@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.Name}} | {{.Title}}</title>
+    <link rel="stylesheet" href="/_assets/new/css/charts1.css">
+    <link rel="stylesheet" href="/_assets/new/css/dash.css">
+    <link rel="stylesheet" href="/_assets/new/css/admin/settings1.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="/_assets/new/imports/toastr1.js"></script>
+    <script src="/_assets/new/imports/loader2.js"></script>
+    <style>
+        /* Site Info Section Styles */
+        .site-info-section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--dark);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 51, 51, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .info-card {
+            padding: 20px;
+            background: var(--darker);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 51, 51, 0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        .info-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 51, 51, 0.1);
+        }
+
+        .info-icon {
+            padding: 12px;
+            background: rgba(255, 51, 51, 0.1);
+            border-radius: 10px;
+            color: var(--primary);
+        }
+
+        .info-title {
+            font-size: 1.1em;
+            color: var(--text);
+            font-weight: 500;
+        }
+
+        .info-content {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .info-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+        }
+
+        .stat-label {
+            color: var(--text);
+            opacity: 0.7;
+        }
+
+        .stat-value {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 8px;
+            display: inline-block;
+        }
+
+        .status-indicator.active {
+            background: #4CAF50;
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.warning {
+            background: #FFC107;
+            box-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+
+        .status-indicator.error{
+            background: #f44336;
+            box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+
+        .status-indicator.Active {
+        background: #4CAF50;
+        box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+        animation: pulse 2s infinite;
+        }
+
+       .status-indicator.Disabled {
+        background: #f44336;
+        box-shadow: 0 0 10px rgba(244, 67, 54, 0.5);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Top Nav -->
+        {{ template "nav.html" . }}
+        <main class="main-content">
+            <div class="settings-header">
+                <h1>Site Settings</h1>
+                <p>Configure your site's core settings and backend configuration</p>
+            </div>
+
+            <!-- New Site Info Section -->
+            <div class="site-info-section">
+                <div class="info-card">
+                    <div class="info-header">
+                        <div class="info-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                            </svg>
+                        </div>
+                        <div class="info-title">System Status</div>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-stat">
+                            <span class="stat-label">API Service</span>
+                            <span class="stat-value"><span class="status-indicator {{.API}}"></span>{{.API}}</span>
+                        </div>
+                        <div class="info-stat">
+                            <span class="stat-label">Database</span>
+                            <span class="stat-value"><span class="status-indicator active"></span>Connected</span>
+                        </div>
+                        <div class="info-stat">
+                            <span class="stat-label">Secure</span>
+                            <span class="stat-value"><span class="status-indicator {{.Secure}}"></span>{{.Secure}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-header">
+                        <div class="info-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20V10M18 20V4M6 20v-6"/>
+                            </svg>
+                        </div>
+                        <div class="info-title">Resources</div>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-stat">
+                            <span class="stat-label">Methods</span>
+                            <span class="stat-value">10</span>
+                        </div>
+                        <div class="info-stat">
+                            <span class="stat-label">Useage</span>
+                            <span class="stat-value">0%</span>
+                        </div>
+                        <div class="info-stat">
+                            <span class="stat-label">Users</span>
+                            <span class="stat-value">234</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-card">
+                    <div class="info-header">
+                        <div class="info-icon">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                <polyline points="22 4 12 14.01 9 11.01"/>
+                            </svg>
+                        </div>
+                        <div class="info-title">Security Status</div>
+                    </div>
+                    <div class="info-content">
+                        <div class="info-stat">
+                            <span class="stat-label">Free user</span>
+                            <span class="stat-value"><span class="status-indicator active"></span>{{.FreeUser}}</span>
+                        </div>
+                        <div class="info-stat">
+                            <span class="stat-label">Bot</span>
+                            <span class="stat-value"><span class="status-indicator error"></span>error</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="settings-grid">
+                <!-- Site Configuration -->
+                <div class="settings-card">
+                    <h2>Site Configuration</h2>
+                    <form id="siteConfigForm" class="settings-form">
+                        <div class="form-group">
+                          <label>Domain</label>
+                          <input
+                            id="domainInput"
+                            type="text"
+                            placeholder="example.com"
+                            required>
+                          <div class="form-feedback"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Flat</label>
+                            <input
+                              id="flatInput"
+                              type="text"
+                              placeholder="AXUUSD"
+                              required>
+                            <div class="form-feedback"></div>
+                        </div>
+                      
+                        <div class="form-group">
+                          <label class="toggle-label">
+                            <span>API Status</span>
+                            <div class="toggle-switch">
+                              <input
+                                id="apiToggle"
+                                type="checkbox">
+                              <span class="toggle-slider"></span>
+                            </div>
+                          </label>
+                          <p class="setting-description">Enables API</p>
+                        </div>
+                      
+                        <button type="submit" class="save-button">Save Changes</button>
+                      </form>
+                </div>
+
+                <!-- Backend Configuration -->
+                <div class="settings-card">
+                    <h2>Backend Configuration</h2>
+                    <form id="backendConfigForm" class="settings-form">
+                        <div class="backend-slots">
+                            <h3>Backend Slots</h3>
+                                <div class="slots-grid">
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet1</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="1" spellcheck="false" id="subnet1">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet2</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="2" spellcheck="false" id="subnet2">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet3</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="3" spellcheck="false" id="subnet3">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet4</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="4" spellcheck="false" id="subnet4">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet5</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="5" spellcheck="false" id="subnet5">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet6</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="6" spellcheck="false" id="subnet6">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet7</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="7" spellcheck="false" id="subnet7">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet8</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="8" spellcheck="false" id="subnet8">
+                                    </div>
+                                    <div class="slot-item">
+                                        <span class="slot-label">subnet9</span>
+                                        <input type="text" class="slot-input" placeholder="Enter subnet address" data-slot="9" spellcheck="false" id="subnet9">
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Simulated Users</label>
+                                <input type="number" min="0" value="100" id="fake_users">
+                            </div>
+                            <div class="form-group">
+                                <label>Simulated Attacks</label>
+                                <input type="number" min="0" value="100" id="fake_ongoing">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="toggle-label">
+                              <span>Free User</span>
+                              <div class="toggle-switch">
+                                <input
+                                  id="fakeToggle"
+                                  type="checkbox">
+                                <span class="toggle-slider"></span>
+                              </div>
+                            </label>
+                            <p class="setting-description">Enables free plan for users who signup!</p>
+                        </div>
+
+                        <div class="free-user-settings">
+                            <h3>Free User Settings</h3>
+                            <div class="features-grid">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="freeuser_roles" value="api">
+                                    <span>API Access</span>
+                                  </label>
+                                  <label class="checkbox-label">
+                                    <input type="checkbox" name="freeuser_roles" value="basic" checked>
+                                    <span>Basic Protection</span>
+                                  </label>
+                                  <label class="checkbox-label">
+                                    <input type="checkbox" name="freeuser_roles" value="cnc">
+                                    <span>CNC Features</span>
+                                  </label>
+                                  <label class="checkbox-label">
+                                    <input type="checkbox" name="freeuser_roles" value="premium">
+                                    <span>Premium Support</span>
+                                  </label>
+                            </div>
+
+                            <div class="form-row"> 
+                                <div class="form-group">
+                                    <label>MBT Limit</label>
+                                    <input type="number" min="0" value="300" id="freeuserConsInput">
+                                </div>
+                                <div class="form-group">
+                                    <label>Conn Limit</label>
+                                    <input type="number" min="0" value="1" id="freeuserTimeInput">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="save-button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            Save Backend Settings
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Security Settings -->
+                <div class="settings-card">
+                    <h2>Security Settings</h2>
+                    <form id="securityConfigForm" class="settings-form">
+                        <div class="form-group">
+                            <label>Authentication Method</label>
+                            <select>
+                                <option value="standard">Standard (Username/Password)</option>
+                                <option value="2fa">Two-Factor Authentication (Telegram) // not working yet</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Session Timeout (minutes)</label>
+                                <input type="number" min="5" value="30">
+                            </div>
+                            <div class="form-group">
+                                <label>Failed Login Attempts</label>
+                                <input type="number" min="1" value="5">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="save-button">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                <polyline points="7 3 7 8 15 8"></polyline>
+                            </svg>
+                            Save Security Settings
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="/_assets/new/js/nav1.js"></script>
+    <script>
+        $(document).ready(function() {
+            //onload populate data
+            $.getJSON('/api/admin/settingsEnd', function(data) {
+            // — Site settings (you already have these) —
+            $('#domainInput').val(data.Domain);
+            $('#flatInput').val(data.AutobuyFlat);
+            $('#apiToggle').prop('checked', data.API);
+
+            // — Backend form —
+            // 1) Subnets
+            for (let i = 1; i <= 9; i++) {
+                $('#subnet' + i).val(data['Subnet' + i]);
+            }
+
+            // 2) Simulated users & attacks
+            $('#fake_users').val(data.FakeUsers);
+            $('#fake_ongoing').val(data.FakeOngoing);
+
+            // 3) Free‑user toggle
+            $('#fakeToggle').prop('checked', data.FreeUser);
+
+            // 4) Free‑user limits
+            $('#Subnet1').val(data.Subnet1);
+            $('#Subnet2').val(data.Subnet2);
+            $('#Subnet3').val(data.Subnet3);
+            $('#Subnet4').val(data.Subnet4);
+            $('#Subnet5').val(data.Subnet5);
+            $('#Subnet6').val(data.Subnet6);
+            $('#Subnet7').val(data.Subnet7);
+            $('#freeuserTimeInput').val(data.Subnet8);
+            $('#freeuserTimeInput').val(data.Subnet9);
+
+            // 4) Free‑user limits
+            $('#freeuserConsInput').val(data.FreeUserCons);
+            $('#freeuserTimeInput').val(data.FreeUserTime);
+
+            // 5) Free‑user roles (split CSV and check matching boxes)
+            $('input[name="freeuser_roles"]').prop('checked', false);
+            data.FreeUserRoles
+                .split(',')
+                .map(r => r.trim())
+                .filter(r => r)
+                .forEach(role => {
+                $('input[name="freeuser_roles"][value="' + role + '"]')
+                    .prop('checked', true);
+                });
+            })
+            .fail(function() {
+            Toastify({
+                text: 'Failed to load settings',
+                duration: 3000,
+                backgroundColor: '#f44336'
+            }).showToast();
+            });
+
+
+          //Site Settings form
+          $('#siteConfigForm').on('submit', function(e) {
+            e.preventDefault();
+        
+            const payload = {
+              domain: $('#domainInput').val(),
+              autobuy_flat: $('#flatInput').val(),
+              api: $('#apiToggle').is(':checked')
+            };
+        
+            $.ajax({
+              url: '/api/admin/settingsEnd',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(payload),
+            })
+            .done(function() {
+              Toastify({ text: 'Settings saved', duration: 3000 }).showToast();
+            })
+            .fail(function(xhr) {
+              let errMsg = 'Error saving settings';
+              if (xhr.responseJSON && xhr.responseJSON.error) {
+                errMsg = xhr.responseJSON.error;
+              }
+              Toastify({ text: errMsg, duration: 3000, backgroundColor: '#f44336' }).showToast();
+            });
+          });
+
+            //Backend Settings form
+            $('#backendConfigForm').on('submit', function(e) {
+            e.preventDefault();
+        
+            const payload = {
+                freeuser:       $('#fakeToggle').prop('checked'),
+                freeuser_roles: $('input[name="freeuser_roles"]:checked')
+                                .map(function() { return this.value })
+                                .get(),
+                freeuser_cons:  Number($('#freeuserConsInput').val()),
+                freeuser_time:  Number($('#freeuserTimeInput').val()),
+                fake_users:     Number($('#fake_users').val()),
+                fake_ongoing:   Number($('#fake_ongoing').val()),
+                subnet1: $('#subnet1').val(),
+                subnet2: $('#subnet2').val(),
+                subnet3: $('#subnet3').val(),
+                subnet4: $('#subnet4').val(),
+                subnet5: $('#subnet5').val(),
+                subnet6: $('#subnet6').val(),
+                subnet7: $('#subnet7').val(),
+                subnet8: $('#subnet8').val(),
+                subnet9: $('#subnet9').val(),
+            };
+        
+            $.ajax({
+              url: '/api/admin/settingsEnd',
+              method: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(payload),
+            })
+            .done(function() {
+              Toastify({ text: 'Settings saved', duration: 3000 }).showToast();
+            })
+            .fail(function(xhr) {
+              let errMsg = 'Error saving settings';
+              if (xhr.responseJSON && xhr.responseJSON.error) {
+                errMsg = xhr.responseJSON.error;
+              }
+              Toastify({ text: errMsg, duration: 3000, backgroundColor: '#f44336' }).showToast();
+            });
+          });
+        });
+        </script>
+</body>
+</html>

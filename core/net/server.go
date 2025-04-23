@@ -1,8 +1,8 @@
 package net
 
 import (
-	"api/core/database"
-	"api/core/models"
+	"api/core/database/site"
+	"api/core/database/users"
 	"api/core/models/log"
 	"fmt"
 	"io/ioutil"
@@ -19,8 +19,8 @@ var (
 
 func Listener() {
 	// Configure your desired ports here
-	listenAddr := fmt.Sprintf("0.0.0.0:%s", models.Config.Server.Telnet) // Telnet port
-	sshListenAddr := fmt.Sprintf("0.0.0.0:%s", models.Config.Server.SSH) // SSH port
+	listenAddr := fmt.Sprintf("0.0.0.0:%s", site.Site.Telnet) // Telnet port
+	sshListenAddr := fmt.Sprintf("0.0.0.0:%s", site.Site.SSH) // SSH port
 
 	// Set up TCP listener for both SSH and Telnet
 	tcpListener, err := net.Listen("tcp4", listenAddr)
@@ -33,7 +33,7 @@ func Listener() {
 
 	// SSH server configuration
 	sshConfig := &ssh.Server{
-		Addr:            ":" + models.Config.Server.SSH,
+		Addr:            ":" + site.Site.SSH,
 		Handler:         sessionHandler,
 		PasswordHandler: passwordHandler,
 	}
@@ -78,11 +78,11 @@ func sessionHandler(session ssh.Session) {
 }
 func passwordHandler(ctx ssh.Context, pass string) bool {
 	passwd := []byte(pass)
-	user, err := database.Container.GetUser(ctx.User())
+	user, err := users.Container.GetUser(ctx.User())
 	if err != nil {
 		log.Println(err)
 		return false
-	} else if !user.IsKey(passwd) {
+	} else if !users.IsKey(user, passwd) {
 		return false
 	}
 	return true

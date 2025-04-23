@@ -1,7 +1,8 @@
 package adminapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"encoding/json"
@@ -19,7 +20,7 @@ func init() {
 			http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 			return
 		}
-		if !session.HasPermission("admin") {
+		if !users.HasPermission(session.User, "admin") {
 			http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 			return
 		}
@@ -34,7 +35,7 @@ func init() {
 			ticketIDStr := ticketCookie.Value
 			ticketID, _ := strconv.Atoi(ticketIDStr)
 			log.Printf("TESTING STRING: %s", ticketIDStr)
-			user, err := database.Container.GetUserForTicket(ticketID)
+			user, err := site.Container.GetUserForTicket(ticketID)
 			if err != nil {
 				http.Error(w, "Error fetching user: "+err.Error(), http.StatusInternalServerError)
 				return

@@ -1,7 +1,8 @@
 package adminapi
 
 import (
-    "api/core/database"
+    	"api/core/database/site"
+	"api/core/database/users"
     "api/core/models/server"
     "encoding/json"
 	"api/core/master/sessions"
@@ -17,7 +18,7 @@ func init() {
 				http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
 				return
 			}
-			if !session.HasPermission("admin") {
+			if !users.HasPermission(session.User, "admin") {
 				http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
 				return
 			}
@@ -35,7 +36,7 @@ func init() {
             Message string          `json:"message"`
             Tickets []*TicketResponse `json:"tickets"`
         }
-            tickets, err := database.Container.GetAllTickets()
+            tickets, err := site.Container.GetAllTickets()
             if err != nil {
                 json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), Tickets: []*TicketResponse{}})
                 return
@@ -43,7 +44,7 @@ func init() {
             
             var ticketList []*TicketResponse
             for _, ticket := range tickets {
-                username, err := database.Container.GetUserByID(ticket.UserID)
+                username, err :=users.Container.GetUserByID(ticket.UserID)
                 if err != nil {
                     json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), Tickets: []*TicketResponse{}})
                     return

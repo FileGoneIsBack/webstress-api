@@ -1,7 +1,7 @@
 package ticketapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
 	"api/core/models/server"
 	"api/core/master/sessions"
 	"encoding/json"
@@ -40,7 +40,7 @@ func init() {
 			}
 
 			// Retrieve messages for the given ticket ID
-			messages, err := database.Container.GetMessagesByTicketID(int64(ticketID))
+			messages, err := site.Container.GetMessagesByTicketID(int64(ticketID))
 			if err != nil {
 				http.Error(w, "Failed to fetch messages", http.StatusInternalServerError)
 				return
@@ -61,7 +61,7 @@ func init() {
 	}))
 }
 
-func convertToAPIModel(messages []*database.Message) []*Message {
+func convertToAPIModel(messages []*site.Message) []*Message {
 	var apiMessages []*Message
 	for _, msg := range messages {
 		apiMsg := Message{

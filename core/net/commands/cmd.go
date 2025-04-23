@@ -2,6 +2,7 @@ package commands
 
 import (
 	"api/core/models/log"
+	"api/core/database/users"
 	"api/core/net/sessions"
 	"fmt"
 	"os"
@@ -112,7 +113,7 @@ func getCMD() error {
 		Description: "displays user list",
 		Admin:       false,
 		System:      false,
-		Exec:        users,
+		Exec:        User,
 	}
 	Commands["ongoing"] = &CommandDetails{
 		Name:        "ongoing",
@@ -157,7 +158,7 @@ func IsCommand(cmd string) bool {
 }
 
 func isAdmin(sessions *sessions.Session) bool {
-	if sessions.User.HasPermission("admin") {
+	if users.HasPermission(sessions.User, "admin") {
 		return true
 	} else {
 		return false

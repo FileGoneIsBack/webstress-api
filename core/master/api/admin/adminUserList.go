@@ -1,7 +1,7 @@
 package adminapi
 
 import (
-	"api/core/database"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/server"
     "api/core/models/ranks"
@@ -13,12 +13,12 @@ import (
 func init() {
     Route.NewSub(server.NewRoute("/user-list", func(w http.ResponseWriter, r *http.Request) {
         if strings.ToLower(r.Method) == "post" {
-            ok, user := sessions.IsLoggedIn(w, r)
+            ok, session := sessions.IsLoggedIn(w, r)
             if !ok {
                 http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
                 return
             }
-            if !user.HasPermission("admin") {
+            if !users.HasPermission(session.User, "admin") {
                 http.Redirect(w, r, "/dashboard", http.StatusTemporaryRedirect)
                 return
             }
@@ -36,7 +36,7 @@ func init() {
                 Status string  `json:"status"`
                 Users  []*User `json:"users"`
             }
-            users, err := database.Container.GetUsers()
+            users, err := users.Container.GetUsers()
             if err != nil {
                 http.Error(w, err.Error(), http.StatusInternalServerError)
                 return

@@ -1,7 +1,7 @@
 package panelapi
 
 import (
-	"api/core/database"
+	"api/core/database/atks"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"encoding/json"
@@ -36,7 +36,7 @@ func init() {
 			var s = &status{
 				Data: make([]*flood, 0),
 			}
-			attacks, err := database.Container.GetRunning(session.User)
+			attacks, err := atks.Container.GetRunning(session.User)
 			if err != nil {
 				s.Status = "error"
 				json.NewEncoder(w).Encode(s)

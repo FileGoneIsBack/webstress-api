@@ -1,7 +1,7 @@
 package paymentsapi
 
 import (
-	"api/core/database"
+	"api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/plans"
 	"api/core/models/server"
@@ -29,7 +29,7 @@ func init() {
 
 			if plan != nil {
 				if user.Balance >= plan.Price {
-					database.Container.UpdateUserPlan(user.User, plan)
+					users.Container.UpdateUserPlan(user.User, plan)
 					json.NewEncoder(w).Encode(&Status{Status: "success", Message: "succesfully purchased " + fmt.Sprint(planVal) + ""})
 					sessions.SetFlash(w, r,  fmt.Sprintf("succesfully purchased %s", planVal), "")
 					return

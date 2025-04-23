@@ -239,11 +239,14 @@ setInterval(() => {
 }, 5000);
 
 const animateServerItems = () => {
-    document.querySelectorAll('.server-item').forEach((item, index) => {
+    // Only target items that haven't been animated yet
+    document.querySelectorAll('.server-item:not(.animated)').forEach((item, index) => {
         item.style.animation = `fadeInUp 0.3s ease-out ${index * 0.1}s forwards`;
+        item.classList.add('animated'); // prevent reanimation
+
+        // Attach click handler only once
         item.addEventListener('click', () => {
             item.classList.toggle('expanded');
         });
     });
 };
-

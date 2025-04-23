@@ -1,7 +1,7 @@
 package ticketapi
 
 import (
-	"api/core/database"
+	"api/core/database/site"
 	"api/core/master/sessions"
 	"api/core/models/server"
 	"encoding/json"
@@ -31,7 +31,7 @@ func init() {
 				return
 			}
 			//db container to get tickets
-			tickets, err := database.Container.GetTickets(user.User)
+			tickets, err := site.Container.GetTickets(user.User)
 			if err != nil {
 				json.NewEncoder(w).Encode(&Status{Status: "error", Message: err.Error(), Tickets: []*Ticket{}})
 				return

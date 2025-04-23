@@ -135,7 +135,7 @@ func (s *Server) NewAttack(atk *floods.Attack) {
 			User:     atk.Parent,
 			Target:   atk.Target,
 			Port:     fmt.Sprint(atk.Port),
-			Method:   atk.Sname,
+			Method:   atk.DisplayName,
 			Conns:    fmt.Sprint(atk.Conns),
 			Duration: fmt.Sprint(atk.Duration),
 		},

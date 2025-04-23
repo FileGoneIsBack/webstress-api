@@ -1,7 +1,9 @@
 package dashboard
 
 import (
-	"api/core/database"
+	"api/core/database/users"
+	"api/core/database/atks"
+	"api/core/database/site"
 	"api/core/master/sessions"
 	"api/core/models"
 	"api/core/models/apis"
@@ -31,9 +33,9 @@ func init() {
 			Title:        "Deposit",
 			Vers:         models.Config.Vers,
 			ServersCount: len(servers.Servers) + len(apis.Apis),
-			Ongoing:      database.Container.GlobalRunning(),
+			Ongoing:      atks.Container.GlobalRunning(),
 			Slots:        servers.Slots()[0],
-			Users:        database.Container.Users() + models.Config.Fake.Users,
+			Users:         users.Container.Users() + site.Site.FakeUsers,
 			Remotes:      servers.Servers,
 			Session:      user,
 		}, w, r, "user", "deposit.html")

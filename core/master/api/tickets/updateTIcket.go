@@ -6,7 +6,7 @@ import (
     "regexp"
     "strings"
 
-    "api/core/database"
+    "api/core/database/site"
     "api/core/models/server"
     "api/core/master/sessions"
     "github.com/microcosm-cc/bluemonday"
@@ -56,7 +56,7 @@ func init() {
             }
 
             // Save the ticket information in the database
-            _ = database.Container.UpdateMessage(req.TicketID, user.ID, req.Message)
+            _ = site.Container.UpdateMessage(req.TicketID, user.ID, req.Message)
 
             json.NewEncoder(w).Encode(&Status{Status: "success", Message: "ticket submitted successfully"})
         }

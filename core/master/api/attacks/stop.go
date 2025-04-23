@@ -1,7 +1,7 @@
 package attackapi
 
 import (
-	"api/core/database"
+	"api/core/database/atks"
 	"api/core/master/sessions"
 	"api/core/models/functions"
 	"api/core/models/server"
@@ -33,7 +33,7 @@ func init() {
 			attackInt, _ := strconv.Atoi(attackID)
 			servers.Stop(attackInt)
 			log.Print(attackID)
-			if err := database.Container.Stop(key, attackID); err != nil {
+			if err := atks.Container.Stop(key, attackID); err != nil {
 				json.NewEncoder(w).Encode(&status{
 					Status:  "error",
 					Message: "failed to stop attack!",
@@ -56,7 +56,7 @@ func init() {
 			attackInt, _ := strconv.Atoi(attackID)
 			servers.Stop(attackInt)
 			log.Print(attackID)
-			if err := database.Container.Stop(user.User, attackID); err != nil {
+			if err := atks.Container.Stop(user.User, attackID); err != nil {
 				json.NewEncoder(w).Encode(&status{
 					Status:  "error",
 					Message: "failed to stop attack!",

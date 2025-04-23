@@ -1,8 +1,9 @@
-package database
+package site
 
 import (
 	"database/sql"
 	"encoding/base64"
+	"api/core/database"
 	"log"
 )
 
@@ -28,7 +29,7 @@ func (conn *Instance) GetApiKey(username string) (string, error) {
 	return apiKey, nil 
 }
 
-func (conn *Instance) IsApiKey(key string, user *User) bool {
+func (conn *Instance) IsApiKey(key string, user *database.User) bool {
     stmt, err := conn.conn.Prepare("SELECT `api` FROM `users` WHERE `username` = ?")
     if err != nil {
         log.Printf("Error preparing query: %v", err)

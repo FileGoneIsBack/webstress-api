@@ -1,10 +1,10 @@
 package panelapi
 
 import (
+    "api/core/database/users"
 	"api/core/master/sessions"
 	"api/core/models/floods"
 	"api/core/models/server"
-    "api/core/models"
 	"encoding/json"
 	"net/http"
 	"strings"
@@ -36,34 +36,34 @@ func init() {
                 Status:  "success",
                 Methods: make([]*method, 0),
             }
-            if !user.HasPermission("basic") && !user.HasPermission("vip") && !user.HasPermission("admin") && !user.HasPermission("api") {
+            if !users.HasPermission(user.User, "basic") && !users.HasPermission(user.User, "vip") && !users.HasPermission(user.User, "admin") && !users.HasPermission(user.User, "api") {
                 s.Methods = append(s.Methods, &method{
                     PanelMethod: "PLEASE BUY A PLAN",
                 })
             }
-            if user.HasPermission("vip") || user.HasPermission("admin") {
+            if users.HasPermission(user.User, "vip") || users.HasPermission(user.User, "admin") {
                 for name, meth := range floods.Methods {
                     s.Methods = append(s.Methods, &method{
                         Description: meth.Description,
                         Method:      name,
                         PanelMethod: meth.Name,
                         ID:          0,
-                        Subnet:      models.Config.Methods[fmt.Sprintf("subnet%d", meth.Subnet)],
+                        Subnet:      fmt.Sprintf("subnet%d", meth.Subnet),
                         VIP:         "VIP",  
-                        Mtype:       meth.Mtype,
+                        //Mtype:       meth.Mtype,
                     })
                 }
-            } else if user.HasPermission("basic") {
+            } else if users.HasPermission(user.User, "basic") {
                 for name, meth := range floods.Methods {
-                    if meth.VIP == false {
+                    if !meth.VIP {
                         s.Methods = append(s.Methods, &method{
                             Description: meth.Description,
                             Method:      name,
                             PanelMethod: meth.Name,
                             ID:          0,
-                            Subnet:      models.Config.Methods[fmt.Sprintf("subnet%d", meth.Subnet)],
+                            Subnet:      fmt.Sprintf("subnet%d", meth.Subnet),
                             VIP:         "BASIC",  
-                            Mtype:       meth.Mtype,
+                            //Mtype:       meth.Mtype,
                         })
                     }
                 }

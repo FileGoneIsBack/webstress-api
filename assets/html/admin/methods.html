@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Methods Management - SecureAuth Pro</title>
+    <link rel="stylesheet" href="/_assets/new/css/dash.css">
+    <link rel="stylesheet" href="/_assets/new/css/admin/methods.css"> 
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/_assets/new/imports/toastr1.js"></script>
+    <script src="/_assets/new/js/nav1.js"></script>
+</head>
+<body>
+    <div class="dashboard">
+        {{ template "nav.html" . }}
+
+        <main class="main-content">
+            <h1>Methods Management</h1>
+
+            <!-- Method Stats -->
+            <div class="method-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 20V10M18 20V4M6 20v-6"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Total Methods</h3>
+                        <p class="stat-value">{{.Methods}}</p>
+                        <p class="stat-label">Active Methods</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Most Used</h3>
+                        <p class="stat-value">{{.TopMethod}}</p>
+                        <p class="stat-label">1.2M Uses</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4"/>
+                            <path d="M12 8h.01"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3>VIP Methods</h3>
+                        <p class="stat-value">{{.VipMethods}}</p>
+                        <p class="stat-label">Premium Only</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-info">
+                        <h3>Usage Today</h3>
+                        <p class="stat-value">{{.Usage}}</p>
+                        <p class="stat-label">Method Calls</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Usage Chart -->
+            <div class="method-chart-container">
+                <canvas id="methodUsageChart"></canvas>
+            </div>
+
+            <div class="edit-form-overlay">
+                <div class="edit-form-container">
+                    <div class="edit-form-header">
+                        <h2>Edit Method</h2>
+                        <button class="close-form-btn">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    <form class="edit-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Method Name</label>
+                                <input type="text" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Site Name</label>
+                                <input type="text" name="sname" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea name="description" required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Subnet (grouping)</label>
+                                <select name="subnet" required>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Type</label>
+                                <select name="type" required>
+                                    <option value="1">Layer 4</option>
+                                    <option value="2">Layer 7</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="vip-toggle">
+                                <span>VIP Method</span>
+                                <input type="checkbox" name="vip">
+                            </label>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="save-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                                    <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                                    <polyline points="7 3 7 8 15 8"></polyline>
+                                </svg>
+                                Save Changes
+                            </button>
+                            <button type="button" class="cancel-btn">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Methods Table -->
+            <div class="methods-container">
+                <div class="methods-header">
+                    <h2>All Methods</h2>
+                    <div class="methods-actions">
+                        <div class="search-box">
+                            <input type="text" placeholder="Search methods..." id="methodSearch">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="m21 21-4.3-4.3"/>
+                            </svg>
+                        </div>
+                        <button class="add-method-btn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14M5 12h14"/>
+                            </svg>
+                            Add Method
+                        </button>
+                    </div>
+                </div>
+
+                <div class="methods-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Display name</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Subnet</th>
+                                <th>VIP</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="methodsTableBody">
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="pagination">
+                    <button class="page-btn" disabled>&laquo;</button>
+                    <button class="page-btn active">1</button>
+                    <button class="page-btn">2</button>
+                    <button class="page-btn">3</button>
+                    <button class="page-btn">&raquo;</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        $(function(){
+  // 1) grab the <select>
+  const $subnet = $('select[name="subnet"]');
+  // 2) fetch your settings
+  $.getJSON('/api/admin/settingsEnd')
+    .done(function(cfg){
+      // clear out any hard‑coded options
+      $subnet.empty();
+      // 3) pull out all keys that match "Subnet\d+"
+      Object.keys(cfg)
+        .filter(k => /^Subnet\d+$/.test(k))
+        // sort by the number suffix
+        .sort((a, b) => parseInt(a.slice(6)) - parseInt(b.slice(6)))
+        .forEach(key => {
+          const idx = key.slice(6);              // "1", "2", ...
+          const label = cfg[key] || `Subnet ${idx}`;
+          // 4) append <option value="1">Subnet 1</option>, etc.
+          $('<option>')
+            .val(idx)
+            .text(label)
+            .appendTo($subnet);
+        });
+    })
+    .fail(function(err){
+      console.error('Could not load subnets', err);
+      showToast('Failed to load subnets', 'error');
+    });
+});
+    document.addEventListener('DOMContentLoaded', () => {
+      let methods = []
+      let currentAction = null   // "add" or "update"
+      let currentMethodName = ''
+
+      // grab DOM nodes
+      const tbody           = document.getElementById('methodsTableBody')
+      const searchInput     = document.getElementById('methodSearch')
+      const addBtn          = document.querySelector('.add-method-btn')
+      const overlay         = document.querySelector('.edit-form-overlay')
+      const form            = document.querySelector('.edit-form')
+      const closeBtn        = document.querySelector('.close-form-btn')
+      const cancelBtn       = document.querySelector('.cancel-btn')
+
+      // CHART.JS setup
+      const ctx = document.getElementById('methodUsageChart').getContext('2d')
+      const usageChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: [],
+          datasets: [{ label: 'Usage Count', data: [], fill: true, tension: 0.4 }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false }},
+          scales: {
+            y: { beginAtZero: true },
+            x: {}
+          }
+        }
+      })
+
+      // fetch from server
+      async function fetchMethods() {
+        const res = await fetch('/api/admin/method')
+        if (!res.ok) throw new Error('Failed to load methods')
+        const data = await res.json()
+        // data is a map{name:MethodObj}, turn into array
+        methods = Object.values(data).map(m => ({
+          name:        m.Name,
+          sname:       m.DisplayName,
+          type:        m.Type,
+          description: m.Description,
+          subnet:      m.Subnet,
+          vip:         m.VIP,
+          usage:       m.UsageCount || 0,
+        }))
+        renderTable(methods)
+        updateChart()
+      }
+
+      // update the chart
+      function updateChart() {
+        usageChart.data.labels = methods.map(m => m.name)
+        usageChart.data.datasets[0].data = methods.map(m => m.usage)
+        usageChart.update()
+      }
+
+      // render the table rows
+      function renderTable(list) {
+  tbody.innerHTML = list
+    .map((m, i) => `
+      <tr>
+        <td>${i + 1}</td>         <!-- auto‑count -->
+        <td>${m.name}</td>
+        <td>${m.sname}</td>
+        <td>${m.type}</td>
+        <td>${m.description}</td>
+        <td>${m.subnet}</td>
+        <td>${m.vip ? '<span class="vip-badge">VIP</span>' : '-'}</td>
+        <td>
+          <button class="action-btn edit-btn"   data-name="${m.name}">✎</button>
+          <button class="action-btn delete-btn" data-name="${m.name}">🗑</button>
+        </td>
+      </tr>
+    `)
+    .join('')
+}
+      // open overlay for edit or add
+      function openForm(action, method = {}) {
+        currentAction      = action
+        currentMethodName  = method.name || ''
+        form.elements.name.value        = method.name || ''
+        form.elements.sname.value        = method.sname || ''
+        form.elements.type.value        = method.type || ''
+        form.elements.description.value = method.description || ''
+        form.elements.subnet.value      = method.subnet || ''
+        form.elements.vip.checked       = method.vip || false
+
+        overlay.classList.add('active')
+        document.body.style.overflow = 'hidden'
+      }
+      function closeForm() {
+        overlay.classList.remove('active')
+        document.body.style.overflow = ''
+        form.reset()
+      }
+
+      // handle search
+      searchInput.addEventListener('input', e => {
+        const term = e.target.value.toLowerCase()
+        renderTable(
+          methods.filter(m =>
+            m.name.toLowerCase().includes(term) ||
+            m.description.toLowerCase().includes(term)
+          )
+        )
+      })
+
+      // delegate edit / delete / add clicks
+      document.addEventListener('click', async e => {
+        if (e.target.closest('.edit-btn')) {
+          const name = e.target.dataset.name
+          const m = methods.find(x => x.name === name)
+          openForm('update', m)
+        }
+        if (e.target.closest('.delete-btn')) {
+          const name = e.target.dataset.name
+          if (!confirm(`Really delete "${name}"?`)) return
+          const res = await fetch('/api/admin/method', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ action: 'delete', name })
+          })
+          if (res.ok) {
+            showToast('Deleted', 'success')
+            await fetchMethods()
+          } else {
+            showToast('Delete failed', 'error')
+          }
+        }
+        if (e.target.closest('.add-method-btn')) {
+          openForm('add')
+        }
+      })
+
+      // form buttons
+      closeBtn.addEventListener('click', closeForm)
+      cancelBtn.addEventListener('click', closeForm)
+      overlay.addEventListener('click', e => {
+        if (e.target === overlay) closeForm()
+      })
+
+      // submit add/update
+      form.addEventListener('submit', async e => {
+        e.preventDefault()
+        const payload = {
+          action: currentAction,
+          name:   currentAction === 'update'    // only include on updates
+            ? currentMethodName
+            : undefined,
+          method: {
+            Name:        form.elements.name.value,  
+            DisplayName:        form.elements.sname.value,
+            Type:        parseInt(form.elements.type.value, 10),
+            Description: form.elements.description.value,
+            Subnet:      parseInt(form.elements.subnet.value, 10),
+            VIP:         form.elements.vip.checked
+          }
+        }
+        // if updating, ensure we send the original name to match DB row
+        if (currentAction === 'update') {
+          payload.method.Name = currentMethodName
+        }
+        const res = await fetch('/api/admin/method', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
+        if (res.ok) {
+          showToast(currentAction === 'add' ? 'Added' : 'Updated', 'success')
+          closeForm()
+          await fetchMethods()
+        } else {
+          showToast('Save failed', 'error')
+        }
+      })
+
+      // initial load
+      fetchMethods().catch(err => {
+        console.error(err)
+      })
+    })
+    </script>
+</body>
+</html>
